@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import "./index.scss";
 import Input from "@material-ui/core/Input";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
@@ -7,43 +7,39 @@ import CloseIcon from "@material-ui/icons/Close";
 export default class TopBar extends React.Component {
   render() {
     return (
-      <div className="bar">
-        <img
-          className="logo"
-          alt="logo"
-          src="https://plannaplan.pl/img/logo.svg"
-        />
-        <div className="rest">
-          <div className="tekst"> plan na plan </div>
-          <div className="inputdiv">
-            <div className="iconSearch">
-              <SearchIcon fontSize="large"></SearchIcon>
-            </div>
-            <div className="search">
-              <Input
-                placeholder="Wyszukaj..."
-                inputProps={{ "aria-label": "description" }}
-                className="input"
-              />
-              <div className="iconClose">
-                <CloseIcon fontSize="large"></CloseIcon>
-              </div>
-            </div>
-          </div>
+      <div className="top-bar">
+        <div className="top-bar__logo">
           <img
-            className="transfer"
+            className="top-bar__logo-image"
+            alt="logo"
+            src="https://plannaplan.pl/img/logo.svg"
+          />
+          <div className="top-bar__tekst"> plan na plan </div>
+        </div>
+        <div className="top-bar__input-div">
+            <SearchIcon fontSize="large"></SearchIcon>
+            <Input
+              placeholder="Wyszukaj..."
+              inputProps={{ "aria-label": "description" }}
+              className="top-bar__input-field"
+            />
+            <CloseIcon fontSize="large"></CloseIcon>
+        </div>
+        <div className="top-bar__icon-box">
+          <img
+            className="top-bar__icon"
             alt="logo"
             src="https://plannaplan.pl/img/transfer.png"
           />
           <img
-            className="UK"
+            className="top-bar__icon"
             alt="logo"
             src="https://plannaplan.pl/img/UK.png"
           />
           <img
-            className="iconUser"
+            className="top-bar__icon"
             alt="logo"
-            src="https://plannaplan.pl/img/user.svg"
+            src="https://plannaplan.pl/img/user.png"
           />
         </div>
       </div>

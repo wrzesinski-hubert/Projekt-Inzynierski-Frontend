@@ -1,11 +1,13 @@
 import React from "react";
-import TopBar from "./components/TopBar/index"
+import TopBar from "./components/TopBar/"
+import Transfer from "./components/Transfer/"
 import "./App.scss";
 
 function App() {
 	return (
 		<div className="App">
-			<TopBar></TopBar>
+			<TopBar/>
+			<Transfer/>
 		</div>
 	);
 }
