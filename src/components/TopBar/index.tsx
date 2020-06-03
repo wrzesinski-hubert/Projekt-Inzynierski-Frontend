@@ -1,8 +1,11 @@
 import React, { ChangeEvent } from "react";
 import "./index.scss";
 import Input from "@material-ui/core/Input";
-import SearchIcon from "@material-ui/icons/Search";
-import CloseIcon from "@material-ui/icons/Close";
+import Transfer from "./transfer.png";
+import Search from "./search.svg";
+import UK from "./UK.png";
+import User from "./user.png";
+import CloseIcon from "./close.svg";
 
 interface TopBarProps {
   handleTransfer: (e: React.MouseEvent) => void;
@@ -56,7 +59,11 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
           <div className="top-bar__tekst"> plan na plan </div>
         </div>
         <div className="top-bar__input-div">
-          <SearchIcon fontSize="large"></SearchIcon>
+        <img
+            className="top-bar__input-icon"
+            alt="search"
+            src={Search}
+          />
           <Input
             placeholder="Wyszukaj..."
             inputProps={{ "aria-label": "description" }}
@@ -65,25 +72,29 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
               this.handleChange(e as ChangeEvent<HTMLInputElement>)
             }
           />
-          <CloseIcon fontSize="large"></CloseIcon>
+        <img
+            className="top-bar__input-icon"
+            alt="close"
+            src={CloseIcon}
+          />
         </div>
         <div className="top-bar__icon-box">
           <img
             className="top-bar__icon"
             alt="transfer"
-            src="https://plannaplan.pl/img/transfer.png"
+            src={Transfer}
             onClick={this.handleTransfer}
           />
           <img
             className="top-bar__icon"
             alt="change_language"
-            src="https://plannaplan.pl/img/UK.png"
+            src={UK}
             onClick={this.handleLanguage}
           />
           <img
             className="top-bar__icon"
             alt="profile"
-            src="https://plannaplan.pl/img/user.png"
+            src={User}
             onClick={this.handleProfile}
           />
         </div>

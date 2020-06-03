@@ -31,6 +31,10 @@
     &-field {
       width: 96%;
     }
+
+    &-icon{
+      width: 35px;
+    }
   }
 
   &__icon {
@@ -56,9 +60,12 @@
       width: 60px;
       height: 60px;
     }
+
+    &__input-icon{
+        width: 25px;
+      }
+    }
   }
-  .MuiSvgIcon-root,
-  MuiSvgIcon-fontSizeLarge {
-    font-size: inherit !important;
-  }
-}
+
+
+
