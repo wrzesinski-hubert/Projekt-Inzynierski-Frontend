@@ -13,36 +13,37 @@
     align-items: center;
     flex-grow: 0.5;
     justify-content: flex-start;
+
+    &-image {
+      width: 80px;
+      height: 80px;
+    }
   }
 
-  &__logo-image {
-    width: 80px;
-    height: 80px;
-  }
+  &__input {
+    &-div {
+      width: 70%;
+      display: flex;
+      align-items: center;
+      flex-grow: 3;
+    }
 
-  &__input-div {
-    width: 70%;
-    display: flex;
-    align-items: center;
-    flex-grow: 3;
-  }
-
-  &__input-field {
-    width: 96%;
-  }
-
-  &__icon-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-grow: 1.5;
+    &-field {
+      width: 96%;
+    }
   }
 
   &__icon {
     width: 50px;
+    cursor: pointer;
+    &-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-grow: 1.5;
+    }
   }
 }
-
 @media only screen and (max-width: 870px) {
   .top-bar__tekst {
     display: none;

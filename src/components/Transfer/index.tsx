@@ -3,12 +3,11 @@ import Modal from "@material-ui/core/Modal";
 import "./index.scss";
 
 interface TransferProps {
-  names?: string;
-}
-
-interface TransferState {
+  handleClose: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   isOpen: boolean;
 }
+
+interface TransferState {}
 
 export default class Transfer extends React.Component<
   TransferProps,
@@ -17,20 +16,14 @@ export default class Transfer extends React.Component<
   constructor(props: TransferProps) {
     super(props);
 
-    this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.state = {
-      isOpen: false,
+      isOpen: true,
     };
   }
 
-  handleOpen(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    this.setState({
-      isOpen: true,
-    });
-  }
-
   handleClose(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    this.props.handleClose(e);
     this.setState({
       isOpen: false,
     });
@@ -39,22 +32,18 @@ export default class Transfer extends React.Component<
   render() {
     return (
       <div>
-        <button type="button" onClick={this.handleOpen}>
-          Open Modal
-        </button>
         <Modal
-        className="wrapper"
-          open={this.state.isOpen}
+          className="wrapper"
+          open={this.props.isOpen}
           onClose={this.handleClose}
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
-            <div className="transfer">
-              <button type="button" onClick={this.handleClose}>
-                Close Modal
-              </button>
-            </div>
-
+          <div className="transfer">
+            <button type="button" onClick={this.handleClose}>
+              Close Modal
+            </button>
+          </div>
         </Modal>
       </div>
     );
