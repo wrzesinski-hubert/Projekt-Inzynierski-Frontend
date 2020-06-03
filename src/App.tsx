@@ -13,8 +13,14 @@ function App() {
         textChangeHandler={(e) => {
           setText(e.target.value);
         }}
-        handleOpen={(e) => {
+        handleTransfer={(e) => {
           setOpen(!isOpen);
+        }}
+        handleLanguage={(e)=>{
+          alert("chuj1");
+        }}
+        handleProfile={(e)=>{
+          alert("chuj2");
         }}
         isOpen={isOpen}
       />

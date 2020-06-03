@@ -44,8 +44,21 @@
     }
   }
 }
-@media only screen and (max-width: 870px) {
-  .top-bar__tekst {
-    display: none;
+@media only screen and (max-width: 670px) {
+  .top-bar {
+    &__tekst {
+      display: none;
+    }
+    &__icon {
+      width: 35px;
+    }
+    &__logo-image {
+      width: 60px;
+      height: 60px;
+    }
+  }
+  .MuiSvgIcon-root,
+  MuiSvgIcon-fontSizeLarge {
+    font-size: inherit !important;
   }
 }

@@ -5,7 +5,9 @@ import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 
 interface TopBarProps {
-  handleOpen: (e: React.MouseEvent) => void;
+  handleTransfer: (e: React.MouseEvent) => void;
+  handleProfile: (e: React.MouseEvent) => void;
+  handleLanguage: (e: React.MouseEvent) => void;
   textChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isOpen: boolean;
 }
@@ -15,15 +17,16 @@ interface TopBarState {}
 export default class TopBar extends React.Component<TopBarProps, TopBarState> {
   constructor(props: TopBarProps) {
     super(props);
-
-    this.handleOpen = this.handleOpen.bind(this);
+    this.handleProfile = this.handleProfile.bind(this);
+    this.handleLanguage = this.handleLanguage.bind(this);
+    this.handleTransfer = this.handleTransfer.bind(this);
     this.state = {
       isOpen: false,
     };
   }
 
-  handleOpen(e: React.MouseEvent) {
-    this.props.handleOpen(e);
+  handleTransfer(e: React.MouseEvent) {
+    this.props.handleTransfer(e);
     this.setState({
       isOpen: true,
     });
@@ -33,8 +36,12 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
     this.props.textChangeHandler(e);
   }
 
-  funkcja() {
-    alert("chuj");
+  handleProfile(e: React.MouseEvent) {
+    this.props.handleProfile(e);
+  }
+
+  handleLanguage(e: React.MouseEvent) {
+    this.props.handleLanguage(e);
   }
 
   render() {
@@ -65,19 +72,19 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
             className="top-bar__icon"
             alt="transfer"
             src="https://plannaplan.pl/img/transfer.png"
-            onClick={this.handleOpen}
+            onClick={this.handleTransfer}
           />
           <img
             className="top-bar__icon"
             alt="change_language"
             src="https://plannaplan.pl/img/UK.png"
-            onClick={this.funkcja}
+            onClick={this.handleLanguage}
           />
           <img
             className="top-bar__icon"
             alt="profile"
             src="https://plannaplan.pl/img/user.png"
-            onClick={this.funkcja}
+            onClick={this.handleProfile}
           />
         </div>
       </div>
