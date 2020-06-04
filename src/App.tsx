@@ -17,10 +17,10 @@ function App() {
           setOpen(!isOpen);
         }}
         handleLanguage={(e)=>{
-          alert("chuj1");
+          alert("Language");
         }}
         handleProfile={(e)=>{
-          alert("chuj2");
+          alert("Profile");
         }}
         isOpen={isOpen}
       />
