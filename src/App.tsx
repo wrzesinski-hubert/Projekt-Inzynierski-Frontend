@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TopBar from "./components/TopBar/";
 import Transfer from "./components/Transfer/";
 import "./App.scss";
+import Schedule from "./components/Calendar/";
 
 function App() {
   const [isOpen, setOpen] = useState(false);
@@ -30,6 +31,7 @@ function App() {
           setOpen(!isOpen);
         }}
       />
+      <Schedule></Schedule>
 	  <h1>{text}</h1>
     </div>
   );
