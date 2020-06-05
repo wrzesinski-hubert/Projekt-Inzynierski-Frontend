@@ -28,7 +28,7 @@ const formatDayScaleDate = (
   return momentDate.format(weekday ? "dddd" : " ").toUpperCase();
 };
 
-const styles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     dayScaleCell:{
       backgroundColor:"red"
@@ -36,14 +36,23 @@ const styles = makeStyles((theme: Theme) =>
   }),
 );
 
-const DayScaleCell = (({ formatDate,classes, ...restProps }: any) => (
+
+//don't know how to set proper type of function arguments
+const   DayScaleCell = ({ formatDate, ...restProps }: any) => { 
+  const classes = useStyles();
+  return (
   <WeekView.DayScaleCell
     {...restProps}
     formatDate={formatDayScaleDate}
     today={false}
-    className={"chuj"}
+    className={classes.dayScaleCell}
   />
-));
+  );
+}
+
+
+
+
 
 export default class Calendar extends React.PureComponent<
   CalendarProps,
