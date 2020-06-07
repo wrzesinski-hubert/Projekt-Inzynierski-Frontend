@@ -13,9 +13,7 @@ import "./index.scss";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 
-interface CalendarProps {
-  
-}
+interface CalendarProps {}
 
 interface CalendarState {
   data: Array<AppointmentModel>;
@@ -82,17 +80,13 @@ export default class Calendar extends React.PureComponent<
 > {
   constructor(props: CalendarProps) {
     super(props);
-    
+
     this.state = {
       data: appointments,
       currentDate: new Date("2020-06-01"),
     };
   }
 
-  expand(e: React.MouseEvent) {
-    //this.classList.add("chujec");
-    console.log("chujec");
-  }
   render() {
     const { data, currentDate } = this.state;
 
@@ -123,16 +117,16 @@ export default class Calendar extends React.PureComponent<
             Hubert Wrzesiński<br></br>
             Semestr zimowy 2020/2021
           </div>
-          <Paper className="paper" onClick={this.expand}>Chuj</Paper>
-          <Paper className="paper">Cipa</Paper>
-          <Paper className="paper">Pizda</Paper>
-          <Paper className="paper">Szmata</Paper>
-          <Paper className="paper">Jebać</Paper>
-          <Paper className="paper">Chuj</Paper>
-          <Paper className="paper">Cipa</Paper>
-          <Paper className="paper">Pizda</Paper>
-          <Paper className="paper">Szmata</Paper>
-          <Paper className="paper">Jebać</Paper>
+          <Paper className="paper">1</Paper>
+          <Paper className="paper">2</Paper>
+          <Paper className="paper">3</Paper>
+          <Paper className="paper">4</Paper>
+          <Paper className="paper">5</Paper>
+          <Paper className="paper">6</Paper>
+          <Paper className="paper">7</Paper>
+          <Paper className="paper">8</Paper>
+          <Paper className="paper">9</Paper>
+          <Paper className="paper">10</Paper>
         </div>
       </div>
     );

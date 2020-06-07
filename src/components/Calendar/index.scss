@@ -17,17 +17,14 @@
   flex-grow: 1;
 }
 .paper {
-    display: flex;
-    margin-top: 10px;
+  display: flex;
+  margin-top: 10px;
   height: 60px;
   width: 90%;
-  background-color: #D4A8FF !important;
+  background-color: #d4a8ff !important;
   align-items: center;
   justify-content: center;
 }
 .text {
   border-bottom: 1px solid;
-}
-.chujec{
-    background-color: red;
 }
