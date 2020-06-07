@@ -15,10 +15,10 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 interface CalendarProps {
   data: Array<AppointmentModel>;
-  currentDate: Date;
+  
 }
 
-interface CalendarState {}
+interface CalendarState {currentDate: Date;}
 
 const formatDayScaleDate = (
   date: moment.MomentInput,
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderCollapse: "separate",
     },
     timeTableCell: {
-      borderRadius: 15,
+      //borderRadius: 15,
     },
     appointmentLayer: {
       borderRadius: 15,
@@ -95,8 +95,18 @@ export default class Calendar extends React.PureComponent<
   CalendarState
 > {
 
+  constructor(props: CalendarProps) {
+    super(props);
+
+    this.state = {
+      currentDate: new Date("2020-06-01"),
+    };
+  }
+
   render() {
-    const { data, currentDate } = this.props;
+    const { data } = this.props;
+    const { currentDate } = this.state;
+    
 
     return (
           <Scheduler data={data} locale={"PL-PL"} firstDayOfWeek={1}>

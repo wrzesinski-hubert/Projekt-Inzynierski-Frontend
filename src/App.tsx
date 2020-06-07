@@ -35,10 +35,7 @@ function App() {
       />
       <div className="wraper">
         <div className="wraper__calendar">
-          <Schedule
-            data={appointments}
-            currentDate={new Date("2020-06-01")}
-          ></Schedule>
+          <Schedule data={appointments} />
         </div>
         <div className="wraper__rightbar">
           <RightBar />
