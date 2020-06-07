@@ -5,20 +5,20 @@ import {
   Scheduler,
   WeekView,
   Appointments,
+  AppointmentTooltip,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import moment from "moment";
 import "moment/locale/pl";
-import { appointments } from "./appointments";
 import "./index.scss";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 
-interface CalendarProps {}
 
-interface CalendarState {
+interface CalendarProps {
   data: Array<AppointmentModel>;
   currentDate: Date;
 }
+
+interface CalendarState {}
 
 const formatDayScaleDate = (
   date: moment.MomentInput,
@@ -37,9 +37,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     timeTableLayout: {
       border: "1px solid rgba(224, 224, 224, 1);",
+      borderCollapse: "separate",
     },
     timeTableCell: {
-      //borderRadius:2,
+      borderRadius: 15,
+    },
+    appointmentLayer: {
+      borderRadius: 15,
+      marginLeft: 5,
+      textAlign: "center",
     },
   })
 );
@@ -74,61 +80,39 @@ const TimeTableLayout = ({ ...restProps }: any) => {
   );
 };
 
+const Appointment = ({ ...restProps }: any) => {
+  const classes = useStyles();
+  return (
+    <Appointments.Appointment
+      {...restProps}
+      className={classes.appointmentLayer}
+    />
+  );
+};
+
 export default class Calendar extends React.PureComponent<
   CalendarProps,
   CalendarState
 > {
-  constructor(props: CalendarProps) {
-    super(props);
-
-    this.state = {
-      data: appointments,
-      currentDate: new Date("2020-06-01"),
-    };
-  }
 
   render() {
-    const { data, currentDate } = this.state;
+    const { data, currentDate } = this.props;
 
     return (
-      <div className="schedule">
-        <div className="calendar">
-          <Scheduler
-            data={data}
-            height={850}
-            locale={"PL-PL"}
-            firstDayOfWeek={1}
-          >
+          <Scheduler data={data} locale={"PL-PL"} firstDayOfWeek={1}>
             <ViewState defaultCurrentDate={currentDate} />
             <WeekView
               startDayHour={8}
               endDayHour={20}
               excludedDays={[0, 6]}
-              cellDuration={45}
+              cellDuration={60}
               dayScaleCellComponent={DayScaleCell}
               timeTableLayoutComponent={TimeTableLayout}
               timeTableCellComponent={TimeTableCell}
             />
-            <Appointments />
-          </Scheduler>
-        </div>
-        <div className="shop-cart">
-          <div className="text">
-            Hubert Wrzesiński<br></br>
-            Semestr zimowy 2020/2021
-          </div>
-          <Paper className="paper">1</Paper>
-          <Paper className="paper">2</Paper>
-          <Paper className="paper">3</Paper>
-          <Paper className="paper">4</Paper>
-          <Paper className="paper">5</Paper>
-          <Paper className="paper">6</Paper>
-          <Paper className="paper">7</Paper>
-          <Paper className="paper">8</Paper>
-          <Paper className="paper">9</Paper>
-          <Paper className="paper">10</Paper>
-        </div>
-      </div>
+            <Appointments appointmentComponent={Appointment} />
+            <AppointmentTooltip />
+          </Scheduler>        
     );
   }
 }

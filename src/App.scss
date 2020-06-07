@@ -2,3 +2,13 @@ body {
     margin: 0px;
     padding: 0px;
   }
+  .wraper{
+    display: flex;
+    &__rightbar{
+      flex-grow: 1;
+    }
+    &__calendar{
+      width: 85%;
+    }
+  }
+
