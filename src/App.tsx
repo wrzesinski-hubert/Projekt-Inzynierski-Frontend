@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import TopBar from "./components/TopBar/";
 import Transfer from "./components/Transfer/";
 import "./App.scss";
+import Schedule from "./components/Calendar/";
+import { appointments } from "./components/Calendar/appointments";
+import RightBar from "./components/RightBar";
 
 function App() {
   const [isOpen, setOpen] = useState(false);
@@ -16,10 +19,10 @@ function App() {
         handleTransfer={(e) => {
           setOpen(!isOpen);
         }}
-        handleLanguage={(e)=>{
+        handleLanguage={(e) => {
           alert("Language");
         }}
-        handleProfile={(e)=>{
+        handleProfile={(e) => {
           alert("Profile");
         }}
         isOpen={isOpen}
@@ -30,7 +33,16 @@ function App() {
           setOpen(!isOpen);
         }}
       />
-	  <h1>{text}</h1>
+      <div className="wraper">
+        <div className="wraper__calendar">
+          <Schedule data={appointments} />
+        </div>
+        <div className="wraper__rightbar">
+          <RightBar />
+        </div>
+      </div>
+
+      <h1>{text}</h1>
     </div>
   );
 }
