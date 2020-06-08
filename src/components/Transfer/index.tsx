@@ -17,16 +17,10 @@ export default class Transfer extends React.Component<
     super(props);
 
     this.handleClose = this.handleClose.bind(this);
-    this.state = {
-      isOpen: true,
-    };
   }
 
   handleClose(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     this.props.handleClose(e);
-    this.setState({
-      isOpen: false,
-    });
   }
 
   render() {

@@ -1,24 +1,25 @@
 import * as React from "react";
-import { ViewState } from "@devexpress/dx-react-scheduler";
+import { ViewState, IntegratedEditing, EditingState } from "@devexpress/dx-react-scheduler";
 import { AppointmentModel } from "@devexpress/dx-react-scheduler";
 import {
   Scheduler,
   WeekView,
   Appointments,
   AppointmentTooltip,
+  AppointmentForm,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import moment from "moment";
 import "moment/locale/pl";
 import "./index.scss";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
-
 interface CalendarProps {
   data: Array<AppointmentModel>;
-  
 }
 
-interface CalendarState {currentDate: Date;}
+interface CalendarState {
+  currentDate: Date;
+}
 
 const formatDayScaleDate = (
   date: moment.MomentInput,
@@ -103,26 +104,34 @@ export default class Calendar extends React.PureComponent<
     };
   }
 
+  commitChanges() {
+
+  }
+
   render() {
     const { data } = this.props;
     const { currentDate } = this.state;
-    
 
     return (
-          <Scheduler data={data} locale={"PL-PL"} firstDayOfWeek={1}>
-            <ViewState defaultCurrentDate={currentDate} />
-            <WeekView
-              startDayHour={8}
-              endDayHour={20}
-              excludedDays={[0, 6]}
-              cellDuration={60}
-              dayScaleCellComponent={DayScaleCell}
-              timeTableLayoutComponent={TimeTableLayout}
-              timeTableCellComponent={TimeTableCell}
-            />
-            <Appointments appointmentComponent={Appointment} />
-            <AppointmentTooltip />
-          </Scheduler>        
+      <Scheduler data={data} locale={"PL-PL"} firstDayOfWeek={1}>
+        <ViewState defaultCurrentDate={currentDate} />
+        <EditingState
+          onCommitChanges={this.commitChanges}         
+        />
+        <WeekView
+          startDayHour={8}
+          endDayHour={20}
+          excludedDays={[0, 6]}
+          cellDuration={60}
+          dayScaleCellComponent={DayScaleCell}
+          timeTableLayoutComponent={TimeTableLayout}
+          timeTableCellComponent={TimeTableCell}
+        />
+        <IntegratedEditing/>
+        <Appointments appointmentComponent={Appointment} />
+        <AppointmentTooltip />
+        <AppointmentForm/>
+      </Scheduler>
     );
   }
 }

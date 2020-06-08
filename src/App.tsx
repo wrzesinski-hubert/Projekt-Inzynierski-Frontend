@@ -7,8 +7,11 @@ import { appointments } from "./components/Calendar/appointments";
 import RightBar from "./components/RightBar";
 
 function App() {
-  const [isOpen, setOpen] = useState(false);
+  const [isOpenTransfer, setOpenTransfer] = useState(false);
+  const [isOpenProfile, setOpenProfile] = useState(false);
+  const [isPolish, setLanguage] = useState(true);
   const [text, setText] = useState("");
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   return (
     <div className="App">
@@ -17,20 +20,27 @@ function App() {
           setText(e.target.value);
         }}
         handleTransfer={(e) => {
-          setOpen(!isOpen);
+          setOpenTransfer(!isOpenTransfer);
         }}
         handleLanguage={(e) => {
-          alert("Language");
+          setLanguage(!isPolish);
         }}
         handleProfile={(e) => {
-          alert("Profile");
+          setOpenProfile(!isOpenProfile);
+          setAnchorEl(e.currentTarget as HTMLElement);
         }}
-        isOpen={isOpen}
+        handleClose={(e) => {
+          setOpenProfile(!isOpenProfile);
+        }}
+        isOpenTransfer={isOpenTransfer}
+        isOpenProfile={isOpenProfile}
+        isPolish={isPolish}
+        anchorEl={anchorEl}
       />
       <Transfer
-        isOpen={isOpen}
+        isOpen={isOpenTransfer}
         handleClose={(e) => {
-          setOpen(!isOpen);
+          setOpenTransfer(!isOpenTransfer);
         }}
       />
       <div className="wraper">
