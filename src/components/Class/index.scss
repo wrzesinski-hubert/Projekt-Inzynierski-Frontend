@@ -1,0 +1,13 @@
+.paper {
+    display: flex;
+    min-height: 50px;
+    background-color: rgb(100, 181, 246) !important;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 10px;
+    padding:10px;
+    border-radius: 10px;
+    width: 90%;
+    cursor: pointer;
+  }

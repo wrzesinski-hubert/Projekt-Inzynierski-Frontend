@@ -1,6 +1,5 @@
 .wrapper {
   display: flex;
-
   justify-content: center;
   text-align: center;
   align-items: center;
@@ -8,31 +7,34 @@
 
 .transfer {
   display: flex;
-  flex-wrap: wrap;
   width: 80%;
   height: 70%;
   padding-top: 40px;
   background: rgba(255, 220, 97, 0.48);
   border: 1px solid #000000;
-  justify-content: center;
+  &__left {
+    display: flex;
+    justify-content: space-around;
+    flex-grow: 1;
+  }
+  &__right {
+    flex-grow: 4;
+  }
   &__text {
     font-family: Lato;
     font-size: 50px;
   }
-  &__input{
+  &__input {
     width: 300px;
-    height: 45px;  
-    background: #D7A700;
+    height: 45px;
+    background: #d7a700;
   }
-  &__give{
-      flex-grow: 1;
+  &__give {
   }
-  &__recieve{
-    flex-grow: 1;
-}
-&__proposition{
-    flex-grow: 4;
-}
-&__add{
-}
+  &__recieve {
+  }
+  &__proposition {
+  }
+  &__add {
+  }
 }

@@ -34,16 +34,20 @@ export default class Transfer extends React.Component<
           aria-describedby="simple-modal-description"
         >
           <div className="transfer">
-            <div className="transfer__give">
-              <div className="transfer__text">Oddam</div>
-              <input className="transfer__input"></input>
+            <div className="transfer__left">
+              {/* <button className="transfer__add">chuj</button> */}
+              <div className="transfer__give">
+                <div className="transfer__text">Oddam</div>
+                <input className="transfer__input"></input>
+              </div>
+              <div className="transfer__receive">
+                <div className="transfer__text">Przyjmę</div>
+                <input className="transfer__input"></input>
+              </div>
             </div>
-            <div className="transfer__receive">
-              <div className="transfer__text">Przyjmę</div>
-              <input className="transfer__input"></input>
+            <div className="transfer__right">
+              <div className="transfer__proposition"></div>
             </div>
-            <div className="transfer__proposition"></div>
-          <button className="transfer__add">chuj</button>
           </div>
         </Modal>
       </div>
