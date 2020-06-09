@@ -12,28 +12,29 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 interface TopBarProps {
   handleTransfer: (e: React.MouseEvent) => void;
-  handleProfile: (e: React.MouseEvent) => void;
-  handleClose: (e: React.MouseEvent) => void;
   handleLanguage: (e: React.MouseEvent) => void;
   textChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isOpenTransfer: boolean;
-  isOpenProfile: boolean;
   isPolish: boolean;
+  
+}
+
+interface TopBarState {
+  isOpenProfile: boolean;
   anchorEl: null | HTMLElement;
 }
 
-interface TopBarState {}
-
-export default class TopBar extends React.Component<
-  TopBarProps,
-  TopBarState
-> {
+export default class TopBar extends React.Component<TopBarProps, TopBarState> {
   constructor(props: TopBarProps) {
     super(props);
     this.handleProfile = this.handleProfile.bind(this);
-    this.handleClose = this.handleProfile.bind(this);
+    this.handleClose = this.handleClose.bind(this);
     this.handleLanguage = this.handleLanguage.bind(this);
     this.handleTransfer = this.handleTransfer.bind(this);
+    this.state = {
+      isOpenProfile: false,
+      anchorEl:null,
+    };
   }
 
   handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -49,11 +50,16 @@ export default class TopBar extends React.Component<
   }
 
   handleProfile(e: React.MouseEvent) {
-    this.props.handleProfile(e);
+    this.setState({
+      isOpenProfile: !this.state.isOpenProfile,
+      anchorEl:e.currentTarget as HTMLElement,
+    });
   }
 
   handleClose(e: React.MouseEvent) {
-    this.props.handleClose(e);
+    this.setState({
+      isOpenProfile: !this.state.isOpenProfile,
+    });
   }
 
   render() {
@@ -98,11 +104,12 @@ export default class TopBar extends React.Component<
             src={User}
             onClick={this.handleProfile}
           />
-          <Menu className="top-bar__menu"
+          <Menu
+            className="top-bar__menu"
             id="simple-menu"
-            anchorEl={this.props.anchorEl}
+            anchorEl={this.state.anchorEl}
             keepMounted
-            open={this.props.isOpenProfile}
+            open={this.state.isOpenProfile}
             onClose={this.handleClose}
           >
             <MenuItem>Profile</MenuItem>

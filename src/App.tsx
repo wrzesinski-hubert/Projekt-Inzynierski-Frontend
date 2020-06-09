@@ -8,10 +8,8 @@ import RightBar from "./components/RightBar";
 
 function App() {
   const [isOpenTransfer, setOpenTransfer] = useState(false);
-  const [isOpenProfile, setOpenProfile] = useState(false);
   const [isPolish, setLanguage] = useState(true);
   const [text, setText] = useState("");
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   return (
     <div className="App">
@@ -25,17 +23,8 @@ function App() {
         handleLanguage={(e) => {
           setLanguage(!isPolish);
         }}
-        handleProfile={(e) => {
-          setOpenProfile(!isOpenProfile);
-          setAnchorEl(e.currentTarget as HTMLElement);
-        }}
-        handleClose={(e) => {
-          setOpenProfile(!isOpenProfile);
-        }}
         isOpenTransfer={isOpenTransfer}
-        isOpenProfile={isOpenProfile}
         isPolish={isPolish}
-        anchorEl={anchorEl}
       />
       <Transfer
         isOpen={isOpenTransfer}
