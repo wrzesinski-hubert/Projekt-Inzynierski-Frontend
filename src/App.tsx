@@ -8,7 +8,6 @@ import RightBar from "./components/RightBar";
 
 function App() {
   const [isOpenTransfer, setOpenTransfer] = useState(false);
-  const [isPolish, setLanguage] = useState(true);
   const [text, setText] = useState("");
 
   return (
@@ -20,11 +19,9 @@ function App() {
         handleTransfer={(e) => {
           setOpenTransfer(!isOpenTransfer);
         }}
-        handleLanguage={(e) => {
-          setLanguage(!isPolish);
+        onLangChange={(e) => {
+          console.log(e);
         }}
-        isOpenTransfer={isOpenTransfer}
-        isPolish={isPolish}
       />
       <Transfer
         isOpen={isOpenTransfer}

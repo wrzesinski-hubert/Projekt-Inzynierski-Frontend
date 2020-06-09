@@ -12,16 +12,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 interface TopBarProps {
   handleTransfer: (e: React.MouseEvent) => void;
-  handleLanguage: (e: React.MouseEvent) => void;
+  onLangChange: (lang:boolean) => void;
   textChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isOpenTransfer: boolean;
-  isPolish: boolean;
-  
 }
 
 interface TopBarState {
   isOpenProfile: boolean;
   anchorEl: null | HTMLElement;
+  isPolish: boolean;
 }
 
 export default class TopBar extends React.Component<TopBarProps, TopBarState> {
@@ -29,11 +27,12 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
     super(props);
     this.handleProfile = this.handleProfile.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.handleLanguage = this.handleLanguage.bind(this);
+    this.onLangChange = this.onLangChange.bind(this);
     this.handleTransfer = this.handleTransfer.bind(this);
     this.state = {
       isOpenProfile: false,
       anchorEl:null,
+      isPolish:true,
     };
   }
 
@@ -45,8 +44,11 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
     this.props.handleTransfer(e);
   }
 
-  handleLanguage(e: React.MouseEvent) {
-    this.props.handleLanguage(e);
+  onLangChange(e: React.MouseEvent) {
+    this.setState({
+      isPolish:!this.state.isPolish,
+    })
+    this.props.onLangChange(this.state.isPolish);
   }
 
   handleProfile(e: React.MouseEvent) {
@@ -95,8 +97,8 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
           <img
             className="top-bar__icon"
             alt="change_language"
-            src={this.props.isPolish ? UK : PL}
-            onClick={this.handleLanguage}
+            src={this.state.isPolish ? UK : PL}
+            onClick={this.onLangChange}
           />
           <img
             className="top-bar__icon"
