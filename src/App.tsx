@@ -7,7 +7,7 @@ import { appointments } from "./components/Calendar/appointments";
 import RightBar from "./components/RightBar";
 
 function App() {
-  const [isOpen, setOpen] = useState(false);
+  const [isOpenTransfer, setOpenTransfer] = useState(false);
   const [text, setText] = useState("");
 
   return (
@@ -17,20 +17,16 @@ function App() {
           setText(e.target.value);
         }}
         handleTransfer={(e) => {
-          setOpen(!isOpen);
+          setOpenTransfer(!isOpenTransfer);
         }}
-        handleLanguage={(e) => {
-          alert("Language");
+        onLangChange={(e) => {
+          console.log(e);
         }}
-        handleProfile={(e) => {
-          alert("Profile");
-        }}
-        isOpen={isOpen}
       />
       <Transfer
-        isOpen={isOpen}
+        isOpen={isOpenTransfer}
         handleClose={(e) => {
-          setOpen(!isOpen);
+          setOpenTransfer(!isOpenTransfer);
         }}
       />
       <div className="wraper">

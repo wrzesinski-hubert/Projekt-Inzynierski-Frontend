@@ -17,16 +17,10 @@ export default class Transfer extends React.Component<
     super(props);
 
     this.handleClose = this.handleClose.bind(this);
-    this.state = {
-      isOpen: true,
-    };
   }
 
   handleClose(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     this.props.handleClose(e);
-    this.setState({
-      isOpen: false,
-    });
   }
 
   render() {
@@ -40,9 +34,16 @@ export default class Transfer extends React.Component<
           aria-describedby="simple-modal-description"
         >
           <div className="transfer">
-            <button type="button" onClick={this.handleClose}>
-              Close Modal
-            </button>
+            <div className="transfer__give">
+              <div className="transfer__text">Oddam</div>
+              <input className="transfer__input"></input>
+            </div>
+            <div className="transfer__receive">
+              <div className="transfer__text">Przyjmę</div>
+              <input className="transfer__input"></input>
+            </div>
+            <div className="transfer__proposition"></div>
+          <button className="transfer__add">chuj</button>
           </div>
         </Modal>
       </div>

@@ -12,13 +12,13 @@ import "moment/locale/pl";
 import "./index.scss";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
-
 interface CalendarProps {
   data: Array<AppointmentModel>;
-  
 }
 
-interface CalendarState {currentDate: Date;}
+interface CalendarState {
+  currentDate: Date;
+}
 
 const formatDayScaleDate = (
   date: moment.MomentInput,
@@ -106,23 +106,22 @@ export default class Calendar extends React.PureComponent<
   render() {
     const { data } = this.props;
     const { currentDate } = this.state;
-    
 
     return (
-          <Scheduler data={data} locale={"PL-PL"} firstDayOfWeek={1}>
-            <ViewState defaultCurrentDate={currentDate} />
-            <WeekView
-              startDayHour={8}
-              endDayHour={20}
-              excludedDays={[0, 6]}
-              cellDuration={60}
-              dayScaleCellComponent={DayScaleCell}
-              timeTableLayoutComponent={TimeTableLayout}
-              timeTableCellComponent={TimeTableCell}
-            />
-            <Appointments appointmentComponent={Appointment} />
-            <AppointmentTooltip />
-          </Scheduler>        
+      <Scheduler data={data} locale={"PL-PL"} firstDayOfWeek={1}>
+        <ViewState defaultCurrentDate={currentDate} />
+        <WeekView
+          startDayHour={8}
+          endDayHour={20}
+          excludedDays={[0, 6]}
+          cellDuration={60}
+          dayScaleCellComponent={DayScaleCell}
+          timeTableLayoutComponent={TimeTableLayout}
+          timeTableCellComponent={TimeTableCell}
+        />
+        <Appointments appointmentComponent={Appointment} />
+        <AppointmentTooltip />
+      </Scheduler>
     );
   }
 }

@@ -4,47 +4,64 @@ import Input from "@material-ui/core/Input";
 import Transfer from "./transfer.png";
 import Search from "./search.svg";
 import UK from "./UK.png";
+import PL from "./PL.png";
 import User from "./user.png";
 import CloseIcon from "./close.svg";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 interface TopBarProps {
   handleTransfer: (e: React.MouseEvent) => void;
-  handleProfile: (e: React.MouseEvent) => void;
-  handleLanguage: (e: React.MouseEvent) => void;
+  onLangChange: (lang:boolean) => void;
   textChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isOpen: boolean;
 }
 
-interface TopBarState {}
+interface TopBarState {
+  isOpenProfile: boolean;
+  anchorEl: null | HTMLElement;
+  isPolish: boolean;
+}
 
 export default class TopBar extends React.Component<TopBarProps, TopBarState> {
   constructor(props: TopBarProps) {
     super(props);
     this.handleProfile = this.handleProfile.bind(this);
-    this.handleLanguage = this.handleLanguage.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.onLangChange = this.onLangChange.bind(this);
     this.handleTransfer = this.handleTransfer.bind(this);
     this.state = {
-      isOpen: false,
+      isOpenProfile: false,
+      anchorEl:null,
+      isPolish:true,
     };
-  }
-
-  handleTransfer(e: React.MouseEvent) {
-    this.props.handleTransfer(e);
-    this.setState({
-      isOpen: true,
-    });
   }
 
   handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.props.textChangeHandler(e);
   }
 
-  handleProfile(e: React.MouseEvent) {
-    this.props.handleProfile(e);
+  handleTransfer(e: React.MouseEvent) {
+    this.props.handleTransfer(e);
   }
 
-  handleLanguage(e: React.MouseEvent) {
-    this.props.handleLanguage(e);
+  onLangChange(e: React.MouseEvent) {
+    this.setState({
+      isPolish:!this.state.isPolish,
+    })
+    this.props.onLangChange(this.state.isPolish);
+  }
+
+  handleProfile(e: React.MouseEvent) {
+    this.setState({
+      isOpenProfile: !this.state.isOpenProfile,
+      anchorEl:e.currentTarget as HTMLElement,
+    });
+  }
+
+  handleClose(e: React.MouseEvent) {
+    this.setState({
+      isOpenProfile: !this.state.isOpenProfile,
+    });
   }
 
   render() {
@@ -59,11 +76,7 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
           <div className="top-bar__tekst"> plan na plan </div>
         </div>
         <div className="top-bar__input-div">
-        <img
-            className="top-bar__input-icon"
-            alt="search"
-            src={Search}
-          />
+          <img className="top-bar__input-icon" alt="search" src={Search} />
           <Input
             placeholder="Wyszukaj..."
             inputProps={{ "aria-label": "description" }}
@@ -72,11 +85,7 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
               this.handleChange(e as ChangeEvent<HTMLInputElement>)
             }
           />
-        <img
-            className="top-bar__input-icon"
-            alt="close"
-            src={CloseIcon}
-          />
+          <img className="top-bar__input-icon" alt="close" src={CloseIcon} />
         </div>
         <div className="top-bar__icon-box">
           <img
@@ -88,8 +97,8 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
           <img
             className="top-bar__icon"
             alt="change_language"
-            src={UK}
-            onClick={this.handleLanguage}
+            src={this.state.isPolish ? UK : PL}
+            onClick={this.onLangChange}
           />
           <img
             className="top-bar__icon"
@@ -97,6 +106,18 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
             src={User}
             onClick={this.handleProfile}
           />
+          <Menu
+            className="top-bar__menu"
+            id="simple-menu"
+            anchorEl={this.state.anchorEl}
+            keepMounted
+            open={this.state.isOpenProfile}
+            onClose={this.handleClose}
+          >
+            <MenuItem>Profile</MenuItem>
+            <MenuItem>My account</MenuItem>
+            <MenuItem>Logout</MenuItem>
+          </Menu>
         </div>
       </div>
     );

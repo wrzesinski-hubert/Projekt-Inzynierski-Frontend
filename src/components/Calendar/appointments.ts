@@ -20,4 +20,11 @@ export const appointments = [
     id: 0,
     location: 'Room 1',
   },
+  {
+    title: 'Twoja stara beszamel',
+    startDate: new Date(2020, 5, 1, 18, 45),
+    endDate: new Date(2020, 5, 1, 20, 0),
+    id: 0,
+    location: 'Room 1',
+  },
 ];
