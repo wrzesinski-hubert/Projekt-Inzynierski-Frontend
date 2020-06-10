@@ -19,12 +19,10 @@ export default class RightBar extends React.Component<
         </div>
         <Class name="E-gospodarka - narzędzia i bezpieczeństwo" />
         <Class name="Algorytmy grafowe" />
-        <Class name="E-gospodarka - narzędzia i bezpieczeństwo" />
-        <Class name="Algorytmy grafowe" />
-        <Class name="E-gospodarka - narzędzia i bezpieczeństwo" />
-        <Class name="Algorytmy grafowe" />
-        <Class name="E-gospodarka - narzędzia i bezpieczeństwo" />
-        <Class name="Algorytmy grafowe" />
+        <Class name="Podstawy programowania deklaratywnego" />
+        <Class name="Statystyka" />
+        <Class name="Wstęp do rachunku prawdopodobieństwa" />
+        <Class name="Technologie internetowe" />
       </div>
     );
   }
