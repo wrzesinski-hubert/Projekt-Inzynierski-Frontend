@@ -18,7 +18,7 @@ interface TopBarProps {
 
 interface TopBarState {
   isOpenProfile: boolean;
-  anchorEl: null | HTMLElement;
+  anchorEl: HTMLElement | null;
   isPolish: boolean;
 }
 
