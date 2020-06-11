@@ -7,9 +7,7 @@ import UK from "./UK.png";
 import PL from "./PL.png";
 import User from "./user.png";
 import CloseIcon from "./close.svg";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import { Profile } from "../Profile";
+import { Profile } from "./Profile";
 
 interface TopBarProps {
 	handleTransfer: (e: React.MouseEvent) => void;
