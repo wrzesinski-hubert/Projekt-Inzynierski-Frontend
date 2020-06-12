@@ -1,9 +1,22 @@
 import React from "react";
 import "./index.scss";
-import Collapse from '@material-ui/core/Collapse';
+import Collapse from "@material-ui/core/Collapse";
+
+type ClassType = {
+  group_id: string;
+  day: string;
+  time: string;
+  lecturer: string;
+  room: string;
+};
+
+type group = {
+  classname:string;
+  classgroups:Array<ClassType>
+}
 
 interface ClassProps {
-  name:string;
+  data: group;
 }
 
 interface ClassState {
@@ -15,28 +28,44 @@ export default class Class extends React.Component<ClassProps, ClassState> {
     super(props);
 
     this.Open = this.Open.bind(this);
-    this.state={
-      open:false,
+    this.state = {
+      open: false,
     };
   }
 
   Open(e: React.MouseEvent) {
     this.setState({
-      open:!this.state.open
+      open: !this.state.open,
     });
   }
 
   render() {
     return (
-      <div className="paper" onClick={this.Open}>{this.props.name}
+      <div className="class" onClick={this.Open}>
+        {this.props.data.classname}
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-        <p>1CB Pn 10.00 A0-1<br></br> dr inż. Michał Ren</p>
-        <p>1CB Pn 10.00 A0-1<br></br> dr inż. Michał Ren</p>
-        <p>1CB Pn 10.00 A0-1<br></br> dr inż. Michał Ren</p>
-        <p>1CB Pn 10.00 A0-1<br></br> dr inż. Michał Ren</p>
-
-
-          </Collapse></div>
+          <p>
+            {this.props.data.classgroups[0].group_id} {this.props.data.classgroups[0].day}
+            {this.props.data.classgroups[0].time} {this.props.data.classgroups[0].room}
+            <br></br> {this.props.data.classgroups[0].lecturer}
+          </p>
+          <p>
+            {this.props.data.classgroups[1].group_id} {this.props.data.classgroups[1].day}
+            {this.props.data.classgroups[1].time} {this.props.data.classgroups[1].room}
+            <br></br> {this.props.data.classgroups[1].lecturer}
+          </p>
+          <p>
+            {this.props.data.classgroups[0].group_id} {this.props.data.classgroups[0].day}
+            {this.props.data.classgroups[0].time} {this.props.data.classgroups[0].room}
+            <br></br> {this.props.data.classgroups[0].lecturer}
+          </p>
+          <p>
+            {this.props.data.classgroups[1].group_id} {this.props.data.classgroups[1].day}
+            {this.props.data.classgroups[1].time} {this.props.data.classgroups[1].room}
+            <br></br> {this.props.data.classgroups[1].lecturer}
+          </p>
+        </Collapse>
+      </div>
     );
   }
 }

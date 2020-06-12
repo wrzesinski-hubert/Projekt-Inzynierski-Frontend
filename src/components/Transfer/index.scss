@@ -3,15 +3,22 @@
   justify-content: center;
   text-align: center;
   align-items: center;
+
 }
 
 .transfer {
   display: flex;
+  outline:none;
   width: 80%;
   height: 70%;
   padding-top: 40px;
-  background: rgba(255, 220, 97, 0.48);
-  border: 1px solid #000000;
+  background: rgba(255, 220, 97, 0.6);
+
+  border: 3px solid #000000;
+  border-radius: 5% 5% 5% 5% / 5% 5% 5% 5%;
+  text-transform: uppercase;
+  letter-spacing: 0.3ch;
+
   &__left {
     display: flex;
     justify-content: space-around;
@@ -23,18 +30,24 @@
   &__text {
     font-family: Lato;
     font-size: 50px;
+    margin-bottom: 10px;
   }
   &__input {
     width: 300px;
     height: 45px;
-    background: #d7a700;
+    background: #ffc400;
+    outline:none;
+    border: 1px solid;
+    border-radius: 22px ;
+    padding: 10px;
+    font-size: 24px;
+    transition-duration: 0.3s;
+
   }
-  &__give {
-  }
-  &__recieve {
-  }
-  &__proposition {
-  }
-  &__add {
+  input:focus {
+    -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+    
   }
 }
