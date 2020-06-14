@@ -1,8 +1,12 @@
 import React from "react";
 import "./index.scss";
-import Paper from "@material-ui/core/Paper";
+import Class, { Group } from "../Class";
 
-interface RightBarProps {}
+interface RightBarProps {
+  onClassHover: (group_id: String, class_id: String) => void;
+  onClassClick: (group_id: String, class_id: String) => void;
+  lectures: Array<Group>;
+}
 
 interface RightBarState {}
 
@@ -10,24 +14,21 @@ export default class RightBar extends React.Component<
   RightBarProps,
   RightBarState
 > {
-
   render() {
     return (
-      <div className="shop-cart">
-        <div className="text">
+      <div className="right-bar">
+        <div className="right-bar__text">
           Hubert Wrzesiński<br></br>
           Semestr zimowy 2020/2021
         </div>
-        <Paper className="paper">1</Paper>
-        <Paper className="paper">2</Paper>
-        <Paper className="paper">3</Paper>
-        <Paper className="paper">4</Paper>
-        <Paper className="paper">5</Paper>
-        <Paper className="paper">6</Paper>
-        <Paper className="paper">7</Paper>
-        <Paper className="paper">8</Paper>
-        <Paper className="paper">9</Paper>
-        <Paper className="paper">10</Paper>
+        {this.props.lectures.map((classgroup, index) => (
+          <Class
+            onClassHover={this.props.onClassHover}
+            onClassClick={this.props.onClassClick}
+            data={classgroup}
+            key={index}
+          />
+        ))}
       </div>
     );
   }

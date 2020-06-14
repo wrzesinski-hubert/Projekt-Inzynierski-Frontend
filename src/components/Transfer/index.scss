@@ -1,38 +1,53 @@
 .wrapper {
   display: flex;
-
   justify-content: center;
   text-align: center;
   align-items: center;
+
 }
 
 .transfer {
   display: flex;
-  flex-wrap: wrap;
+  outline:none;
   width: 80%;
   height: 70%;
   padding-top: 40px;
-  background: rgba(255, 220, 97, 0.48);
-  border: 1px solid #000000;
-  justify-content: center;
+  background: rgba(255, 220, 97, 0.6);
+
+  border: 3px solid #000000;
+  border-radius: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.3ch;
+
+  &__left {
+    display: flex;
+    justify-content: space-around;
+    flex-grow: 1;
+  }
+  &__right {
+    flex-grow: 4;
+  }
   &__text {
     font-family: Lato;
     font-size: 50px;
+    margin-bottom: 10px;
   }
-  &__input{
+  &__input {
     width: 300px;
-    height: 45px;  
-    background: #D7A700;
+    height: 45px;
+    background: #ffc400;
+    outline:none;
+    border: 1px solid;
+    border-radius: 22px ;
+    padding: 10px;
+    font-size: 24px;
+    transition-duration: 0.3s;
+
   }
-  &__give{
-      flex-grow: 1;
+  input:focus {
+    -webkit-box-shadow: 0px 0px 18px 8px #ffae00;
+    -moz-box-shadow: 0px 0px 18px 8px #ffae00;
+    box-shadow: 0px 0px 18px 8px #ffae00;
+    
   }
-  &__recieve{
-    flex-grow: 1;
-}
-&__proposition{
-    flex-grow: 4;
-}
-&__add{
-}
 }

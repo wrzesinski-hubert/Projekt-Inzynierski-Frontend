@@ -1,23 +1,13 @@
-.shop-cart {
+.right-bar {
     padding-top: 10px;
     padding-left: 15px;
     padding-right: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     text-align: center;
     font-family: Lato;
+    &__text {
+      border-bottom: 1px solid;
+    }
+    height:85vh;
+    overflow-y: scroll;
+
   }
-  .paper {
-    display: flex;
-    margin-top: 10px;
-    height: 60px;
-    width: 90%;
-    background-color: #d4a8ff !important;
-    align-items: center;
-    justify-content: center;
-  }
-  .text {
-    border-bottom: 1px solid;
-  }
-  
