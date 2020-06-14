@@ -48,7 +48,7 @@ export default class Class extends React.Component<ClassProps, ClassState> {
         <div className="class__name" onClick={this.Open}>{this.props.data.classname}</div>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           {this.props.data.classgroups.map((classgroup, index) => (
-            <div className="class__group">
+            <div key={index} className="class__group">
               <p
                 onMouseOver={() =>
                   this.props.onClassHover(
