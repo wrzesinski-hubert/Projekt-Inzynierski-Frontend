@@ -75,7 +75,8 @@ function App() {
           <Schedule data={appointments} />
         </div>
         <div className="wraper__rightbar">
-          <RightBar onClassHover={(group_id,class_id)=>{console.log("group id: ",group_id,"class id",class_id)}} lectures={data}/>
+          <RightBar onClassHover={(group_id,class_id)=>{console.log("group id: ",group_id,"class id",class_id)}} lectures={data}
+          onClassClick={(group_id,class_id)=>{console.log("group id: ",group_id,"class id",class_id)}}/>
         </div>
       </div>
 

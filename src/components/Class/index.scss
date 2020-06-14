@@ -6,7 +6,33 @@
     justify-content: center;
     flex-direction: column;
     margin-top: 10px;
-    padding:10px;
+    padding-top:10px;
+    padding-bottom:10px;
     border-radius: 10px;
     cursor: pointer;
+    align-items: stretch;
+    &__group{
+      padding-top: 1px;
+      padding-bottom: 1px;
+      &:hover{
+        cursor: pointer;
+        transition: 1s;
+        background-color: #8BC8FB;
+      }
+    }
+    &__name{
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    &__expandIcon{
+      margin-top: 5px;
+      width: 20px;
+      transition: 0.2s;
+    }
+    &__expandIconRotate{
+      margin-top: 5px;
+      width: 20px;
+      transition: 0.5s;
+      transform: scaleY(-1);
+    }
   }
