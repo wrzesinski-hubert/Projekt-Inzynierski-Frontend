@@ -10,6 +10,47 @@ function App() {
   const [isOpenTransfer, setOpenTransfer] = useState(false);
   const [text, setText] = useState("");
 
+  var data = [
+    {
+      classname: "E-gospodarka - narzędzia i bezpieczeństwo",
+      classgroups: [
+        {
+          group_id: "1CB",
+          day: "Pn",
+          time: "10:00",
+          lecturer: "dr inż. Michał Ren",
+          room: "A2-01",
+        },
+        {
+          group_id: "1XD",
+          day: "Wt",
+          time: "12:00",
+          lecturer: "dr inż. Michał Ren",
+          room: "A3-01",
+        },
+      ],
+    },
+    {
+      classname: "Statystyka",
+      classgroups: [
+        {
+          group_id: "2CB",
+          day: "Pn",
+          time: "10:00",
+          lecturer: "dr inż. Michał Ren",
+          room: "A2-01",
+        },
+        {
+          group_id: "2XD",
+          day: "Wt",
+          time: "12:00",
+          lecturer: "dr inż. Michał Ren",
+          room: "A3-01",
+        },
+      ],
+    },
+  ];
+
   return (
     <div className="App">
       <TopBar
@@ -34,7 +75,7 @@ function App() {
           <Schedule data={appointments} />
         </div>
         <div className="wraper__rightbar">
-          <RightBar />
+          <RightBar onClassHover={(group_id,class_id)=>{console.log("group id: ",group_id,"class id",class_id)}} lectures={data}/>
         </div>
       </div>
 

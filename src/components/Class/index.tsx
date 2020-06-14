@@ -10,13 +10,14 @@ type ClassType = {
   room: string;
 };
 
-type group = {
-  classname:string;
-  classgroups:Array<ClassType>
-}
+export type Group = {
+  classname: string;
+  classgroups: Array<ClassType>;
+};
 
 interface ClassProps {
-  data: group;
+  onClassHover: (group_id: String, class_id: String) => void;
+  data: Group;
 }
 
 interface ClassState {
@@ -44,26 +45,21 @@ export default class Class extends React.Component<ClassProps, ClassState> {
       <div className="class" onClick={this.Open}>
         {this.props.data.classname}
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-          <p>
-            {this.props.data.classgroups[0].group_id} {this.props.data.classgroups[0].day}
-            {this.props.data.classgroups[0].time} {this.props.data.classgroups[0].room}
-            <br></br> {this.props.data.classgroups[0].lecturer}
-          </p>
-          <p>
-            {this.props.data.classgroups[1].group_id} {this.props.data.classgroups[1].day}
-            {this.props.data.classgroups[1].time} {this.props.data.classgroups[1].room}
-            <br></br> {this.props.data.classgroups[1].lecturer}
-          </p>
-          <p>
-            {this.props.data.classgroups[0].group_id} {this.props.data.classgroups[0].day}
-            {this.props.data.classgroups[0].time} {this.props.data.classgroups[0].room}
-            <br></br> {this.props.data.classgroups[0].lecturer}
-          </p>
-          <p>
-            {this.props.data.classgroups[1].group_id} {this.props.data.classgroups[1].day}
-            {this.props.data.classgroups[1].time} {this.props.data.classgroups[1].room}
-            <br></br> {this.props.data.classgroups[1].lecturer}
-          </p>
+          <div className="class__group">
+            {this.props.data.classgroups.map((classgroup, index) => (
+              <p
+                onMouseOver={() =>
+                  this.props.onClassHover(
+                    this.props.data.classname,
+                    this.props.data.classgroups[index].group_id
+                  )
+                }
+              >
+                {classgroup.group_id} {classgroup.day} {classgroup.time}{" "}
+                {classgroup.room} <br></br> {classgroup.lecturer}
+              </p>
+            ))}
+          </div>
         </Collapse>
       </div>
     );

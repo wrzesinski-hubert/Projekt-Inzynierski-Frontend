@@ -114,7 +114,7 @@ export default class Calendar extends React.PureComponent<
           startDayHour={8}
           endDayHour={20}
           excludedDays={[0, 6]}
-          cellDuration={45}
+          cellDuration={60}
           dayScaleCellComponent={DayScaleCell}
           timeTableLayoutComponent={TimeTableLayout}
           timeTableCellComponent={TimeTableCell}

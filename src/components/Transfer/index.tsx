@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "@material-ui/core/Modal";
 import "./index.scss";
+import Fade from '@material-ui/core/Fade';
 
 interface TransferProps {
   handleClose: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -33,6 +34,7 @@ export default class Transfer extends React.Component<
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
+          <Fade in={this.props.isOpen}>
           <div className="transfer">
             <div className="transfer__left">
               {/* <button className="transfer__add">chuj</button> */}
@@ -49,7 +51,9 @@ export default class Transfer extends React.Component<
               <div className="transfer__proposition"></div>
             </div>
           </div>
+          </Fade>
         </Modal>
+        
       </div>
     );
   }
