@@ -1,35 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.scss";
-import Class, { Group } from "../Class";
+import { Lecture } from "../../lectures";
+import LectureCard from "./LectureCard";
 
 interface RightBarProps {
-  onClassHover: (group_id: String, class_id: String) => void;
-  onClassClick: (group_id: String, class_id: String) => void;
-  lectures: Array<Group>;
+	onGroupMouseOver: (id: string, name: string) => void;
+	onGroupClick: (id: string, name: string) => void;
+	lectures: Array<Lecture>;
 }
 
-interface RightBarState {}
+export default function RightBar({ lectures, onGroupMouseOver, onGroupClick }: RightBarProps) {
+	const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
-export default class RightBar extends React.Component<
-  RightBarProps,
-  RightBarState
-> {
-  render() {
-    return (
-      <div className="right-bar">
-        <div className="right-bar__text">
-          Hubert Wrzesiński<br></br>
-          Semestr zimowy 2020/2021
-        </div>
-        {this.props.lectures.map((classgroup, index) => (
-          <Class
-            onClassHover={this.props.onClassHover}
-            onClassClick={this.props.onClassClick}
-            data={classgroup}
-            key={index}
-          />
-        ))}
-      </div>
-    );
-  }
+	const onCardClick = (e: React.MouseEvent) => {
+		const target = e.target as HTMLElement;
+		console.log(`Target id is: ${target.id}`);
+		selectedCardId === target.id ? setSelectedCardId(null) : setSelectedCardId(target.id);
+	};
+
+	return (
+		<div className="right-bar">
+			<div className="right-bar__text">
+				Hubert Wrzesiński<br></br>
+				Semestr zimowy 2020/2021
+			</div>
+			{lectures.map((lecture, index) => (
+				<LectureCard
+					lecture={lecture}
+					key={index}
+					id={index.toString()}
+					onGroupMouseOver={onGroupMouseOver}
+					onGroupClick={onGroupClick}
+					onCardClick={onCardClick}
+					isSelected={selectedCardId === index.toString()}
+				/>
+			))}
+		</div>
+	);
 }
