@@ -1,15 +1,18 @@
 import { Menu, MenuItem } from "@material-ui/core";
 import React, { FC } from "react";
-
+import BusinessLogicContext from "../../buisnesslogic/BusinessLogicContext";
+import { BuisnessProvided } from "../../buisnesslogic/BuisnessLogicProvider";
 
 interface ProfileProps {
-    anchorEl: HTMLElement | null;
-    handleClose: () => void
-
+	anchorEl: HTMLElement | null;
+	handleClose: () => void;
 }
 
-export const Profile : FC<ProfileProps> = ({anchorEl, handleClose, ...restProps}) => {
-
+export const Profile: FC<ProfileProps> = ({
+	anchorEl,
+	handleClose,
+	...restProps
+}) => {
 	return (
 		<Menu
 			className="top-bar__menu"
@@ -21,7 +24,17 @@ export const Profile : FC<ProfileProps> = ({anchorEl, handleClose, ...restProps}
 		>
 			<MenuItem>Profile</MenuItem>
 			<MenuItem>My account</MenuItem>
-			<MenuItem>Logout</MenuItem>
+			<BusinessLogicContext.Consumer>
+				{(context) => (
+					<MenuItem
+						onClick={() => {
+							(context as BuisnessProvided).reducers();
+						}}
+					>
+						Logout
+					</MenuItem>
+				)}
+			</BusinessLogicContext.Consumer>
 		</Menu>
 	);
 };
