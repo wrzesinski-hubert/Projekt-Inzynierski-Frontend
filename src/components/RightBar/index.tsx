@@ -14,7 +14,6 @@ export default function RightBar({ lectures, onGroupMouseOver, onGroupClick }: R
 
 	const onCardClick = (e: React.MouseEvent) => {
 		const target = e.target as HTMLElement;
-		console.log(`Target id is: ${target.id}`);
 		selectedCardId === target.id ? setSelectedCardId(null) : setSelectedCardId(target.id);
 	};
 
