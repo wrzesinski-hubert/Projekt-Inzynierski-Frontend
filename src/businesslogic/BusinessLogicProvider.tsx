@@ -4,7 +4,9 @@ import { User } from "./models/user";
 
 export interface BuisnessProvided {
 	states: BusinessState;
-	reducers: () => void;
+	reducers: {
+		userlogout: () => void;
+	};
 }
 
 interface BusinessState {
@@ -42,11 +44,15 @@ class BusinessLogicProvider extends Component<Props, BusinessState> {
 	}
 
 	redirectToCASLogoutService() {
-		window.location.replace(`https://cas.amu.edu.pl/cas/logout?service=${window.origin}`);
+		window.location.replace(
+			`https://cas.amu.edu.pl/cas/logout?service=${window.origin}`
+		);
 	}
 
 	redirectToCASLoginService() {
-		window.location.replace(`https://cas.amu.edu.pl/cas/login?service=${window.origin}&locale=pl`);
+		window.location.replace(
+			`https://cas.amu.edu.pl/cas/login?service=${window.origin}&locale=pl`
+		);
 	}
 
 	render() {
@@ -54,8 +60,10 @@ class BusinessLogicProvider extends Component<Props, BusinessState> {
 			<BusinessLogicContext.Provider
 				value={{
 					states: this.state,
-					reducers: () => {
-						this.logout();
+					reducers: {
+						userlogout: () => {
+							this.logout();
+						},
 					},
 				}}
 			>

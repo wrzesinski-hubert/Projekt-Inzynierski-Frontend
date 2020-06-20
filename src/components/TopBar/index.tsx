@@ -12,7 +12,10 @@ import { Profile } from "./Profile";
 interface TopBarProps {
 	handleTransfer: (e: React.MouseEvent) => void;
 	onLangChange: (lang: boolean) => void;
-	textChangeHandler: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+	handleLogout: () => void;
+	textChangeHandler: (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => void;
 }
 
 interface TopBarState {
@@ -64,29 +67,55 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
 		return (
 			<div className="top-bar">
 				<div className="top-bar__logo">
-					<img className="top-bar__logo-image" alt="logo" src="https://plannaplan.pl/img/logo.svg" />
+					<img
+						className="top-bar__logo-image"
+						alt="logo"
+						src="https://plannaplan.pl/img/logo.svg"
+					/>
 					<div className="top-bar__tekst"> plan na plan </div>
 				</div>
 				<div className="top-bar__input-div">
-					<img className="top-bar__input-icon" alt="search" src={Search} />
+					<img
+						className="top-bar__input-icon"
+						alt="search"
+						src={Search}
+					/>
 					<Input
 						placeholder="Wyszukaj..."
 						inputProps={{ "aria-label": "description" }}
 						className="top-bar__input-field"
 						onChange={(e) => this.handleChange(e)}
 					/>
-					<img className="top-bar__input-icon" alt="close" src={CloseIcon} />
+					<img
+						className="top-bar__input-icon"
+						alt="close"
+						src={CloseIcon}
+					/>
 				</div>
 				<div className="top-bar__icon-box">
-					<img className="top-bar__icon" alt="transfer" src={Transfer} onClick={this.handleTransfer} />
+					<img
+						className="top-bar__icon"
+						alt="transfer"
+						src={Transfer}
+						onClick={this.handleTransfer}
+					/>
 					<img
 						className="top-bar__icon"
 						alt="change_language"
 						src={this.state.isPolish ? UK : PL}
 						onClick={this.onLangChange}
 					/>
-					<img className="top-bar__icon" alt="profile" src={User} onClick={this.handleProfile} />
-					<Profile anchorEl={this.state.anchorEl} handleClose={this.handleClose} />
+					<img
+						className="top-bar__icon"
+						alt="profile"
+						src={User}
+						onClick={this.handleProfile}
+					/>
+					<Profile
+						anchorEl={this.state.anchorEl}
+						handleClose={this.handleClose}
+						handleLogout={this.props.handleLogout}
+					/>
 				</div>
 			</div>
 		);

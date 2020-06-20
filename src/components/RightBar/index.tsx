@@ -21,14 +21,15 @@ export default class RightBar extends React.Component<
 			<div className="right-bar">
 				<BusinessLogicContext.Consumer>
 					{(context) => (
-						<h1>
+						<p>
 							{JSON.stringify(
 								(context as BuisnessProvided).states.user
 									?.ticket
 							)}
-						</h1>
+						</p>
 					)}
 				</BusinessLogicContext.Consumer>
+				<p>Semestr zimowy 2020/2021</p>
 				{this.props.lectures.map((classgroup, index) => (
 					<Class
 						onClassHover={this.props.onClassHover}
