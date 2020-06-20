@@ -30,15 +30,23 @@ class BusinessLogicProvider extends Component<Props, BusinessState> {
 		const ticket = urlParams.get("ticket");
 
 		if (!ticket) {
-			window.location.replace(`https://cas.amu.edu.pl/cas/login?service=${window.origin}&locale=pl`);
+			this.redirectToCASLoginService();
 		}
-		if (ticket && !this.state.user) {
+		if (ticket) {
 			this.setState({ user: { ticket } });
 		}
 	}
 
 	logout() {
+		this.redirectToCASLogoutService();
+	}
+
+	redirectToCASLogoutService() {
 		window.location.replace(`https://cas.amu.edu.pl/cas/logout?service=${window.origin}`);
+	}
+
+	redirectToCASLoginService() {
+		window.location.replace(`https://cas.amu.edu.pl/cas/login?service=${window.origin}&locale=pl`);
 	}
 
 	render() {
