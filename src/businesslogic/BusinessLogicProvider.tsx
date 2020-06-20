@@ -3,17 +3,17 @@ import React, { Component } from "react";
 import { User } from "./models/user";
 
 export interface BuisnessProvided {
-	states: BuisnessState;
+	states: BusinessState;
 	reducers: () => void;
 }
 
-interface BuisnessState {
+interface BusinessState {
 	user: User | null;
 }
 
 interface Props {}
 
-class BusinessLogicProvider extends Component<Props, BuisnessState> {
+class BusinessLogicProvider extends Component<Props, BusinessState> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
@@ -29,19 +29,16 @@ class BusinessLogicProvider extends Component<Props, BuisnessState> {
 		const urlParams = new URLSearchParams(window.location.search);
 		const ticket = urlParams.get("ticket");
 
-		if (!ticket && !this.state.user) {
-			window.location.replace(
-				`https://cas.amu.edu.pl/cas/login?service=${window.origin}&locale=pl`
-			);
-		} else if (ticket && !this.state.user) {
+		if (!ticket) {
+			window.location.replace(`https://cas.amu.edu.pl/cas/login?service=${window.origin}&locale=pl`);
+		}
+		if (ticket && !this.state.user) {
 			this.setState({ user: { ticket } });
 		}
 	}
 
 	logout() {
-		window.location.replace(
-			`https://cas.amu.edu.pl/cas/logout?service=${window.origin}`
-		);
+		window.location.replace(`https://cas.amu.edu.pl/cas/logout?service=${window.origin}`);
 	}
 
 	render() {

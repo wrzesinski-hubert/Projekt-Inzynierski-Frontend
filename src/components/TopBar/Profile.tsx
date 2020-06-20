@@ -1,7 +1,7 @@
 import { Menu, MenuItem } from "@material-ui/core";
 import React, { FC } from "react";
-import BusinessLogicContext from "../../buisnesslogic/BusinessLogicContext";
-import { BuisnessProvided } from "../../buisnesslogic/BuisnessLogicProvider";
+import BusinessLogicContext from "../../businesslogic/BusinessLogicContext";
+import { BuisnessProvided } from "../../businesslogic/BusinessLogicProvider";
 
 interface ProfileProps {
 	anchorEl: HTMLElement | null;

@@ -1,8 +1,8 @@
 import React from "react";
 import "./index.scss";
 import Class, { Group } from "../Class";
-import BusinessLogicContext from "../../buisnesslogic/BusinessLogicContext";
-import { BuisnessProvided } from "../../buisnesslogic/BuisnessLogicProvider";
+import BusinessLogicContext from "../../businesslogic/BusinessLogicContext";
+import { BuisnessProvided } from "../../businesslogic/BusinessLogicProvider";
 
 interface RightBarProps {
 	onClassHover: (group_id: String, class_id: String) => void;
