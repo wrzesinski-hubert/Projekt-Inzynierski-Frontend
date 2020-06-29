@@ -1,44 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.scss";
-import Class, { Group } from "../Class";
+import { Lecture } from "../../lectures";
+import LectureCard from "./LectureCard";
 import BusinessLogicContext from "../../businesslogic/BusinessLogicContext";
 import { BuisnessProvided } from "../../businesslogic/BusinessLogicProvider";
 
 interface RightBarProps {
-	onClassHover: (group_id: String, class_id: String) => void;
-	onClassClick: (group_id: String, class_id: String) => void;
-	lectures: Array<Group>;
+	onGroupMouseOver: (id: string, name: string) => void;
+	onGroupClick: (id: string, name: string) => void;
+	lectures: Array<Lecture>;
 }
 
-interface RightBarState {}
+export default function RightBar({ lectures, onGroupMouseOver, onGroupClick }: RightBarProps) {
+	const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
-export default class RightBar extends React.Component<
-	RightBarProps,
-	RightBarState
-> {
-	render() {
-		return (
-			<div className="right-bar">
-				<BusinessLogicContext.Consumer>
-					{(context) => (
-						<p>
-							{JSON.stringify(
-								(context as BuisnessProvided).states.user
-									?.ticket
-							)}
-						</p>
-					)}
-				</BusinessLogicContext.Consumer>
-				<p>Semestr zimowy 2020/2021</p>
-				{this.props.lectures.map((classgroup, index) => (
-					<Class
-						onClassHover={this.props.onClassHover}
-						onClassClick={this.props.onClassClick}
-						data={classgroup}
-						key={index}
-					/>
-				))}
+	const onCardClick = (e: React.MouseEvent) => {
+		const target = e.currentTarget as HTMLElement;
+		selectedCardId === target.id ? setSelectedCardId(null) : setSelectedCardId(target.id);
+	};
+
+	return (
+		<div className="right-bar">
+			<BusinessLogicContext.Consumer>
+				{(context) => <p>{JSON.stringify((context as BuisnessProvided).states.user?.ticket)}</p>}
+			</BusinessLogicContext.Consumer>
+			<div className="right-bar__text">
+				Hubert Wrzesiński<br></br>
+				Semestr zimowy 2020/2021
 			</div>
-		);
-	}
+			{lectures.map((lecture, index) => (
+				<LectureCard
+					lecture={lecture}
+					key={index}
+					id={index.toString()}
+					onGroupMouseOver={onGroupMouseOver}
+					onGroupClick={onGroupClick}
+					onCardClick={onCardClick}
+					isSelected={selectedCardId === index.toString()}
+				/>
+			))}
+		</div>
+	);
 }
