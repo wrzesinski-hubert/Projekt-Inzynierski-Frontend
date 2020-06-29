@@ -13,7 +13,7 @@ function App() {
 	const [isOpenTransfer, setOpenTransfer] = useState(false);
 	const [text, setText] = useState("");
 
-	const businessLogicContext = useContext(BusinessLogicContext);
+	const { logout } = useContext(BusinessLogicContext).actions;
 
 	return (
 		<div className="App">
@@ -28,7 +28,7 @@ function App() {
 					console.log(e);
 				}}
 				handleLogout={() => {
-					businessLogicContext.actions.logout();
+					logout();
 				}}
 			/>
 			<Transfer

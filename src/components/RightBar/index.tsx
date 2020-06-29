@@ -13,7 +13,7 @@ interface RightBarProps {
 export default function RightBar({ lectures, onGroupMouseOver, onGroupClick }: RightBarProps) {
 	const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
-	const businessLogicContext = useContext(BusinessLogicContext);
+	const ticket = useContext(BusinessLogicContext).user?.ticket;
 
 	const onCardClick = (e: React.MouseEvent) => {
 		const target = e.currentTarget as HTMLElement;
@@ -22,7 +22,7 @@ export default function RightBar({ lectures, onGroupMouseOver, onGroupClick }: R
 
 	return (
 		<div className="right-bar">
-			<p>{businessLogicContext.user?.ticket}</p>
+			<p>{ticket}</p>
 			<div className="right-bar__text">
 				Hubert Wrzesiński<br></br>
 				Semestr zimowy 2020/2021
