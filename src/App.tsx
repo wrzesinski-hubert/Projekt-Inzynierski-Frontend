@@ -6,23 +6,34 @@ import Schedule from "./components/Calendar/";
 import { appointments } from "./components/Calendar/appointments";
 import RightBar from "./components/RightBar";
 import { lectures } from "./lectures";
+
+import BusinessLogicContext from "./businesslogic/BusinessLogicContext";
+import { BuisnessProvided } from "./businesslogic/BusinessLogicProvider";
+
 function App() {
 	const [isOpenTransfer, setOpenTransfer] = useState(false);
 	const [text, setText] = useState("");
 
 	return (
 		<div className="App">
-			<TopBar
-				textChangeHandler={(e) => {
-					setText(e.target.value);
-				}}
-				handleTransfer={(e) => {
-					setOpenTransfer(!isOpenTransfer);
-				}}
-				onLangChange={(e) => {
-					console.log(e);
-				}}
-			/>
+			<BusinessLogicContext.Consumer>
+				{(context) => (
+					<TopBar
+						textChangeHandler={(e) => {
+							setText(e.target.value);
+						}}
+						handleTransfer={(e) => {
+							setOpenTransfer(!isOpenTransfer);
+						}}
+						onLangChange={(e) => {
+							console.log(e);
+						}}
+						handleLogout={() => {
+							(context as BuisnessProvided).reducers.userlogout();
+						}}
+					/>
+				)}
+			</BusinessLogicContext.Consumer>
 			<Transfer
 				isOpen={isOpenTransfer}
 				handleClose={(e) => {

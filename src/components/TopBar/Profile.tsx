@@ -1,15 +1,18 @@
 import { Menu, MenuItem } from "@material-ui/core";
 import React, { FC } from "react";
 
-
 interface ProfileProps {
-    anchorEl: HTMLElement | null;
-    handleClose: () => void
-
+	anchorEl: HTMLElement | null;
+	handleClose: () => void;
+	handleLogout: () => void;
 }
 
-export const Profile : FC<ProfileProps> = ({anchorEl, handleClose, ...restProps}) => {
-
+export const Profile: FC<ProfileProps> = ({
+	anchorEl,
+	handleClose,
+	handleLogout,
+	...restProps
+}) => {
 	return (
 		<Menu
 			className="top-bar__menu"
@@ -21,7 +24,13 @@ export const Profile : FC<ProfileProps> = ({anchorEl, handleClose, ...restProps}
 		>
 			<MenuItem>Profile</MenuItem>
 			<MenuItem>My account</MenuItem>
-			<MenuItem>Logout</MenuItem>
+			<MenuItem
+				onClick={() => {
+					handleLogout();
+				}}
+			>
+				Logout
+			</MenuItem>
 		</Menu>
 	);
 };
