@@ -1,76 +1,54 @@
-import BusinessLogicContext from "./BusinessLogicContext";
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { User } from "./models/user";
+import { redirectToCASLoginService, redirectToCASLogoutService } from "./utilites";
 
-export interface BuisnessProvided {
-	states: BusinessState;
-	reducers: {
-		userlogout: () => void;
+export interface IBusinessLogicContext {
+	user: User | null;
+	actions: {
+		logout: () => void;
 	};
 }
 
-interface BusinessState {
-	user: User | null;
-}
+export const BusinessLogicContext = React.createContext<IBusinessLogicContext>({
+	user: null,
+	actions: { logout: () => {} },
+});
 
 interface Props {}
 
-class BusinessLogicProvider extends Component<Props, BusinessState> {
-	constructor(props: Props) {
-		super(props);
-		this.state = {
-			user: null,
-		};
-	}
+export const BusinessLogicProvider: React.FC<Props> = (props) => {
+	const [user, setUser] = useState<User | null>(null);
 
-	componentDidMount() {
-		this.login();
-	}
+	useEffect(() => {
+		login();
+	}, []);
 
-	login() {
+	const login = () => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const ticket = urlParams.get("ticket");
 
 		if (!ticket) {
-			this.redirectToCASLoginService();
+			redirectToCASLoginService();
 		}
 		if (ticket) {
-			this.setState({ user: { ticket } });
+			setUser({ ticket });
 		}
-	}
+	};
 
-	logout() {
-		this.redirectToCASLogoutService();
-	}
+	const logout = () => {
+		redirectToCASLogoutService();
+	};
 
-	redirectToCASLogoutService() {
-		window.location.replace(
-			`https://cas.amu.edu.pl/cas/logout?service=${window.origin}`
-		);
-	}
-
-	redirectToCASLoginService() {
-		window.location.replace(
-			`https://cas.amu.edu.pl/cas/login?service=${window.origin}&locale=pl`
-		);
-	}
-
-	render() {
-		return (
-			<BusinessLogicContext.Provider
-				value={{
-					states: this.state,
-					reducers: {
-						userlogout: () => {
-							this.logout();
-						},
-					},
-				}}
-			>
-				{this.props.children}
-			</BusinessLogicContext.Provider>
-		);
-	}
-}
-
-export default BusinessLogicProvider;
+	return (
+		<BusinessLogicContext.Provider
+			value={{
+				user: user,
+				actions: {
+					logout: logout,
+				},
+			}}
+		>
+			{props.children}
+		</BusinessLogicContext.Provider>
+	);
+};

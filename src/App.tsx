@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TopBar from "./components/TopBar/";
 import Transfer from "./components/Transfer/";
 import "./App.scss";
@@ -7,33 +7,30 @@ import { appointments } from "./components/Calendar/appointments";
 import RightBar from "./components/RightBar";
 import { lectures } from "./lectures";
 
-import BusinessLogicContext from "./businesslogic/BusinessLogicContext";
-import { BuisnessProvided } from "./businesslogic/BusinessLogicProvider";
+import { BusinessLogicContext } from "./businesslogic/BusinessLogicProvider";
 
 function App() {
 	const [isOpenTransfer, setOpenTransfer] = useState(false);
 	const [text, setText] = useState("");
 
+	const businessLogicContext = useContext(BusinessLogicContext);
+
 	return (
 		<div className="App">
-			<BusinessLogicContext.Consumer>
-				{(context) => (
-					<TopBar
-						textChangeHandler={(e) => {
-							setText(e.target.value);
-						}}
-						handleTransfer={(e) => {
-							setOpenTransfer(!isOpenTransfer);
-						}}
-						onLangChange={(e) => {
-							console.log(e);
-						}}
-						handleLogout={() => {
-							(context as BuisnessProvided).reducers.userlogout();
-						}}
-					/>
-				)}
-			</BusinessLogicContext.Consumer>
+			<TopBar
+				textChangeHandler={(e) => {
+					setText(e.target.value);
+				}}
+				handleTransfer={(e) => {
+					setOpenTransfer(!isOpenTransfer);
+				}}
+				onLangChange={(e) => {
+					console.log(e);
+				}}
+				handleLogout={() => {
+					businessLogicContext.actions.logout();
+				}}
+			/>
 			<Transfer
 				isOpen={isOpenTransfer}
 				handleClose={(e) => {
