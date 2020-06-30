@@ -11,7 +11,7 @@ export const LecturesProvider : React.FC = (props) => {
 
     const [lectures, setLectures] = useState<Array<Lecture>>([]); 
 
-    const updateLectures = (lecture : Lecture) => {setLectures([...lectures, lecture]); console.log(`Lectures xd are: ${JSON.stringify(lectures)}\n`)}
+    const  updateLectures = (lecture : Lecture) => {  setLectures([...lectures, lecture])}
 
     return (
         <LecturesContext.Provider value={{lectures: lectures, updateLectures : updateLectures}}>

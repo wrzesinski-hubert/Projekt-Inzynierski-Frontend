@@ -45,7 +45,6 @@ function App() {
 					<RightBar
 						lectures={lectures}
 						onGroupMouseOver={(id, name) => {
-							console.log("XD");
 						}}
 						onGroupClick={(id, name) => {}}
 					/>

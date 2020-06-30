@@ -5,8 +5,7 @@ import "./index.scss";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { LecturesContext } from "../../../businesslogic/LecturesProvider";
 import { Lecture, Group } from "../../../lectures";
-import { GroupingPanel } from "@devexpress/dx-react-scheduler";
-import { group } from "console";
+import { EDEADLK } from "constants";
 
 interface data {
   id: number;
@@ -30,20 +29,29 @@ export const Results: React.FC = () => {
     setInput(event.target.value);
     //query should be updated on backend to not accept empty string
     if (event.target.value !== "") {
-      console.log(event.target.value);
+      console.log("Jeste w okej")
       search(event.target.value);
     } else {
+      console.log("Jeste w dupuie")
       search("xxxxxxxxxxxxxxx");
+
     }
   };
   const search = (text: string) => {
     axios
       .get(`http://localhost:1287/getCourses?name=${text}`)
-      .then((response) => setData(response.data));
+      .then((response) => {
+        const names = lecturesContext.lectures.map(lecture => lecture.name);
+        console.log(`Names: ${names}`)
+        const filteredData = response.data.filter((el : any) => !names.includes(el.name));
+        console.log("D")
+        setData(filteredData)
+      });
   };
 
   const handleClick = () => {
     setOpen(true);
+    console.log("OPWENEE")
   };
 
   const handleClickAway = () => {
@@ -56,13 +64,10 @@ export const Results: React.FC = () => {
 
     const lecture = {name: "", groups: []} as Lecture;
 
-    console.log(id);
     axios
     .get(`http://localhost:1287/getClassesByCourseId?id=${id}`)
     .then((response) => {
       for(let data of response.data){
-        console.log("XDD");
-        console.log(data);
         let group = {} as Group;
         lecture.name = data.course.name;
         group.id = data.id;
@@ -71,13 +76,10 @@ export const Results: React.FC = () => {
         group.lecturer =  `${data.lecturer.title} ${data.lecturer.name} ${data.lecturer.surname}`;
         group.room = data.room.trim();
         lecture.groups.push(group);
-        console.log("XDDD");
-        console.log(lecture.groups);
        lecturesContext.updateLectures(lecture);
       }
- 
     setOpen(false);
-    });
+    }).then(()=>{search(input)});
   }
 
   return (
@@ -89,6 +91,7 @@ export const Results: React.FC = () => {
           className="top-bar__input-field"
           onChange={handleChange}
           onClick={handleClick}
+          value={input}
         />
         {open ? (
           <div className="dropdown">
