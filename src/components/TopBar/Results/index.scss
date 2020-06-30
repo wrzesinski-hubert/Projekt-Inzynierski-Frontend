@@ -1,0 +1,21 @@
+.lecture {
+  position: relative;
+  z-index: 10;
+  padding: 5px;
+  background-color: #e6c759;
+  font-size: 18px;
+}
+.lecture:hover{
+  background-color: #d4b851;
+  cursor: pointer;
+}
+.dropdown::-webkit-scrollbar {
+  display: none;
+}
+.dropdown {
+  max-height: 400px;
+  overflow-y: auto;
+}
+.top-bar__input-field {
+  width: 100%;
+}

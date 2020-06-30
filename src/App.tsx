@@ -12,16 +12,13 @@ import { BuisnessProvided } from "./businesslogic/BusinessLogicProvider";
 
 function App() {
 	const [isOpenTransfer, setOpenTransfer] = useState(false);
-	const [text, setText] = useState("");
+
 
 	return (
 		<div className="App">
 			<BusinessLogicContext.Consumer>
 				{(context) => (
 					<TopBar
-						textChangeHandler={(e) => {
-							setText(e.target.value);
-						}}
 						handleTransfer={(e) => {
 							setOpenTransfer(!isOpenTransfer);
 						}}
@@ -54,8 +51,6 @@ function App() {
 					/>
 				</div>
 			</div>
-
-			<h1>{text}</h1>
 		</div>
 	);
 }

@@ -1,6 +1,5 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import "./index.scss";
-import Input from "@material-ui/core/Input";
 import Transfer from "./transfer.png";
 import Search from "./search.svg";
 import UK from "./UK.png";
@@ -8,14 +7,12 @@ import PL from "./PL.png";
 import User from "./user.png";
 import CloseIcon from "./close.svg";
 import { Profile } from "./Profile";
+import {Results} from "./Results";
 
 interface TopBarProps {
 	handleTransfer: (e: React.MouseEvent) => void;
 	onLangChange: (lang: boolean) => void;
 	handleLogout: () => void;
-	textChangeHandler: (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => void;
 }
 
 interface TopBarState {
@@ -34,10 +31,6 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
 			isPolish: true,
 			anchorEl: null,
 		};
-	}
-
-	handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-		this.props.textChangeHandler(e);
 	}
 
 	handleTransfer(e: React.MouseEvent) {
@@ -80,12 +73,7 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
 						alt="search"
 						src={Search}
 					/>
-					<Input
-						placeholder="Wyszukaj..."
-						inputProps={{ "aria-label": "description" }}
-						className="top-bar__input-field"
-						onChange={(e) => this.handleChange(e)}
-					/>
+					<div className="top-bar__input-field"><Results/></div>
 					<img
 						className="top-bar__input-icon"
 						alt="close"
