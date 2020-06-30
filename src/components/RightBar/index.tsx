@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./index.scss";
 import { Lecture } from "../../lectures";
 import LectureCard from "./LectureCard";
 import BusinessLogicContext from "../../businesslogic/BusinessLogicContext";
 import { BuisnessProvided } from "../../businesslogic/BusinessLogicProvider";
+import { LecturesContext } from "../../businesslogic/LecturesProvider";
 
 interface RightBarProps {
 	onGroupMouseOver: (id: string, name: string) => void;
@@ -13,6 +14,9 @@ interface RightBarProps {
 
 export default function RightBar({ lectures, onGroupMouseOver, onGroupClick }: RightBarProps) {
 	const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+
+	const lecturesContext = useContext(LecturesContext);
+
 
 	const onCardClick = (e: React.MouseEvent) => {
 		const target = e.currentTarget as HTMLElement;
@@ -28,7 +32,7 @@ export default function RightBar({ lectures, onGroupMouseOver, onGroupClick }: R
 				Hubert Wrzesiński<br></br>
 				Semestr zimowy 2020/2021
 			</div>
-			{lectures.map((lecture, index) => (
+			{lecturesContext.lectures.map((lecture, index) => (
 				<LectureCard
 					lecture={lecture}
 					key={index}

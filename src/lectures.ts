@@ -3,7 +3,7 @@ export interface Lecture {
 	groups: Array<Group>;
 }
 
-interface Group {
+export interface Group {
 	id: string;
 	day: string;
 	time: string;
