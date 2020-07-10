@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./index.scss";
 import { Lecture } from "../../lectures";
 import LectureCard from "./LectureCard";
-import BusinessLogicContext from "../../businesslogic/BusinessLogicContext";
-import { BuisnessProvided } from "../../businesslogic/BusinessLogicProvider";
+import { BusinessLogicContext } from "../../businesslogic/BusinessLogicProvider";
 
 interface RightBarProps {
 	onGroupMouseOver: (id: string, name: string) => void;
@@ -14,6 +13,8 @@ interface RightBarProps {
 export default function RightBar({ lectures, onGroupMouseOver, onGroupClick }: RightBarProps) {
 	const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
+	const ticket = useContext(BusinessLogicContext).user?.ticket;
+
 	const onCardClick = (e: React.MouseEvent) => {
 		const target = e.currentTarget as HTMLElement;
 		selectedCardId === target.id ? setSelectedCardId(null) : setSelectedCardId(target.id);
@@ -21,9 +22,7 @@ export default function RightBar({ lectures, onGroupMouseOver, onGroupClick }: R
 
 	return (
 		<div className="right-bar">
-			<BusinessLogicContext.Consumer>
-				{(context) => <p>{JSON.stringify((context as BuisnessProvided).states.user?.ticket)}</p>}
-			</BusinessLogicContext.Consumer>
+			<p>{ticket}</p>
 			<div className="right-bar__text">
 				Hubert Wrzesiński<br></br>
 				Semestr zimowy 2020/2021
