@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import TopBar from "./components/TopBar/";
 import Transfer from "./components/Transfer/";
 import "./App.scss";
-import Schedule from "./components/Calendar/";
-import { appointments } from "./components/Calendar/appointments";
+import {Scheduler} from "./components/Scheduler";
 import RightBar from "./components/RightBar";
 import { lectures } from "./lectures";
 
@@ -39,7 +38,7 @@ function App() {
 			/>
 			<div className="wraper">
 				<div className="wraper__calendar">
-					<Schedule data={appointments} />
+					<Scheduler />
 				</div>
 				<div className="wraper__rightbar">
 					<RightBar

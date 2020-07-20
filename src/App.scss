@@ -7,9 +7,8 @@ body {
   }
   .wraper{
     display: flex;
-    &__rightbar{
-      width: 80%;
+    &__calendar{
+      flex-grow: 3;
     }
-
   }
 
