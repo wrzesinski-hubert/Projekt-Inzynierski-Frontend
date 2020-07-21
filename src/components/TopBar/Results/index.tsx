@@ -47,7 +47,7 @@ export const Results: React.FC = () => {
 
   useEffect(() => {
     const filterLectures = (value: string) => {
-      const zmienna= lecturesData.filter((lecture) => lecture.name.includes(value));
+      const zmienna= lecturesData.filter((lecture) => lecture.name.toLowerCase().includes(value.toLowerCase()));
       console.log(zmienna);
       return zmienna
     };
