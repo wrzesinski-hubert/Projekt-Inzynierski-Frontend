@@ -1,86 +1,85 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Input } from "@material-ui/core";
 import "./index.scss";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { LecturesContext } from "../../../businesslogic/LecturesProvider";
-import { Lecture, Group } from "../../../lectures";
-import { EDEADLK } from "constants";
+import { Lecture } from "../../../lectures";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
-interface data {
-  id: number;
+interface LectureData {
   name: string;
-  sym: string;
+  id: number;
 }
-
-
-
-
 
 export const Results: React.FC = () => {
   const [input, setInput] = useState<string>("");
-  const [data, setData] = useState<Array<data>>([]);
+  const [lecturesData, setLecturesData] = useState<Array<LectureData>>([]);
   const [open, setOpen] = React.useState(false);
 
   const lecturesContext = useContext(LecturesContext);
 
+  //fetch lectures ids and lectures names
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const {lecturesData } = await axios.get(
+  //       `http://localhost:1287/getCourses?name=""`
+  //     );
+  //     setLecturesData(lecturesData);
+  //   };
+  //   fetchData();
+  // }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const results = await axios.get(`http://localhost:1287/getCourses?name=`);
+      const lecturesData = results.data.map(
+        (result: { id: number; name: string }) => ({
+          id: result.id,
+          name: result.name,
+        })
+      );
+
+      setLecturesData(lecturesData);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const filterLectures = (value: string) => {
+      const zmienna= lecturesData.filter((lecture) => lecture.name.includes(value));
+      console.log(zmienna);
+      return zmienna
+    };
+    filterLectures(input);
+  }, [input]);
+
+  const getLecturesById = async (id: string): Promise<Lecture> => {
+    const { data } = await axios.get(
+      `http://localhost:1287/getClassesByCourseId?id=${id}`
+    );
+    return data;
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
-    //query should be updated on backend to not accept empty string
-    if (event.target.value !== "") {
-      console.log("Jeste w okej")
-      search(event.target.value);
-    } else {
-      console.log("Jeste w dupuie")
-      search("xxxxxxxxxxxxxxx");
-
-    }
-  };
-  const search = (text: string) => {
-    axios
-      .get(`http://localhost:1287/getCourses?name=${text}`)
-      .then((response) => {
-        const names = lecturesContext.lectures.map(lecture => lecture.name);
-        console.log(`Names: ${names}`)
-        const filteredData = response.data.filter((el : any) => !names.includes(el.name));
-        console.log("D")
-        setData(filteredData)
-      });
   };
 
   const handleClick = () => {
     setOpen(true);
-    console.log("OPWENEE")
   };
 
   const handleClickAway = () => {
     setOpen(false);
   };
 
-	const onLectureClick = (e: React.MouseEvent) => {
-		const target = e.currentTarget as HTMLElement;
+  const onLectureClick = async (e: React.MouseEvent) => {
+    const target = e.currentTarget as HTMLElement;
     const id = target.id;
-
-    const lecture = {name: "", groups: []} as Lecture;
-
-    axios
-    .get(`http://localhost:1287/getClassesByCourseId?id=${id}`)
-    .then((response) => {
-      for(let data of response.data){
-        let group = {} as Group;
-        lecture.name = data.course.name;
-        group.id = data.id;
-        group.day = data.day;
-        group.time = data.time;
-        group.lecturer =  `${data.lecturer.title} ${data.lecturer.name} ${data.lecturer.surname}`;
-        group.room = data.room.trim();
-        lecture.groups.push(group);
-       lecturesContext.updateLectures(lecture);
-      }
+    const result = await getLecturesById(id);
+    lecturesContext.updateLectures(result);
     setOpen(false);
-    }).then(()=>{search(input)});
-  }
+  };
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
@@ -95,8 +94,13 @@ export const Results: React.FC = () => {
         />
         {open ? (
           <div className="dropdown">
-            {data.map((lecture, index) => (
-            <div className="lecture" key={index} id={String(lecture.id)} onClick={onLectureClick}>
+            {lecturesData.map((lecture, index) => (
+              <div
+                className="lecture"
+                key={index}
+                id={String(lecture.id)}
+                onClick={onLectureClick}
+              >
                 <p>{lecture.name} </p>
               </div>
             ))}
@@ -106,4 +110,3 @@ export const Results: React.FC = () => {
     </ClickAwayListener>
   );
 };
-            
