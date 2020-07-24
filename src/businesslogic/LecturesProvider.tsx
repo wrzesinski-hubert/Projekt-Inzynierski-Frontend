@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Lecture } from "../lectures";
+import { Lecture } from "./mockData/lectures";
 
 interface ILectureContext {
     lectures: Array<Lecture> 

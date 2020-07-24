@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import "./index.scss";
-import { Lecture } from "../../lectures";
+import { Lecture } from "../../businesslogic/mockData/lectures";
 import LectureCard from "./LectureCard";
 import { LecturesContext } from "../../businesslogic/LecturesProvider";
 

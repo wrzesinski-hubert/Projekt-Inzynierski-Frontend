@@ -4,7 +4,7 @@ import Transfer from "./components/Transfer/";
 import "./App.scss";
 import {Scheduler} from "./components/Scheduler";
 import RightBar from "./components/RightBar";
-import { lectures } from "./lectures";
+import { lectures } from "./businesslogic/mockData/lectures";
 
 import BusinessLogicContext from "./businesslogic/BusinessLogicContext";
 import { BuisnessProvided } from "./businesslogic/BusinessLogicProvider";

@@ -1,6 +1,6 @@
 import BusinessLogicContext from "./BusinessLogicContext";
 import React, { Component } from "react";
-import { User } from "./models/user";
+import { User } from "./types/user";
 
 export interface BuisnessProvided {
 	states: BusinessState;

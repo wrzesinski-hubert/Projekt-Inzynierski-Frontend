@@ -2,7 +2,7 @@ import React from "react";
 import "./index.scss";
 import Collapse from "@material-ui/core/Collapse";
 import ExpandIcon from "./expand.png";
-import { Lecture } from "../../../lectures";
+import { Lecture } from "../../../businesslogic/mockData/lectures";
 
 interface LectureCardProps {
   onGroupMouseOver: (id: string, name: string) => void;
