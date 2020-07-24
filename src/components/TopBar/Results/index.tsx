@@ -4,8 +4,8 @@ import { Input } from "@material-ui/core";
 import "./index.scss";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { LecturesContext } from "../../../businesslogic/LecturesProvider";
-import {LectureInit} from "../../../businesslogic/types/lectureInit";
-
+import { Lecture } from "../../../businesslogic/types/lecture";
+import { LectureInit } from "../../../businesslogic/types/lectureInit";
 
 export const Results: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -27,11 +27,14 @@ export const Results: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(
-        `http://localhost:1287/getCourses?name=""`
+      const results = await axios.get(`http://localhost:1287/getCourses?name=`);
+      const lecturesData = results.data.map(
+        (result: { id: number; name: string }) => ({
+          id: result.id,
+          name: result.name,
+        })
       );
-      const lecturesData = data.map((data: { name: any; id: any; })=> {name: data.name, id: data.id})
-       
+
       setLecturesData(lecturesData);
     };
     fetchData();
@@ -39,7 +42,11 @@ export const Results: React.FC = () => {
 
   useEffect(() => {
     const filterLectures = (value: string) => {
-      return lecturesData.filter((lecture) => lecture.name.includes(value));
+      const zmienna = lecturesData.filter((lecture) =>
+        lecture.name.toLowerCase().includes(value.toLowerCase())
+      );
+      console.log(zmienna);
+      return zmienna;
     };
     filterLectures(input);
   }, [input]);
@@ -53,7 +60,7 @@ export const Results: React.FC = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
-  };  
+  };
 
   const handleClick = () => {
     setOpen(true);
