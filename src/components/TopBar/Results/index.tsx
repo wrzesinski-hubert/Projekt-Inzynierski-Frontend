@@ -1,15 +1,23 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { Input } from "@material-ui/core";
+import { Input, Grow } from "@material-ui/core";
 import "./index.scss";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { LecturesContext } from "../../../businesslogic/LecturesProvider";
 import { Lecture } from "../../../businesslogic/types/lecture";
-import { LectureInit } from "../../../businesslogic/types/lectureInit";
+import { Group } from "../../../businesslogic/types/group";
+
+interface LectureData {
+  name: string;
+  id: number;
+}
 
 export const Results: React.FC = () => {
   const [input, setInput] = useState<string>("");
-  const [lecturesData, setLecturesData] = useState<Array<LectureInit>>([]);
+  const [lecturesData, setLecturesData] = useState<Array<LectureData>>([]);
+  const [filteredLecturesData, setFilteredLecturesData] = useState<
+    Array<LectureData>
+  >([]);
   const [open, setOpen] = React.useState(false);
 
   const lecturesContext = useContext(LecturesContext);
@@ -42,16 +50,15 @@ export const Results: React.FC = () => {
 
   useEffect(() => {
     const filterLectures = (value: string) => {
-      const zmienna = lecturesData.filter((lecture) =>
+      const filteredLectures = lecturesData.filter((lecture) =>
         lecture.name.toLowerCase().includes(value.toLowerCase())
       );
-      console.log(zmienna);
-      return zmienna;
+      setFilteredLecturesData(filteredLectures);
     };
     filterLectures(input);
   }, [input]);
 
-  const getLecturesById = async (id: string): Promise<Lecture> => {
+  const getLecturesById = async (id: string) => {
     const { data } = await axios.get(
       `http://localhost:1287/getClassesByCourseId?id=${id}`
     );
@@ -74,7 +81,28 @@ export const Results: React.FC = () => {
     const target = e.currentTarget as HTMLElement;
     const id = target.id;
     const result = await getLecturesById(id);
-    lecturesContext.updateLectures(result);
+    let groups: Array<Group> = [];
+    let lecture = { groups: groups } as Lecture;
+    lecture.id = result[0].course.id;
+    lecture.name = result[0].course.name;
+    for (let i = 0; i < result.length; i++) {
+      let group = {} as Group;
+      group.id = result[i].id;
+      group.day = result[i].day;
+      group.time = result[i].time;
+      group.lecturer =
+        result[i].lecturer.title +
+        " " +
+        result[i].lecturer.name +
+        " " +
+        result[i].lecturer.surname;
+      group.room = result[i].room;
+      lecture.groups.push(group);
+    }
+    console.log(result);
+    console.log(result[0].course.name);
+
+    lecturesContext.updateLectures(lecture);
     setOpen(false);
   };
 
@@ -91,7 +119,7 @@ export const Results: React.FC = () => {
         />
         {open ? (
           <div className="dropdown">
-            {lecturesData.map((lecture, index) => (
+            {filteredLecturesData.map((lecture, index) => (
               <div
                 className="lecture"
                 key={index}

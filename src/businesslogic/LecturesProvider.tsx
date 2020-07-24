@@ -1,24 +1,28 @@
 import React, { useState } from "react";
-import { Lecture } from "./mockData/lectures";
+import { lectures } from "./mockData/lectures";
+import { Lecture } from "./types/lecture";
 
 interface ILectureContext {
-    lectures: Array<Lecture> 
-    updateLectures: (lectures: Lecture) => void
+  lectures: Array<Lecture>;
+  updateLectures: (lectures: Lecture) => void;
 }
-export const LecturesContext = React.createContext({lectures: Array<Lecture>(),  updateLectures: (lectures: Lecture) => {}});
+export const LecturesContext = React.createContext({
+  lectures: Array<Lecture>(),
+  updateLectures: (lectures: Lecture) => {},
+});
 
-export const LecturesProvider : React.FC = (props) => {
+export const LecturesProvider: React.FC = (props) => {
+  const [lectures, setLectures] = useState<Array<Lecture>>([]);
 
-    const [lectures, setLectures] = useState<Array<Lecture>>([]); 
+  const updateLectures = (lecture: Lecture) => {
+    setLectures([...lectures, lecture]);
+  };
 
-    const  updateLectures = (lecture : Lecture) => {  setLectures([...lectures, lecture])}
-
-    return (
-        <LecturesContext.Provider value={{lectures: lectures, updateLectures : updateLectures}}>
-            {props.children}
-        </LecturesContext.Provider>
-    );
-
-
-}
-
+  return (
+    <LecturesContext.Provider
+      value={{ lectures: lectures, updateLectures: updateLectures }}
+    >
+      {props.children}
+    </LecturesContext.Provider>
+  );
+};
