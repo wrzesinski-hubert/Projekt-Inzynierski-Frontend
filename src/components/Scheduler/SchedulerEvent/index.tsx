@@ -13,17 +13,16 @@ export const SchedulerEvent = ({ events, colIndex }: SchedulerEventProps) => {
 
   return (
     <>
-      {events.map((event, index) => (
+      {events.map((_, index) => (
         <div
           id={`eventCol${colIndex}eventRow${index}`}
           style={{
             position: "absolute",
-            top: 80 * index + 5,
-            left:5,
+            top: 80 * index + 10,
+            left: 5,
             backgroundColor: "#839FE6",
             color: "white",
             borderRadius: 5,
-            padding:5,
             width: "80%",
             height: 60,
             display: "none",

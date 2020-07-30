@@ -35,7 +35,7 @@ export const Results: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const results = await axios.get(`http://localhost:1287/getCourses?name=`);
+      const results = await axios.get(`http://localhost:1285/getCourses?name=`);
       const lecturesData = results.data.map(
         (result: { id: number; name: string }) => ({
           id: result.id,
@@ -49,18 +49,19 @@ export const Results: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const names = lecturesContext.lectures.map((lecture) => lecture.name);
     const filterLectures = (value: string) => {
-      const filteredLectures = lecturesData.filter((lecture) =>
-        lecture.name.toLowerCase().includes(value.toLowerCase())
+      let filteredLectures = lecturesData.filter((lecture) =>
+        lecture.name.toLowerCase().includes(value.toLowerCase()) &&  !names.includes(lecture.name)
       );
       setFilteredLecturesData(filteredLectures);
     };
     filterLectures(input);
-  }, [input]);
+  }, [input, open]);
 
   const getLecturesById = async (id: string) => {
     const { data } = await axios.get(
-      `http://localhost:1287/getClassesByCourseId?id=${id}`
+      `http://localhost:1285/getClassesByCourseId?id=${id}`
     );
     return data;
   };
@@ -81,6 +82,7 @@ export const Results: React.FC = () => {
     const target = e.currentTarget as HTMLElement;
     const id = target.id;
     const result = await getLecturesById(id);
+
     let groups: Array<Group> = [];
     let lecture = { groups: groups } as Lecture;
     lecture.id = result[0].course.id;

@@ -45,7 +45,6 @@ function App() {
 						lectures={lectures}
 						onGroupMouseOver={(id, name) => {
 						}}
-						onGroupClick={(id, name) => {}}
 					/>
 				</div>
 			</div>

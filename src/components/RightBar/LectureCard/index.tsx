@@ -1,12 +1,13 @@
-import React from "react";
+import React, {useContext} from "react";
 import "./index.scss";
 import Collapse from "@material-ui/core/Collapse";
 import ExpandIcon from "./expand.png";
 import { Lecture } from "../../../businesslogic/types/lecture";
+import { Group } from "../../../businesslogic/types/group";
+import { LecturesContext } from "../../../businesslogic/LecturesProvider";
 
 interface LectureCardProps {
   onGroupMouseOver: (id: string, name: string) => void;
-  onGroupClick: (id: string, name: string) => void;
   onCardClick: (e: React.MouseEvent) => void;
   lecture: Lecture;
   id: string;
@@ -15,12 +16,21 @@ interface LectureCardProps {
 
 export default function LectureCard({
   onGroupMouseOver,
-  onGroupClick,
   onCardClick,
   lecture,
   id,
   isSelected,
 }: LectureCardProps) {
+
+  const {updateGroups} = useContext(LecturesContext);
+
+
+  function onGroupClick(group : Group){
+      console.log(`group is: ${JSON.stringify(group)}`)
+      updateGroups(group);
+  }
+
+
   return (
     <div className="class" onClick={onCardClick} id={id}>
       <div className="class__name">{lecture.name}</div>
@@ -35,7 +45,7 @@ export default function LectureCard({
             className="class__group"
             key={index}
             onMouseOver={() => onGroupMouseOver(group.id, lecture.name)}
-            onClick={() => onGroupClick(group.id, lecture.name)}
+            onClick={() => onGroupClick(group)}
           >
             <p>
               {group.time} {group.room} <br></br> {group.lecturer}

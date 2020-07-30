@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useState } from "react";
 import "./index.scss";
 import { SchedulerEvent } from "./SchedulerEvent";
 import { Column } from "./Column";
+import { LecturesContext } from "../../businesslogic/LecturesProvider";
 const days = ["", "poniedziałek", "wtorek", "środa", "czwartek", "piątek"];
 
 const hours = [
@@ -31,11 +32,16 @@ let terms = ["Zawsze", "jest pora", "na kurde", "lody", "koral"];
 
 export const Scheduler = () => {
   const [currentEventsIds, setCurrentEventsIds] = useState<Array<string>>([]);
+
+  const { choosenGroups } = useContext(LecturesContext);
+
   useEffect(() => {
     const displayEvents = () => {
       currentEventsIds.map((eventId: string) => {
         const event = document.getElementById(eventId);
-        event!.style.display = "block";
+        if (event) {
+          event.style.display = "block";
+        }
       });
     };
     displayEvents();
@@ -52,7 +58,7 @@ export const Scheduler = () => {
 
   return (
     <>
-      <div className="scheduler">
+      <div className="scheduler" >
         <div className="thead">
           {days.map((day, index) => (
             <div className="th" key={index}>
@@ -61,15 +67,18 @@ export const Scheduler = () => {
           ))}
         </div>
         <div className="tbody">
-          <Column hours={hours}  isEventable={false}/>
+          <Column hours={hours} isEventable={false} />
           {terms.map((_, colIndex) => (
-            <Column hours={hours} handleClick={handleClick} colIndex={colIndex} isEventable={true} >
+            <Column
+              hours={hours}
+              handleClick={handleClick}
+              colIndex={colIndex}
+              isEventable={true}
+            >
               <SchedulerEvent events={events} colIndex={colIndex} />
             </Column>
           ))}
         </div>
-        
-
       </div>
     </>
   );
