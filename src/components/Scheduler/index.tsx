@@ -28,6 +28,32 @@ for (let i = 0; i < hours.length / 2; i++) {
   events.push(i);
 }
 
+let center: "center" = "center";
+let row: "row" = "row";
+let column: "column" = "column";
+let wrap: "wrap" = "wrap";
+const tbodyStyles = {
+  width: 900,
+  height: 560,
+  backgroundColor: "blue",
+  display: "flex",
+  flexDirection: column,
+  // flexWrap: wrap
+
+}
+
+const rowStyles = {
+  display: "flex",
+  flexDirection: row,
+}
+
+const cellStyles = {
+  border: "1px solid #ddd",
+  padding: "10px",
+  textAlign: center,
+  flex: 1,
+}
+
 let terms = ["Zawsze", "jest pora", "na kurde", "lody", "koral"];
 
 export const Scheduler = () => {
@@ -66,7 +92,55 @@ export const Scheduler = () => {
             </div>
           ))}
         </div>
-        <div className="tbody">
+        <div style={tbodyStyles}>
+          {hours.map((hour, index) => (
+            <div style={rowStyles}>{
+              [hour, "", "", "", "", ""].map((value) => (
+                <div style={cellStyles}>{value}</div>
+              ))}</div>
+          ))}
+        </div>
+        <div>
+          {["", "", "", "", ""].map((value, index) => (
+            <div style={{ position: "absolute", top: 150 + 10, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+
+            </div>
+          ))}
+        </div>
+        <div>
+          {["", "", "", "", ""].map((value, index) => (
+            <div style={{ position: "absolute", top: 150 + 80, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+
+            </div>
+          ))}
+        </div>          <div>
+          {["", "", "", "", ""].map((value, index) => (
+            <div style={{ position: "absolute", top: 150 + 150, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+
+            </div>
+          ))}
+        </div>          <div>
+          {["", "", "", "", ""].map((value, index) => (
+            <div style={{ position: "absolute", top: 150 + 230, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+
+            </div>
+          ))}
+        </div>          <div>
+          {["", "", "", "", ""].map((value, index) => (
+            <div style={{ position: "absolute", top: 150 + 300, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+
+            </div>
+          ))}
+        </div>          <div>
+          {["", "", "", "", ""].map((value, index) => (
+            <div style={{ position: "absolute", top: 150 + 370, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+
+            </div>
+          ))}
+        </div>
+
+
+        {/* <div className="tbody">
           <Column hours={hours} isEventable={false} />
           {terms.map((_, colIndex) => (
             <Column
@@ -78,7 +152,7 @@ export const Scheduler = () => {
               <SchedulerEvent events={events} colIndex={colIndex} />
             </Column>
           ))}
-        </div>
+        </div> */}
       </div>
     </>
   );
