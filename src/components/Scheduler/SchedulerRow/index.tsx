@@ -19,28 +19,31 @@ export const SchedulerRow = ({
   //   eventDiv.style.backgroundColor = "#1547C5";
   // };
 
-  const group = {0: {id: 5, day: 4, time: "11.45", lecturer: "dr Dorota Blinkiewicz", room: "A2-3"}}
+  console.log(`You passed me these of a groupzzz: ${groups}`)
+
 
   return (
     <div>
-      {[...Array(5)].map((value, index) => (
+      {[...Array(5)].map((value, eventIndex) => (
         <div
-          key = {`eventRow${indexRow}eventCol${index}`} 
-          id={`eventRow${indexRow}eventCol${index}`}
+          key={`eventRow${indexRow}eventCol${eventIndex}`}
+          id={`eventRow${indexRow}eventCol${eventIndex}`}
           style={{
             position: "absolute",
             top: cellTop,
-            left: cellWidth + 5 + cellWidth * index,
+            left: cellWidth + 5 + cellWidth * eventIndex,
             width: (cellWidth * 2) / 3,
             height: 60,
             backgroundColor: "lightblue",
             zIndex: 2,
           }}
         >
-          
-          {groups.map((value, index) => (
-            <div key={index}>{groups[index]?.lecturer}</div>
-          ))}
+
+          {groups.map((group, index) =>
+            (
+              parseInt(group.day) === eventIndex ? <div key={index}>{groups[index]?.lecturer}</div>
+                : null
+            ))}
         </div>
       ))}
     </div>
