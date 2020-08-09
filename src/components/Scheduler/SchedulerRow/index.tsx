@@ -19,9 +19,6 @@ export const SchedulerRow = ({
   //   eventDiv.style.backgroundColor = "#1547C5";
   // };
 
-  console.log(`You passed me these of a groupzzz: ${groups}`)
-
-
   return (
     <div>
       {[...Array(5)].map((value, eventIndex) => (

@@ -101,8 +101,6 @@ export const Results: React.FC = () => {
       group.room = result[i].room.trim();
       lecture.groups.push(group);
     }
-    console.log(result);
-    console.log(result[0].course.name);
 
     lecturesContext.addLecture(lecture);
     setOpen(false);
