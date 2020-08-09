@@ -1,7 +1,7 @@
-import React, { useEffect, useContext, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import "./index.scss";
-import { LecturesContext } from "../../businesslogic/LecturesProvider";
+import { SchedulerEvents } from "./SchedulerEvents";
 const days = ["", "poniedziałek", "wtorek", "środa", "czwartek", "piątek"];
 
 const hours = [
@@ -27,63 +27,53 @@ for (let i = 0; i < hours.length / 2; i++) {
 let center: "center" = "center";
 let row: "row" = "row";
 let column: "column" = "column";
-const collapse: "collapse" = "collapse";
+// const collapse: "collapse" = "collapse";
 const tbodyStyles = {
   width: "100%",
   height: "100%",
   display: "flex",
   flexDirection: column,
-}
+};
 
 const rowStyles = {
   display: "flex",
   flexDirection: row,
-}
+};
 
 const cellStyles = {
   border: "1px solid #ddd",
   padding: "10px",
   textAlign: center,
   flex: 1,
-}
+};
 
 const theadStyles = {
   display: "flex",
-  width: "100%"
-}
+  width: "100%",
+};
 
-const scheduler = {
-  marginTop: "20px",
-  borderCollapse: collapse
-
-}
-
+// const scheduler = {
+//   marginTop: "20px",
+//   borderCollapse: collapse,
+// };
 
 export const Scheduler = () => {
   const [currentEventsIds, setCurrentEventsIds] = useState<Array<string>>([]);
   const cellRef = useRef<HTMLDivElement>(null);
   const [cellWidth, setCellWidth] = useState(0);
   const [cellTop, setCellTop] = useState(0);
-  const { choosenGroups } = useContext(LecturesContext);
 
-  
+
   useEffect(() => {
     const handleResize = () => {
-      console.log(`cellref is:`);
-      console.log(cellRef);
       if (cellRef.current) {
         setCellWidth(cellRef.current.getBoundingClientRect().width);
         setCellTop(cellRef.current.getBoundingClientRect().top);
-        console.log(`cellwidth: ${cellWidth}`);
-        console.log("cell ref:");
-        console.log(cellRef.current.getBoundingClientRect());
       }
-    }
+    };
     handleResize();
-    window.addEventListener('resize', handleResize);
-
+    window.addEventListener("resize", handleResize);
   }, []);
-
 
   useEffect(() => {
     const displayEvents = () => {
@@ -97,18 +87,18 @@ export const Scheduler = () => {
     displayEvents();
   }, [currentEventsIds]);
 
-  const handleClick = (e: React.MouseEvent) => {
-    const cellId = e.currentTarget.id;
-    const column = cellId.slice(0, 1);
-    const row = cellId.slice(1);
-    const eventId = `eventCol${column}eventRow${Math.floor(parseInt(row) / 2)}`;
+  // const handleClick = (e: React.MouseEvent) => {
+  //   const cellId = e.currentTarget.id;
+  //   const column = cellId.slice(0, 1);
+  //   const row = cellId.slice(1);
+  //   const eventId = `eventCol${column}eventRow${Math.floor(parseInt(row) / 2)}`;
 
-    setCurrentEventsIds((currentEventsIds) => [...currentEventsIds, eventId]);
-  };
+  //   setCurrentEventsIds((currentEventsIds) => [...currentEventsIds, eventId]);
+  // };
 
   return (
     <>
-      <div className="scheduler" >
+      <div className="scheduler">
         <div style={theadStyles}>
           {days.map((day, index) => (
             <div className="th" key={index}>
@@ -118,52 +108,18 @@ export const Scheduler = () => {
         </div>
         <div style={tbodyStyles}>
           {hours.map((hour, indexRow) => (
-            <div style={rowStyles}>{
-              [hour, "", "", "", "", ""].map((value, indexCell) =>
-                indexRow === 0 && indexCell === 1 ? (<div ref={cellRef} style={cellStyles}></div>) : (<div style={cellStyles}>{value}</div>)
-
-              )}</div>
-          ))}
-        </div>
-        <div>
-          {[...Array(5)].map((value, index) => (
-            <div style={{ position: "absolute", top: cellTop + 10, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
-
+            <div key={indexRow} style={rowStyles}>
+              {[hour, "", "", "", "", ""].map((value, indexCell) =>
+                indexRow === 0 && indexCell === 1 ? (
+                  <div key={`${indexRow}${indexCell}`}  ref={cellRef} style={cellStyles}></div>
+                ) : (
+                  <div key={`${indexRow}${indexCell}`} style={cellStyles}>{value}</div>
+                )
+              )}
             </div>
           ))}
         </div>
-        <div>
-          {[...Array(5)].map((value, index) => (
-            <div style={{ position: "absolute", top: cellTop + 80, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
-
-            </div>
-          ))}
-        </div>          <div>
-          {[...Array(5)].map((value, index) => (
-            <div style={{ position: "absolute", top: cellTop + 150, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
-
-            </div>
-          ))}
-        </div>          <div>
-          {[...Array(5)].map((value, index) => (
-            <div style={{ position: "absolute", top: cellTop + 230, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
-
-            </div>
-          ))}
-        </div>          <div>
-          {[...Array(5)].map((value, index) => (
-            <div style={{ position: "absolute", top: cellTop + 300, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
-
-            </div>
-          ))}
-        </div>          <div>
-          {[...Array(5)].map((value, index) => (
-            <div style={{ position: "absolute", top: cellTop + 370, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
-
-            </div>
-          ))}
-        </div>
-
+        <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} />
       </div>
     </>
   );

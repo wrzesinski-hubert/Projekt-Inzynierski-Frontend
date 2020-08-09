@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { Input, Grow } from "@material-ui/core";
+import { Input } from "@material-ui/core";
 import "./index.scss";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { LecturesContext } from "../../../businesslogic/LecturesProvider";
@@ -35,7 +35,7 @@ export const Results: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const results = await axios.get(`http://localhost:1285/getCourses?name=`);
+      const results = await axios.get(`http://localhost:1287/getCourses?name=`);
       const lecturesData = results.data.map(
         (result: { id: number; name: string }) => ({
           id: result.id,
@@ -61,7 +61,7 @@ export const Results: React.FC = () => {
 
   const getLecturesById = async (id: string) => {
     const { data } = await axios.get(
-      `http://localhost:1285/getClassesByCourseId?id=${id}`
+      `http://localhost:1287/getClassesByCourseId?id=${id}`
     );
     return data;
   };
@@ -98,13 +98,13 @@ export const Results: React.FC = () => {
         result[i].lecturer.name +
         " " +
         result[i].lecturer.surname;
-      group.room = result[i].room;
+      group.room = result[i].room.trim();
       lecture.groups.push(group);
     }
     console.log(result);
     console.log(result[0].course.name);
 
-    lecturesContext.updateLectures(lecture);
+    lecturesContext.addLecture(lecture);
     setOpen(false);
   };
 

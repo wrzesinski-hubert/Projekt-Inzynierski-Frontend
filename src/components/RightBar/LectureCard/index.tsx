@@ -22,12 +22,11 @@ export default function LectureCard({
   isSelected,
 }: LectureCardProps) {
 
-  const {updateGroups} = useContext(LecturesContext);
+  const {addGroup} = useContext(LecturesContext);
 
 
   function onGroupClick(group : Group){
-      console.log(`group is: ${JSON.stringify(group)}`)
-      updateGroups(group);
+      addGroup(group);
   }
 
 
