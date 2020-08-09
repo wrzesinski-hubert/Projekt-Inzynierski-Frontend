@@ -1,8 +1,6 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import { useState } from "react";
 import "./index.scss";
-import { SchedulerEvent } from "./SchedulerEvent";
-import { Column } from "./Column";
 import { LecturesContext } from "../../businesslogic/LecturesProvider";
 const days = ["", "poniedziałek", "wtorek", "środa", "czwartek", "piątek"];
 
@@ -19,8 +17,6 @@ const hours = [
   "17:00",
   "18:00",
   "19:00",
-  "20:00",
-  "21:00",
 ];
 
 let events: Array<number> = [];
@@ -31,15 +27,12 @@ for (let i = 0; i < hours.length / 2; i++) {
 let center: "center" = "center";
 let row: "row" = "row";
 let column: "column" = "column";
-let wrap: "wrap" = "wrap";
+const collapse: "collapse" = "collapse";
 const tbodyStyles = {
-  width: 900,
-  height: 560,
-  backgroundColor: "blue",
+  width: "100%",
+  height: "100%",
   display: "flex",
   flexDirection: column,
-  // flexWrap: wrap
-
 }
 
 const rowStyles = {
@@ -54,12 +47,43 @@ const cellStyles = {
   flex: 1,
 }
 
-let terms = ["Zawsze", "jest pora", "na kurde", "lody", "koral"];
+const theadStyles = {
+  display: "flex",
+  width: "100%"
+}
+
+const scheduler = {
+  marginTop: "20px",
+  borderCollapse: collapse
+
+}
+
 
 export const Scheduler = () => {
   const [currentEventsIds, setCurrentEventsIds] = useState<Array<string>>([]);
-
+  const cellRef = useRef<HTMLDivElement>(null);
+  const [cellWidth, setCellWidth] = useState(0);
+  const [cellTop, setCellTop] = useState(0);
   const { choosenGroups } = useContext(LecturesContext);
+
+  
+  useEffect(() => {
+    const handleResize = () => {
+      console.log(`cellref is:`);
+      console.log(cellRef);
+      if (cellRef.current) {
+        setCellWidth(cellRef.current.getBoundingClientRect().width);
+        setCellTop(cellRef.current.getBoundingClientRect().top);
+        console.log(`cellwidth: ${cellWidth}`);
+        console.log("cell ref:");
+        console.log(cellRef.current.getBoundingClientRect());
+      }
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+  }, []);
+
 
   useEffect(() => {
     const displayEvents = () => {
@@ -85,7 +109,7 @@ export const Scheduler = () => {
   return (
     <>
       <div className="scheduler" >
-        <div className="thead">
+        <div style={theadStyles}>
           {days.map((day, index) => (
             <div className="th" key={index}>
               {day}
@@ -93,66 +117,53 @@ export const Scheduler = () => {
           ))}
         </div>
         <div style={tbodyStyles}>
-          {hours.map((hour, index) => (
+          {hours.map((hour, indexRow) => (
             <div style={rowStyles}>{
-              [hour, "", "", "", "", ""].map((value) => (
-                <div style={cellStyles}>{value}</div>
-              ))}</div>
+              [hour, "", "", "", "", ""].map((value, indexCell) =>
+                indexRow === 0 && indexCell === 1 ? (<div ref={cellRef} style={cellStyles}></div>) : (<div style={cellStyles}>{value}</div>)
+
+              )}</div>
           ))}
         </div>
         <div>
-          {["", "", "", "", ""].map((value, index) => (
-            <div style={{ position: "absolute", top: 150 + 10, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+          {[...Array(5)].map((value, index) => (
+            <div style={{ position: "absolute", top: cellTop + 10, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
 
             </div>
           ))}
         </div>
         <div>
-          {["", "", "", "", ""].map((value, index) => (
-            <div style={{ position: "absolute", top: 150 + 80, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+          {[...Array(5)].map((value, index) => (
+            <div style={{ position: "absolute", top: cellTop + 80, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
 
             </div>
           ))}
         </div>          <div>
-          {["", "", "", "", ""].map((value, index) => (
-            <div style={{ position: "absolute", top: 150 + 150, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+          {[...Array(5)].map((value, index) => (
+            <div style={{ position: "absolute", top: cellTop + 150, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
 
             </div>
           ))}
         </div>          <div>
-          {["", "", "", "", ""].map((value, index) => (
-            <div style={{ position: "absolute", top: 150 + 230, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+          {[...Array(5)].map((value, index) => (
+            <div style={{ position: "absolute", top: cellTop + 230, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
 
             </div>
           ))}
         </div>          <div>
-          {["", "", "", "", ""].map((value, index) => (
-            <div style={{ position: "absolute", top: 150 + 300, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+          {[...Array(5)].map((value, index) => (
+            <div style={{ position: "absolute", top: cellTop + 300, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
 
             </div>
           ))}
         </div>          <div>
-          {["", "", "", "", ""].map((value, index) => (
-            <div style={{ position: "absolute", top: 150 + 370, left: 155 + 150 * index, width: 100, height: 60, backgroundColor: "black", zIndex: 2 }}>
+          {[...Array(5)].map((value, index) => (
+            <div style={{ position: "absolute", top: cellTop + 370, left: cellWidth + 5 + cellWidth * index, width: cellWidth * 2 / 3, height: 60, backgroundColor: "lightblue", zIndex: 2 }}>
 
             </div>
           ))}
         </div>
 
-
-        {/* <div className="tbody">
-          <Column hours={hours} isEventable={false} />
-          {terms.map((_, colIndex) => (
-            <Column
-              hours={hours}
-              handleClick={handleClick}
-              colIndex={colIndex}
-              isEventable={true}
-            >
-              <SchedulerEvent events={events} colIndex={colIndex} />
-            </Column>
-          ))}
-        </div> */}
       </div>
     </>
   );
