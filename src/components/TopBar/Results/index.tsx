@@ -3,59 +3,48 @@ import axios from 'axios';
 import { Input } from '@material-ui/core';
 import './index.scss';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import { LecturesContext } from '../../../contexts/LecturesProvider';
-import { Lecture, Group } from '../../../types';
+import { coursesContext } from '../../../contexts/CoursesProvider';
+import { Course, Group } from '../../../types';
 
-interface LectureData {
+interface courseData {
   name: string;
   id: number;
 }
 
 export const Results: React.FC = () => {
   const [input, setInput] = useState<string>('');
-  const [lecturesData, setLecturesData] = useState<Array<LectureData>>([]);
-  const [filteredLecturesData, setFilteredLecturesData] = useState<Array<LectureData>>([]);
+  const [coursesData, setcoursesData] = useState<Array<courseData>>([]);
+  const [filteredcoursesData, setFilteredcoursesData] = useState<Array<courseData>>([]);
   const [open, setOpen] = React.useState(false);
 
-  const lecturesContext = useContext(LecturesContext)!;
-
-  //fetch lectures ids and lectures names
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const {lecturesData } = await axios.get(
-  //       `http://localhost:1287/getCourses?name=""`
-  //     );
-  //     setLecturesData(lecturesData);
-  //   };
-  //   fetchData();
-  // }, []);
+  const { courses, addCourse } = useContext(coursesContext)!;
 
   useEffect(() => {
     const fetchData = async () => {
-      const results = await axios.get(`http://localhost:1287/getCourses?name=`);
-      const lecturesData = results.data.map((result: { id: number; name: string }) => ({
+      const results = await axios.get(`http://localhost:1285/getCourses`);
+      const coursesData = results.data.map((result: { id: number; name: string }) => ({
         id: result.id,
         name: result.name,
       }));
 
-      setLecturesData(lecturesData);
+      setcoursesData(coursesData);
     };
     fetchData();
   }, []);
 
   useEffect(() => {
-    const names = lecturesContext.lectures.map((lecture) => lecture.name);
-    const filterLectures = (value: string) => {
-      let filteredLectures = lecturesData.filter(
-        (lecture) => lecture.name.toLowerCase().includes(value.toLowerCase()) && !names.includes(lecture.name),
+    const names = courses.map((course) => course.name);
+    const filtercourses = (value: string) => {
+      let filteredcourses = coursesData.filter(
+        (course) => course.name.toLowerCase().includes(value.toLowerCase()) && !names.includes(course.name),
       );
-      setFilteredLecturesData(filteredLectures);
+      setFilteredcoursesData(filteredcourses);
     };
-    filterLectures(input);
+    filtercourses(input);
   }, [input, open]);
 
-  const getLecturesById = async (id: string) => {
-    const { data } = await axios.get(`http://localhost:1287/getClassesByCourseId?id=${id}`);
+  const getGroupsByCourseId = async (id: string) => {
+    const { data } = await axios.get(`http://localhost:1285/getCourseGroups?id=${id}`);
     return data;
   };
 
@@ -71,27 +60,34 @@ export const Results: React.FC = () => {
     setOpen(false);
   };
 
-  const onLectureClick = async (e: React.MouseEvent) => {
+  const onCourseClick = async (e: React.MouseEvent) => {
     const target = e.currentTarget as HTMLElement;
-    const id = target.id;
-    const result = await getLecturesById(id);
-
-    let groups: Array<Group> = [];
-    let lecture = { groups: groups } as Lecture;
-    lecture.id = result[0].course.id;
-    lecture.name = result[0].course.name;
-    for (let i = 0; i < result.length; i++) {
-      let group = {} as Group;
-      group.id = result[i].id;
-      group.day = result[i].day;
-      group.time = result[i].time;
-      group.lecturer = result[i].lecturer.title + ' ' + result[i].lecturer.name + ' ' + result[i].lecturer.surname;
-      group.room = result[i].room.trim();
-      lecture.groups.push(group);
+    if (target.id && target.textContent) {
+      const id = target.id;
+      const name = target.textContent;
+      const groups = await getGroupsByCourseId(id);
+      const course: Course = {
+        name: name,
+        id: parseInt(id),
+        groups: groups,
+      };
+      addCourse(course);
+      setOpen(false);
     }
 
-    lecturesContext.addLecture(lecture);
-    setOpen(false);
+    // let groups: Array<Group> = [];
+    // let course = { groups: groups } as course;
+    // course.id = result[0].course.id;
+    // course.name = result[0].course.name;
+    // for (let i = 0; i < result.length; i++) {
+    //   let group = {} as Group;
+    //   group.id = result[i].id;
+    //   group.day = result[i].day;
+    //   group.time = result[i].time;
+    //   group.courser = result[i].courser.title + ' ' + result[i].courser.name + ' ' + result[i].courser.surname;
+    //   group.room = result[i].room.trim();
+    //   course.groups.push(group);
+    // }
   };
 
   return (
@@ -107,9 +103,9 @@ export const Results: React.FC = () => {
         />
         {open ? (
           <div className="dropdown">
-            {filteredLecturesData.map((lecture, index) => (
-              <div className="lecture" key={index} id={String(lecture.id)} onClick={onLectureClick}>
-                <p>{lecture.name} </p>
+            {filteredcoursesData.map((course, index) => (
+              <div className="course" key={index} id={String(course.id)} onClick={onCourseClick}>
+                <p>{course.name} </p>
               </div>
             ))}
           </div>

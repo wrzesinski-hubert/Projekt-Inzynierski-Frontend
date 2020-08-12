@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SchedulerRow } from '../SchedulerRow';
-import { LecturesContext } from '../../../contexts/LecturesProvider';
+import { coursesContext } from '../../../contexts/CoursesProvider';
 import { Group } from '../../../types';
 
 interface SchedulerEventsProps {
@@ -9,20 +9,20 @@ interface SchedulerEventsProps {
 }
 
 export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) => {
-  const { choosenGroups } = useContext(LecturesContext)!;
+  const { choosenGroups } = useContext(coursesContext)!;
 
   const [groupsMappedToEvents, setGroupsMappedToEvents] = useState<any>([]);
 
-  // const groups: Array<Group> = [{ id: "5", day: "4", time: "11.45", lecturer: "dr Dorota Blinkiewicz", room: "A2-3" },
-  // { id: "28", day: "1", time: "13.45", lecturer: "dr Barbara Kołodziejczak", room: "D-3" },
-  // { id: "69", day: "4", time: "15.30", lecturer: "dr Karol Gierszewski", room: "A2-3" }];
+  // const groups: Array<Group> = [{ id: "5", day: "4", time: "11.45", courser: "dr Dorota Blinkiewicz", room: "A2-3" },
+  // { id: "28", day: "1", time: "13.45", courser: "dr Barbara Kołodziejczak", room: "D-3" },
+  // { id: "69", day: "4", time: "15.30", courser: "dr Karol Gierszewski", room: "A2-3" }];
 
   interface GroupTimeToEventRowMapping {
     [time: string]: number;
   }
 
   const groupTimeToEventRowMapping: GroupTimeToEventRowMapping = {
-    '8.15': 0,
+    '08.15': 0,
     '10.00': 1,
     '11.45': 2,
     '13.45': 3,

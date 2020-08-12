@@ -39,7 +39,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth }: Scheduler
           id={`eventRow${indexRow}eventCol${eventIndex}`}
         >
           {groups.map((group, index) =>
-            parseInt(group.day) === eventIndex ? <div key={index}>{groups[index]?.lecturer}</div> : null,
+            group.day === eventIndex ? <div key={index}>{groups[index]?.lecturer}</div> : null,
           )}
         </SchedulerEvent>
       ))}

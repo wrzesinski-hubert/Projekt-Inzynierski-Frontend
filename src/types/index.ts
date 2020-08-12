@@ -1,16 +1,24 @@
+export enum GroupType {
+  course = 'course',
+  CLASS = 'class',
+}
+
 export interface Group {
-  id: string;
-  day: string;
+  id: number;
+  day: number;
   time: string;
   lecturer: string;
   room: string;
+  groupType: GroupType;
+  capacity?: number;
 }
-export interface Lecture {
-  id?: number;
+
+export interface Course {
+  id: number;
   name: string;
   groups: Array<Group>;
 }
-export interface LectureInit {
+export interface courseInit {
   name: string;
   id: number;
 }

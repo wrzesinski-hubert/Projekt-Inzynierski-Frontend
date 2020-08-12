@@ -2,17 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './App';
 import { CASProvider } from './contexts/CASProvider';
-import { LecturesProvider } from './contexts/LecturesProvider';
+import { CoursesProvider } from './contexts/CoursesProvider';
 import { GlobalStyles } from './styles/GlobalStyles';
 
 ReactDOM.render(
   <>
-    <LecturesProvider>
+    <CoursesProvider>
       <CASProvider>
         <GlobalStyles />
         <App />
       </CASProvider>
-    </LecturesProvider>
+    </CoursesProvider>
   </>,
   document.getElementById('root'),
 );
