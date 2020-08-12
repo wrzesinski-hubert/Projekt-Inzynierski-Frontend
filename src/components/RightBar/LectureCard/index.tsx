@@ -1,10 +1,9 @@
-import React, {useContext} from "react";
-import "./index.scss";
-import Collapse from "@material-ui/core/Collapse";
-import ExpandIcon from "./expand.png";
-import { Lecture } from "../../../businesslogic/types/lecture";
-import { Group } from "../../../businesslogic/types/group";
-import { LecturesContext } from "../../../businesslogic/LecturesProvider";
+import React, { useContext } from 'react';
+import './index.scss';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandIcon from './expand.png';
+import { Lecture, Group } from '../../../types/index';
+import { LecturesContext } from '../../../contexts/LecturesProvider';
 
 interface LectureCardProps {
   onGroupMouseOver: (id: string, name: string) => void;
@@ -14,31 +13,17 @@ interface LectureCardProps {
   isSelected: boolean;
 }
 
-export default function LectureCard({
-  onGroupMouseOver,
-  onCardClick,
-  lecture,
-  id,
-  isSelected,
-}: LectureCardProps) {
+export default function LectureCard({ onGroupMouseOver, onCardClick, lecture, id, isSelected }: LectureCardProps) {
+  const { addGroup } = useContext(LecturesContext)!;
 
-  const {addGroup} = useContext(LecturesContext);
-
-
-  function onGroupClick(group : Group){
-      addGroup(group);
+  function onGroupClick(group: Group) {
+    addGroup(group);
   }
-
 
   return (
     <div className="class" onClick={onCardClick} id={id}>
       <div className="class__name">{lecture.name}</div>
-      <Collapse
-        className="expanded"
-        in={isSelected}
-        timeout="auto"
-        unmountOnExit
-      >
+      <Collapse className="expanded" in={isSelected} timeout="auto" unmountOnExit>
         {lecture.groups.map((group, index) => (
           <div
             className="class__group"
@@ -48,16 +33,12 @@ export default function LectureCard({
           >
             <p>
               {group.time} {group.room} <br></br> {group.lecturer}
-            </p>{" "}
+            </p>{' '}
           </div>
         ))}
       </Collapse>
       <div onClick={onCardClick} id={id}>
-        <img
-          alt="expand"
-          src={ExpandIcon}
-          className={`class__expandIcon${isSelected ? "Rotate" : ""}`}
-        />
+        <img alt="expand" src={ExpandIcon} className={`class__expandIcon${isSelected ? 'Rotate' : ''}`} />
       </div>
     </div>
   );

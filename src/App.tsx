@@ -1,55 +1,40 @@
-import React, { useState } from "react";
-import TopBar from "./components/TopBar/";
-import Transfer from "./components/Transfer/";
-import "./App.scss";
-import {Scheduler} from "./components/Scheduler";
-import RightBar from "./components/RightBar";
-import { lectures } from "./businesslogic/mockData/lectures";
+import React, { useState, useContext } from 'react';
+import TopBar from './components/TopBar/';
+import Transfer from './components/Transfer/';
+import { Scheduler } from './components/Scheduler';
+import RightBar from './components/RightBar';
+import { CASContext } from './contexts/CASProvider';
+import styled from 'styled-components';
 
-import BusinessLogicContext from "./businesslogic/BusinessLogicContext";
-import { BuisnessProvided } from "./businesslogic/BusinessLogicProvider";
+const Wrapper = styled.div`
+  display: flex;
+`;
 
-function App() {
-	const [isOpenTransfer, setOpenTransfer] = useState(false);
+export const App = () => {
+  const [isOpenTransfer, setOpenTransfer] = useState(false);
 
+  const { logout } = useContext(CASContext)!;
 
-	return (
-		<div className="App">
-			<BusinessLogicContext.Consumer>
-				{(context) => (
-					<TopBar
-						handleTransfer={(e) => {
-							setOpenTransfer(!isOpenTransfer);
-						}}
-						onLangChange={(e) => {
-							console.log(e);
-						}}
-						handleLogout={() => {
-							(context as BuisnessProvided).reducers.userlogout();
-						}}
-					/>
-				)}
-			</BusinessLogicContext.Consumer>
-			<Transfer
-				isOpen={isOpenTransfer}
-				handleClose={(e) => {
-					setOpenTransfer(!isOpenTransfer);
-				}}
-			/>
-			<div className="wraper">
-				<div className="wraper__calendar">
-					<Scheduler />
-				</div>
-				<div className="wraper__rightbar">
-					<RightBar
-						lectures={lectures}
-						onGroupMouseOver={(id, name) => {
-						}}
-					/>
-				</div>
-			</div>
-		</div>
-	);
-}
+  const handleCloseTransfer = () => {
+    setOpenTransfer(!isOpenTransfer);
+  };
 
-export default App;
+  const onLangChange = () => {
+    console.log('Language changed');
+  };
+
+  const onGroupMouseOver = () => {
+    console.log(`On groupmouse over`);
+  };
+
+  return (
+    <>
+      <TopBar handleTransfer={handleCloseTransfer} onLangChange={onLangChange} handleLogout={logout} />
+      <Transfer isOpen={isOpenTransfer} handleClose={handleCloseTransfer} />
+      <Wrapper>
+        <Scheduler />
+        <RightBar onGroupMouseOver={onGroupMouseOver} />
+      </Wrapper>
+    </>
+  );
+};

@@ -1,68 +1,51 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
-import "./index.scss";
 import { SchedulerEvents } from "./SchedulerEvents";
-const days = ["", "poniedziałek", "wtorek", "środa", "czwartek", "piątek"];
+import { days, hours } from "../../constants/index";
+import styled from "styled-components";
 
-const hours = [
-  "8:00",
-  "9:00",
-  "10:00",
-  "11:00",
-  "12:00",
-  "13:00",
-  "14:00",
-  "15:00",
-  "16:00",
-  "17:00",
-  "18:00",
-  "19:00",
-];
+const SchedulerWrapper = styled.div`
+  flex-grow: 3;
+  margin-top: 20px;
+  border-collapse: collapse;
+`;
 
-let events: Array<number> = [];
-for (let i = 0; i < hours.length / 2; i++) {
-  events.push(i);
-}
+const TableBody = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
 
-let center: "center" = "center";
-let row: "row" = "row";
-let column: "column" = "column";
-// const collapse: "collapse" = "collapse";
-const tbodyStyles = {
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  flexDirection: column,
-};
+const TableRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
-const rowStyles = {
-  display: "flex",
-  flexDirection: row,
-};
+const TableCell = styled.div`
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  flex: 1;
+`;
 
-const cellStyles = {
-  border: "1px solid #ddd",
-  padding: "10px",
-  textAlign: center,
-  flex: 1,
-};
+const TableHead = styled.div`
+  display: flex;
+  width: 100%;
+`;
 
-const theadStyles = {
-  display: "flex",
-  width: "100%",
-};
-
-// const scheduler = {
-//   marginTop: "20px",
-//   borderCollapse: collapse,
-// };
+const TableHeadCell = styled.div`
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  flex: 1;
+`;
 
 export const Scheduler = () => {
   const [currentEventsIds, setCurrentEventsIds] = useState<Array<string>>([]);
   const cellRef = useRef<HTMLDivElement>(null);
   const [cellWidth, setCellWidth] = useState(0);
   const [cellTop, setCellTop] = useState(0);
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -98,29 +81,30 @@ export const Scheduler = () => {
 
   return (
     <>
-      <div className="scheduler">
-        <div style={theadStyles}>
+      <SchedulerWrapper>
+        <TableHead>
           {days.map((day, index) => (
-            <div className="th" key={index}>
-              {day}
-            </div>
+            <TableHeadCell key={index}>{day}</TableHeadCell>
           ))}
-        </div>
-        <div style={tbodyStyles}>
+        </TableHead>
+        <TableBody>
           {hours.map((hour, indexRow) => (
-            <div key={indexRow} style={rowStyles}>
+            <TableRow key={indexRow}>
               {[hour, "", "", "", "", ""].map((value, indexCell) =>
                 indexRow === 0 && indexCell === 1 ? (
-                  <div key={`${indexRow}${indexCell}`}  ref={cellRef} style={cellStyles}></div>
+                  <TableCell
+                    key={`${indexRow}${indexCell}`}
+                    ref={cellRef}
+                  ></TableCell>
                 ) : (
-                  <div key={`${indexRow}${indexCell}`} style={cellStyles}>{value}</div>
+                  <TableCell key={`${indexRow}${indexCell}`}>{value}</TableCell>
                 )
               )}
-            </div>
+            </TableRow>
           ))}
-        </div>
+        </TableBody>
         <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} />
-      </div>
+      </SchedulerWrapper>
     </>
   );
 };
