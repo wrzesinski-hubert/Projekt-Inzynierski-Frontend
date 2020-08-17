@@ -1,13 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { CourseCard } from './CourseCard/index';
-import { coursesContext } from '../../contexts/CoursesProvider';
+import { CourseCard } from './CourseCard';
+import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
 
-interface RightBarProps {
-  onGroupMouseOver: (id: number, name: string) => void;
-}
-
-const RightBarStyled = styled.div`
+const RightbarStyled = styled.div`
   padding-top: 10px;
   padding-left: 15px;
   padding-right: 15px;
@@ -30,11 +26,11 @@ const RightBarStyled = styled.div`
     border: 1px solid;
   }
 `;
-const RightBarTextStyled = styled.div`
+const RightbarTextStyled = styled.div`
   border-bottom: 1px solid;
 `;
 
-export default function RightBar({ onGroupMouseOver }: RightBarProps) {
+export default function Rightbar() {
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
   const { courses } = useContext(coursesContext)!;
@@ -45,21 +41,20 @@ export default function RightBar({ onGroupMouseOver }: RightBarProps) {
   };
 
   return (
-    <RightBarStyled>
-      <RightBarTextStyled>
+    <RightbarStyled>
+      <RightbarTextStyled>
         Hubert Wrzesiński<br></br>
         Semestr zimowy 2020/2021
-      </RightBarTextStyled>
+      </RightbarTextStyled>
       {courses.map((course, index) => (
         <CourseCard
           course={course}
           key={index}
           id={index.toString()}
-          onGroupMouseOver={onGroupMouseOver}
           onCardClick={onCardClick}
           isSelected={selectedCardId === index.toString()}
         />
       ))}
-    </RightBarStyled>
+    </RightbarStyled>
   );
 }

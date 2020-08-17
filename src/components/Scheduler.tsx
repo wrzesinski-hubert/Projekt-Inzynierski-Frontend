@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { SchedulerEvents } from "./SchedulerEvents";
-import { days, hours } from "../../constants/index";
+import { days, hours } from "../constants/index";
 import styled from "styled-components";
 
 const SchedulerWrapper = styled.div`

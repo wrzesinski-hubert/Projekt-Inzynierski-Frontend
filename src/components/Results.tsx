@@ -2,8 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { Input } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import { coursesContext } from '../../../contexts/CoursesProvider';
-import { Course } from '../../../types';
+import { coursesContext } from '../contexts/CoursesProvider';
+import { Course } from '../types';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -36,7 +36,7 @@ const Dropdown = styled.div`
 
 const useStyles = makeStyles({
   topbarInput: {
-    marginTop:"8px",
+    marginTop: '8px',
     width: '100%',
   },
 });
@@ -120,7 +120,6 @@ export const Results: React.FC = () => {
     //   course.groups.push(group);
     // }
   };
-
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>

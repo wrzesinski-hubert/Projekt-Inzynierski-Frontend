@@ -1,5 +1,5 @@
 import React from 'react';
-import { Group } from '../../../types';
+import { Group } from '../types';
 import styled from 'styled-components';
 
 interface SchedulerEventProps {

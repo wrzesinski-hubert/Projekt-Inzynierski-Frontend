@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { SchedulerRow } from '../SchedulerRow';
-import { coursesContext } from '../../../contexts/CoursesProvider';
-import { Group } from '../../../types';
+import { SchedulerRow } from './SchedulerRow';
+import { coursesContext } from '../contexts/CoursesProvider';
+import { Group } from '../types';
 
 interface SchedulerEventsProps {
   cellTop: number;
