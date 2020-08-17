@@ -3,12 +3,24 @@ import Modal from "@material-ui/core/Modal";
 import "./index.scss";
 import Fade from '@material-ui/core/Fade';
 import Input from "@material-ui/core/Input";
+import { makeStyles } from '@material-ui/core/styles';
+import styled from 'styled-components';
+
 interface TransferProps {
   handleClose: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   isOpen: boolean;
 }
 
 interface TransferState {}
+
+const useStyles = makeStyles({
+  wrapper: {
+    display: "flex",
+    justifyContent: "center",
+    textAlign: "center",
+    alignItems: "center",
+  },
+});
 
 export default class Transfer extends React.Component<
   TransferProps,
