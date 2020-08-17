@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, MouseEvent } from 'react';
 import Transfer from '../assets/transfer.png';
 import Search from '../assets/search.svg';
 import UK from '../assets/UK.png';
@@ -6,7 +6,7 @@ import PL from '../assets/PL.png';
 import User from '../assets/user.png';
 import CloseIcon from '../assets/close.svg';
 import { Profile } from './Profile';
-import { Results } from './Results';
+import { Dropdown } from './Dropdown';
 import styled from 'styled-components';
 
 const TopbarTextStyled = styled.div`
@@ -26,14 +26,14 @@ const TopbarStyled = styled.div`
   justify-content: space-between;
 `;
 
-const TopbarLogoStyled = styled.div`
+const TopbarLogoWrapperStyled = styled.div`
   display: flex;
   align-items: center;
   flex-grow: 0.5;
   justify-content: flex-start;
 `;
 
-const TopbarLogoImageStyled = styled.img`
+const TopbarLogoStyled = styled.img`
   width: 80px;
   height: 80px;
   @media only screen and (max-width: 670px) {
@@ -42,7 +42,7 @@ const TopbarLogoImageStyled = styled.img`
   }
 `;
 
-const TopbarInputDivStyled = styled.div`
+const TopbarInputStyled = styled.div`
   width: 70%;
   display: flex;
   flex-grow: 3;
@@ -76,38 +76,37 @@ const TopbarIconBox = styled.div`
 `;
 
 interface TopbarProps {
-  handleTransfer: (e: React.MouseEvent) => void;
-  handleLogout: () => void;
+  handleTransfer: (e: MouseEvent) => void;
 }
 
-export const Topbar = ({ handleTransfer, handleLogout }: TopbarProps) => {
+export const Topbar = ({ handleTransfer }: TopbarProps) => {
   const [isPolish, setIsPolish] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
 
-  const onLangChange = (event: React.MouseEvent) => setIsPolish(!isPolish);
+  const onLangChange = () => setIsPolish(!isPolish);
 
-  const handleProfile = (event: React.MouseEvent) => setAnchorEl(event.currentTarget as HTMLImageElement);
+  const handleProfile = (event: MouseEvent<HTMLImageElement>) => setAnchorEl(event.currentTarget);
 
   const handleClose = () => setAnchorEl(null);
 
   return (
     <TopbarStyled>
-      <TopbarLogoStyled>
-        <TopbarLogoImageStyled alt="logo" src="https://plannaplan.pl/img/logo.svg" />
+      <TopbarLogoWrapperStyled>
+        <TopbarLogoStyled alt="logo" src="https://plannaplan.pl/img/logo.svg" />
         <TopbarTextStyled> plan na plan </TopbarTextStyled>
-      </TopbarLogoStyled>
-      <TopbarInputDivStyled>
+      </TopbarLogoWrapperStyled>
+      <TopbarInputStyled>
         <TopbarInputIconStyled alt="search" src={Search} />
         <TopbarInputFieldStyled>
-          <Results />
+          <Dropdown />
         </TopbarInputFieldStyled>
         <TopbarInputIconStyled alt="close" src={CloseIcon} />
-      </TopbarInputDivStyled>
+      </TopbarInputStyled>
       <TopbarIconBox>
         <TopbarIcon alt="transfer" src={Transfer} onClick={handleTransfer} />
         <TopbarIcon alt="change_language" src={isPolish ? UK : PL} onClick={onLangChange} />
         <TopbarIcon alt="profile" src={User} onClick={handleProfile} />
-        <Profile anchorEl={anchorEl} handleClose={handleClose} handleLogout={handleLogout} />
+        <Profile anchorEl={anchorEl} handleClose={handleClose} />
       </TopbarIconBox>
     </TopbarStyled>
   );

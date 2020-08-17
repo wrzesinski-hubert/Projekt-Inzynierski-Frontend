@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, MouseEvent } from 'react';
 import { CourseCard } from './CourseCard';
 import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
@@ -30,23 +30,25 @@ const RightbarTextStyled = styled.div`
   border-bottom: 1px solid;
 `;
 
-export default function Rightbar() {
+export const Rightbar = () => {
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
-  const { courses } = useContext(coursesContext)!;
+  const { choosenCourses } = useContext(coursesContext)!;
 
-  const onCardClick = (e: React.MouseEvent) => {
-    const target = e.currentTarget as HTMLElement;
+  //działa clunky
+  const onCardClick = (event: MouseEvent) => {
+    const target = event.currentTarget;
     selectedCardId === target.id ? setSelectedCardId(null) : setSelectedCardId(target.id);
   };
 
+  //need to insert student name from db and course maybe based on current time or from db too
   return (
     <RightbarStyled>
       <RightbarTextStyled>
         Hubert Wrzesiński<br></br>
         Semestr zimowy 2020/2021
       </RightbarTextStyled>
-      {courses.map((course, index) => (
+      {choosenCourses.map((course, index) => (
         <CourseCard
           course={course}
           key={index}
@@ -57,4 +59,4 @@ export default function Rightbar() {
       ))}
     </RightbarStyled>
   );
-}
+};

@@ -27,7 +27,6 @@ export const CASProvider = ({ children }: CASProviderProps) => {
       redirectToCASLoginService();
     }
     if (ticket) {
-      console.log(`Ticket is: ${ticket}`);
       setUser({ ...user, ticket: ticket });
     }
   }

@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
-import { useState } from "react";
-import { SchedulerEvents } from "./SchedulerEvents";
-import { days, hours } from "../constants/index";
-import styled from "styled-components";
+import React, { useEffect, useRef } from 'react';
+import { useState } from 'react';
+import { SchedulerEvents } from './SchedulerEvents';
+import { days, hours } from '../constants/index';
+import styled from 'styled-components';
 
 const SchedulerWrapper = styled.div`
   flex-grow: 3;
@@ -55,7 +55,7 @@ export const Scheduler = () => {
       }
     };
     handleResize();
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export const Scheduler = () => {
       currentEventsIds.map((eventId: string) => {
         const event = document.getElementById(eventId);
         if (event) {
-          event.style.display = "block";
+          event.style.display = 'block';
         }
       });
     };
@@ -90,15 +90,12 @@ export const Scheduler = () => {
         <TableBody>
           {hours.map((hour, indexRow) => (
             <TableRow key={indexRow}>
-              {[hour, "", "", "", "", ""].map((value, indexCell) =>
+              {[hour, '', '', '', '', ''].map((value, indexCell) =>
                 indexRow === 0 && indexCell === 1 ? (
-                  <TableCell
-                    key={`${indexRow}${indexCell}`}
-                    ref={cellRef}
-                  ></TableCell>
+                  <TableCell key={`${indexRow}${indexCell}`} ref={cellRef}></TableCell>
                 ) : (
                   <TableCell key={`${indexRow}${indexCell}`}>{value}</TableCell>
-                )
+                ),
               )}
             </TableRow>
           ))}

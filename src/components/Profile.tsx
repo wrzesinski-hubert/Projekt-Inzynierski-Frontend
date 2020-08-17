@@ -1,31 +1,20 @@
 import { Menu, MenuItem } from '@material-ui/core';
-import React, { FC } from 'react';
+import React, { useContext } from 'react';
+import { CASContext } from '../contexts/CASProvider';
 
 interface ProfileProps {
   anchorEl: HTMLElement | null;
   handleClose: () => void;
-  handleLogout: () => void;
 }
 
-export const Profile: FC<ProfileProps> = ({ anchorEl, handleClose, handleLogout, ...restProps }) => {
+export const Profile = ({ anchorEl, handleClose }: ProfileProps) => {
+  const { logout } = useContext(CASContext)!;
+
   return (
-    <Menu
-      className="top-bar__menu"
-      id="simple-menu"
-      anchorEl={anchorEl}
-      keepMounted
-      open={Boolean(anchorEl)}
-      onClose={handleClose}
-    >
+    <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
       <MenuItem>Profile</MenuItem>
       <MenuItem>My account</MenuItem>
-      <MenuItem
-        onClick={() => {
-          handleLogout();
-        }}
-      >
-        Logout
-      </MenuItem>
+      <MenuItem onClick={logout}>Logout</MenuItem>
     </Menu>
   );
 };

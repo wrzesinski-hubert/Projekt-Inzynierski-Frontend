@@ -1,6 +1,6 @@
 export enum Types {
-  addCourse = 'ADD_COURSE',
+  addChoosenCourse = 'ADD_COURSE',
   removecourse = 'REMOVE_COURSE',
-  addGroup = 'ADD_GROUP',
+  addChoosenGroup = 'ADD_GROUP',
   removeGroup = 'REMOVE_GROUP',
 }

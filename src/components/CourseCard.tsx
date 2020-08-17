@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, MouseEvent } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandIcon from '../assets/expand.png';
 import { Course, Group } from '../types/index';
@@ -10,7 +10,7 @@ interface ClassExandIconProps {
   isSelected: boolean;
 }
 
-const ClassStyled = styled.div`
+const CourseStyled = styled.div`
   display: flex;
   min-height: 50px;
   background-color: rgb(100, 181, 246) !important;
@@ -25,7 +25,7 @@ const ClassStyled = styled.div`
   align-items: stretch;
 `;
 
-const ClassNameStyled = styled.div`
+const CourseNameStyled = styled.div`
   padding-top: 10px;
   padding-bottom: 10px;
 `;
@@ -68,39 +68,38 @@ const useStyles = makeStyles({
 });
 
 interface CourseCardProps {
-  onCardClick: (e: React.MouseEvent) => void;
+  onCardClick: (event: MouseEvent) => void;
   course: Course;
   id: string;
   isSelected: boolean;
 }
 
-export function CourseCard({ onCardClick, course, id, isSelected }: CourseCardProps) {
+export const CourseCard = ({ onCardClick, course, id, isSelected }: CourseCardProps) => {
   const classes = useStyles();
-  const { addGroup, courses } = useContext(coursesContext)!;
 
-  function onGroupClick(group: Group) {
-    addGroup(group);
-  }
+  const { addChoosenGroup, choosenCourses } = useContext(coursesContext)!;
+
+  const onGroupClick = (group: Group) => addChoosenGroup(group);
 
   return (
-    <ClassStyled onClick={onCardClick} id={id}>
-      <ClassNameStyled>{course.name}</ClassNameStyled>
+    <CourseStyled onClick={onCardClick} id={id}>
+      <CourseNameStyled>{course.name}</CourseNameStyled>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
-        {courses.map((course, index) => (
-          <>
+        {choosenCourses.map((course) => (
+          <div key={id}>
             {course.groups.map((group, index) => (
               <ClassGroupStyled key={index} onClick={() => onGroupClick(group)}>
                 <p>
                   {group.time} {group.room} <br></br> {group.lecturer}
-                </p>{' '}
+                </p>
               </ClassGroupStyled>
             ))}
-          </>
+          </div>
         ))}
       </Collapse>
       <div onClick={onCardClick} id={id}>
         <ClassExandIconStyled isSelected={isSelected} alt="expand" src={ExpandIcon} />
       </div>
-    </ClassStyled>
+    </CourseStyled>
   );
-}
+};
