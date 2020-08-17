@@ -1,17 +1,48 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { Input } from '@material-ui/core';
-import './index.scss';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { coursesContext } from '../../../contexts/CoursesProvider';
-import { Course, Group } from '../../../types';
+import { Course } from '../../../types';
+import styled from 'styled-components';
+import { makeStyles } from '@material-ui/core/styles';
 
 interface courseData {
   name: string;
   id: number;
 }
 
+const CourseStyled = styled.div`
+  position: relative;
+  z-index: 10;
+  padding: 5px;
+  padding-left: 20px;
+  background-color: #e6c759;
+  font-size: 18px;
+  font-family: Lato;
+  :hover {
+    background-color: #d4b851;
+    cursor: pointer;
+  }
+`;
+
+const Dropdown = styled.div`
+  max-height: 400px;
+  overflow-y: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const useStyles = makeStyles({
+  topbarInput: {
+    marginTop:"8px",
+    width: '100%',
+  },
+});
+
 export const Results: React.FC = () => {
+  const classes = useStyles();
   const [input, setInput] = useState<string>('');
   const [coursesData, setcoursesData] = useState<Array<courseData>>([]);
   const [filteredcoursesData, setFilteredcoursesData] = useState<Array<courseData>>([]);
@@ -90,25 +121,26 @@ export const Results: React.FC = () => {
     // }
   };
 
+
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <div>
         <Input
           placeholder="Wyszukaj..."
           inputProps={{ 'aria-label': 'description' }}
-          className="top-bar__input-field"
+          className={classes.topbarInput}
           onChange={handleChange}
           onClick={handleClick}
           value={input}
         />
         {open ? (
-          <div className="dropdown">
+          <Dropdown>
             {filteredcoursesData.map((course, index) => (
-              <div className="course" key={index} id={String(course.id)} onClick={onCourseClick}>
+              <CourseStyled key={index} id={String(course.id)} onClick={onCourseClick}>
                 <p>{course.name} </p>
-              </div>
+              </CourseStyled>
             ))}
-          </div>
+          </Dropdown>
         ) : null}
       </div>
     </ClickAwayListener>

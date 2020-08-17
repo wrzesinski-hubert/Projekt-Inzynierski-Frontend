@@ -26,7 +26,8 @@ interface SchedulerRowProps {
 }
 
 export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth }: SchedulerRowProps) => {
-  console.log(`You passed me these of a groupzzz: ${groups}`);
+  console.log(`You passed me these of a groupzzz`);
+  console.log(groups)
 
   return (
     <>

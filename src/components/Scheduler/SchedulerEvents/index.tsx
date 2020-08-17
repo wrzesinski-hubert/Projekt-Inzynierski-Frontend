@@ -34,7 +34,6 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
     function mapGroupTimeToEventRow(groups: Array<Group>) {
       const groupsMappedToEventsTemp = [];
       for (const group of groups) {
-        console.log(group);
         const groupTime = group.time;
         const eventRow: number = groupTimeToEventRowMapping[groupTime];
         const groupMappedToEvent: any = {
@@ -61,8 +60,6 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
   }, [choosenGroups]);
 
   useEffect(() => {
-    console.log(choosenGroups);
-    console.log(groupsMappedToEvents);
   }, [groupsMappedToEvents]);
 
   return (

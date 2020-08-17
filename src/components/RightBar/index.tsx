@@ -1,12 +1,38 @@
 import React, { useState, useContext } from 'react';
-import './index.scss';
-import { Course } from '../../types';
 import { CourseCard } from './CourseCard/index';
 import { coursesContext } from '../../contexts/CoursesProvider';
+import styled from 'styled-components';
 
 interface RightBarProps {
   onGroupMouseOver: (id: number, name: string) => void;
 }
+
+const RightBarStyled = styled.div`
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-align: center;
+  font-family: Lato;
+  width: 300px;
+  height: 85vh;
+  overflow-y: scroll;
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #f5f5f5;
+  }
+  ::-webkit-scrollbar {
+    width: 12px;
+    background-color: #f5f5f5;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #d4b851;
+    border: 1px solid;
+  }
+`;
+const RightBarTextStyled = styled.div`
+  border-bottom: 1px solid;
+`;
 
 export default function RightBar({ onGroupMouseOver }: RightBarProps) {
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
@@ -19,11 +45,11 @@ export default function RightBar({ onGroupMouseOver }: RightBarProps) {
   };
 
   return (
-    <div className="right-bar">
-      <div className="right-bar__text">
+    <RightBarStyled>
+      <RightBarTextStyled>
         Hubert Wrzesiński<br></br>
         Semestr zimowy 2020/2021
-      </div>
+      </RightBarTextStyled>
       {courses.map((course, index) => (
         <CourseCard
           course={course}
@@ -34,6 +60,6 @@ export default function RightBar({ onGroupMouseOver }: RightBarProps) {
           isSelected={selectedCardId === index.toString()}
         />
       ))}
-    </div>
+    </RightBarStyled>
   );
 }
