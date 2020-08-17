@@ -26,21 +26,20 @@ interface SchedulerRowProps {
 }
 
 export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth }: SchedulerRowProps) => {
-  // console.log(`You passed me these of a groupzzz`);
-  // console.log(groups)
+
 
   return (
     <>
-      {[...Array(5)].map((value, eventIndex) => (
+      {[...Array(5)].map((_, eventIndex) => (
         <SchedulerEvent
           eventIndex={eventIndex}
           cellTop={cellTop}
           cellWidth={cellWidth}
-          key={`eventRow${indexRow}eventCol${eventIndex}`}
+          key={eventIndex}
           id={`eventRow${indexRow}eventCol${eventIndex}`}
         >
           {groups.map((group, index) =>
-            group.day === eventIndex ? <div key={index}>{groups[index]?.lecturer}</div> : null,
+            group.day === eventIndex && <div key={index}>{groups[index]?.lecturer}</div>,
           )}
         </SchedulerEvent>
       ))}

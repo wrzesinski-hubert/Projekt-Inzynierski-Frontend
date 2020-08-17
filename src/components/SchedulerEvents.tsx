@@ -11,7 +11,7 @@ interface SchedulerEventsProps {
 export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) => {
   const { choosenGroups } = useContext(coursesContext)!;
 
-  const [groupsMappedToEvents, setGroupsMappedToEvents] = useState<any>([]);
+  const [choosenGroupsMappedToEvents, setChoosenGroupsMappedToEvents] = useState<any>([]);
 
   interface GroupTimeToEventRowMapping {
     [time: string]: number;
@@ -29,22 +29,7 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
   };
 
   useEffect(() => {
-    function mapGroupTimeToEventRow(groups: Array<Group>) {
-      const groupsMappedToEventsTemp = [];
-      for (const group of groups) {
-        const groupTime = group.time;
-        const eventRow: number = groupTimeToEventRowMapping[groupTime];
-        const groupMappedToEvent: any = {
-          id: group.id,
-          day: group.day,
-          eventRow: eventRow,
-          lecturer: group.lecturer,
-          room: group.room,
-        };
-        setGroupsMappedToEvents((groupsMappedToEvents: any) => [...groupsMappedToEvents, groupMappedToEvent]);
-      }
-    }
-    function alternative(choosenGroups: Array<Group>) {
+    function mapGroupTimeToEventRow(choosenGroups: Array<Group>) {
       const groupsMapped = choosenGroups.map(({ id, day, lecturer, room, time }) => ({
         id,
         day,
@@ -52,9 +37,9 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
         room,
         eventRow: groupTimeToEventRowMapping[time],
       }));
-      setGroupsMappedToEvents(groupsMapped);
+      setChoosenGroupsMappedToEvents(groupsMapped);
     }
-    alternative(choosenGroups);
+    mapGroupTimeToEventRow(choosenGroups);
   }, [choosenGroups]);
 
   return (
@@ -62,7 +47,7 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
       {[...Array(6)].map((_, index) => (
         <SchedulerRow
           key={index}
-          groups={groupsMappedToEvents.filter((group: any) => {
+          groups={choosenGroupsMappedToEvents.filter((group: any) => {
             return group.eventRow === index;
           })}
           indexRow={index}
