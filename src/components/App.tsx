@@ -1,9 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { Topbar } from './Topbar';
-import { Transfer } from './Transfer/Transfer';
+import { Transfer } from './Transfer';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
-import { CASContext } from '../contexts/CASProvider';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`

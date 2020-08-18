@@ -51,7 +51,13 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
             return group.eventRow === index;
           })}
           indexRow={index}
-          cellTop={cellTop + (10 + 70 * index)}
+          cellTop={
+            index == 3
+              ? cellTop + (25 + 80 * index)
+              : index < 3
+              ? cellTop + (12 + 80 * index)
+              : cellTop + (25 + 80 * index)
+          }
           cellWidth={cellWidth}
         />
       ))}

@@ -13,7 +13,7 @@ const SchedulerEvent = styled.div<SchedulerEventProps>`
   top: ${(props) => props.cellTop}px;
   left: ${(props) => props.cellWidth + 5 + props.cellWidth * props.eventIndex}px;
   width: ${(props) => (props.cellWidth * 2) / 3}px;
-  height: 60px;
+  height: 69px;
   background-color: lightblue;
   z-index: 2;
 `;
