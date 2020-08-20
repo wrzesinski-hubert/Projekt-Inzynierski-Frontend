@@ -20,21 +20,15 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const [choosenGroups, setChoosenGroups] = useState<Array<Group>>([]);
 
   const addChoosenCourse = (choosenCourse: Course) => {
-    console.log('adding course');
     setChoosenCourses([...choosenCourses, choosenCourse]);
   };
   const addChoosenGroup = (choosenGroup: Group) => {
+    //const choosenCourse = courses.filter(course=>(course.groups.map(group=>group.id).includes(choosenGroup.id)))
+    console.log("id" + choosenGroup.id )
+    console.log("mapowanie: " + courses.filter(course=>(course.groups.map(group=>group.id))));
+    //console.log("wybrane kursy: " + choosenCourse);
     setChoosenGroups([...choosenGroups, choosenGroup]);
   };
-
-  useEffect(() => {
-    console.log('All courses');
-    console.log(courses);
-  }, [courses]);
-  useEffect(() => {
-    console.log('Choosen courses');
-    console.log(choosenCourses);
-  }, [choosenCourses]);
 
   useEffect(() => {
     const fetchData = async () => {

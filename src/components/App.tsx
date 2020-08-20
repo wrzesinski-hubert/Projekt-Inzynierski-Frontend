@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Topbar } from './Topbar';
+import Topbar from './Topbar';
 import { Transfer } from './Transfer';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';

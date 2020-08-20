@@ -18,14 +18,12 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
   }
   //delete later additional mappings
   const groupTimeToEventRowMapping: GroupTimeToEventRowMapping = {
-    '08.15': 0,
+    '8.15': 0,
     '10.00': 1,
     '11.45': 2,
     '13.45': 3,
     '15.30': 4,
     '17.15': 5,
-    '10.17': 0,
-    '13.55': 1,
   };
 
   useEffect(() => {

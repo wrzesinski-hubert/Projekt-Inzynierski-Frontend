@@ -36,7 +36,12 @@ const useStyles = makeStyles({
   },
 });
 
-export const Dropdown = () => {
+interface DropdownProps {
+  clearInput: boolean;
+  handleClearInput: ()=>void;
+}
+
+export const Dropdown = ({clearInput,handleClearInput}:DropdownProps) => {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -57,6 +62,13 @@ export const Dropdown = () => {
     };
     filterCourses(input);
   }, [input, open, choosenCourses]);
+
+  useEffect(()=>{
+    if(clearInput){
+      setInput('')
+      handleClearInput()
+    }
+  },[clearInput])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
 

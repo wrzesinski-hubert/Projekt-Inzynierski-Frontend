@@ -15,7 +15,7 @@ const TopbarTextStyled = styled.div`
   }
 `;
 
-const TopbarStyled = styled.div`
+const Topbar = styled.div`
   background-color: #ffdc61;
   height: 80px;
   padding: 5px;
@@ -58,6 +58,7 @@ const TopbarInputIconStyled = styled.img`
   @media only screen and (max-width: 670px) {
     width: 25px;
   }
+  cursor: pointer;
 `;
 
 const TopbarIcon = styled.img`
@@ -79,7 +80,8 @@ interface TopbarProps {
   handleTransfer: (e: MouseEvent) => void;
 }
 
-export const Topbar = ({ handleTransfer }: TopbarProps) => {
+export default function ({ handleTransfer }: TopbarProps) {
+  const [clearInput, setClearInput] = useState(false);
   const [isPolish, setIsPolish] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
 
@@ -89,8 +91,10 @@ export const Topbar = ({ handleTransfer }: TopbarProps) => {
 
   const handleClose = () => setAnchorEl(null);
 
+  const handleClearInput = () => setClearInput(!clearInput);
+
   return (
-    <TopbarStyled>
+    <Topbar>
       <TopbarLogoWrapperStyled>
         <TopbarLogoStyled alt="logo" src="https://plannaplan.pl/img/logo.svg" />
         <TopbarTextStyled> plan na plan </TopbarTextStyled>
@@ -98,9 +102,9 @@ export const Topbar = ({ handleTransfer }: TopbarProps) => {
       <TopbarInputStyled>
         <TopbarInputIconStyled alt="search" src={Search} />
         <TopbarInputFieldStyled>
-          <Dropdown />
+          <Dropdown clearInput={clearInput} handleClearInput={handleClearInput}/>
         </TopbarInputFieldStyled>
-        <TopbarInputIconStyled alt="close" src={CloseIcon} />
+        <TopbarInputIconStyled alt="close" src={CloseIcon} onClick={handleClearInput}/>
       </TopbarInputStyled>
       <TopbarIconBox>
         <TopbarIcon alt="transfer" src={Transfer} onClick={handleTransfer} />
@@ -108,6 +112,6 @@ export const Topbar = ({ handleTransfer }: TopbarProps) => {
         <TopbarIcon alt="profile" src={User} onClick={handleProfile} />
         <Profile anchorEl={anchorEl} handleClose={handleClose} />
       </TopbarIconBox>
-    </TopbarStyled>
+    </Topbar>
   );
 };
