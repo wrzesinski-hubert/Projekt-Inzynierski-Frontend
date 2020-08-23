@@ -33,7 +33,14 @@ const RightbarTextStyled = styled.div`
 export const Rightbar = () => {
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
-  const { choosenCourses } = useContext(coursesContext)!;
+  const { courses, basket } = useContext(coursesContext)!;
+
+  const getBasketGroups = () => {
+    const ids = basket.map(({ id }) => id);
+    return courses.filter(({ id }) => ids.includes(id));
+  };
+
+  const filteredCourses = getBasketGroups();
 
   //działa clunky
   const onCardClick = (event: MouseEvent) => {
@@ -48,7 +55,7 @@ export const Rightbar = () => {
         Hubert Wrzesiński<br></br>
         Semestr zimowy 2020/2021
       </RightbarTextStyled>
-      {choosenCourses.map((course, index) => (
+      {filteredCourses.map((course, index) => (
         <CourseCard
           course={course}
           key={index}

@@ -50,18 +50,18 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
   //courses - choosenCourses
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
 
-  const { courses, choosenCourses, addToBasket } = useContext(coursesContext)!;
+  const { courses, basket, addToBasket } = useContext(coursesContext)!;
 
   useEffect(() => {
     const filterCourses = (input: string) => {
-      const choosenCoursesNames = choosenCourses.map(({ name }) => name.trim());
+      const choosenCoursesNames = basket.map(({ name }) => name.trim());
       const filteredCourses = courses.filter(
         ({ name }) => name.toLowerCase().includes(input.toLowerCase()) && !choosenCoursesNames.includes(name),
       );
       setFilteredCourses(filteredCourses);
     };
     filterCourses(input);
-  }, [input, open, choosenCourses]);
+  }, [input, open, basket]);
 
   useEffect(() => {
     if (clearInput) {
@@ -83,7 +83,7 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
       const name = target.textContent;
 
       //porozmawiać z Filipem, żeby odrobinę przerobił endpoint
-      const course: Basket = { name: name, id: parseInt(id), lecture: null, class: null };
+      const course: Basket = { name: name, id: parseInt(id), lecture: null, classes: null };
 
       addToBasket(course);
       setOpen(false);

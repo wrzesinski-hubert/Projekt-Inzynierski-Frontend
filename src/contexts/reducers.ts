@@ -3,7 +3,7 @@
 export enum Types {
   addToBasket = 'ADD_CHOOSEN_COURSE',
   removeChoosenCourse = 'REMOVE_CHOOSEN_COURSE',
-  addChoosenGroup = 'ADD_CHOOSEN_GROUP',
+  addGroup = 'ADD_CHOOSEN_GROUP',
   removeChoosenGroup = 'REMOVE_CHOOSEN_GROUP',
 }
 
@@ -21,7 +21,7 @@ export enum Types {
 
 // export const choosenGroupsReducer = (state, action) => {
 //   switch (action.type) {
-//     case Types.addChoosenGroup:
+//     case Types.addGroup:
 //       return add;
 //   }
 // };

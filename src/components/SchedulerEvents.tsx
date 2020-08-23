@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SchedulerRow } from './SchedulerRow';
 import { coursesContext } from '../contexts/CoursesProvider';
-import { Group } from '../types';
+import { Group, Basket } from '../types';
 
 interface SchedulerEventsProps {
   cellTop: number;
@@ -9,7 +9,7 @@ interface SchedulerEventsProps {
 }
 
 export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) => {
-  const { choosenGroups } = useContext(coursesContext)!;
+  const { basket } = useContext(coursesContext)!;
 
   const [choosenGroupsMappedToEvents, setChoosenGroupsMappedToEvents] = useState<any>([]);
 
@@ -26,8 +26,17 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
   };
 
   useEffect(() => {
-    function mapGroupTimeToEventRow(choosenGroups: Array<Group>) {
-      const groupsMapped = choosenGroups.map(({ id, day, lecturer, room, time }) => ({
+    function mapGroupTimeToEventRow(basket: Array<Basket>) {
+      const basketGroups = basket.map(({ classes, lecture }) => ({
+        ...classes,
+        ...lecture,
+      })) as Array<Group>;
+
+      console.log('passed basket');
+      console.log(basket);
+      console.log(`basketgroups`);
+      console.log(basketGroups);
+      const groupsMapped = basketGroups.map(({ id, day, lecturer, room, time }) => ({
         id,
         day,
         lecturer,
@@ -36,8 +45,8 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
       }));
       setChoosenGroupsMappedToEvents(groupsMapped);
     }
-    mapGroupTimeToEventRow(choosenGroups);
-  }, [choosenGroups]);
+    mapGroupTimeToEventRow(basket);
+  }, [basket]);
 
   return (
     <div>

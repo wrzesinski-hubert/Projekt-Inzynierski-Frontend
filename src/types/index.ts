@@ -1,13 +1,13 @@
-const COURSE = 'course';
-const CLASS = 'class';
-
-export type GroupType = typeof COURSE | typeof CLASS;
+export enum GroupType {
+  LECTURE = 'LECTURE',
+  CLASS = 'CLASS',
+}
 
 export interface Basket {
   id: number;
   name: string;
   lecture: Group | null;
-  class: Group | null;
+  classes: Group | null;
 }
 
 export interface Group {
