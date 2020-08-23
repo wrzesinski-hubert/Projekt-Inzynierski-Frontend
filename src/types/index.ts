@@ -1,6 +1,13 @@
-export enum GroupType {
-  course = 'course',
-  CLASS = 'class',
+const COURSE = 'course';
+const CLASS = 'class';
+
+export type GroupType = typeof COURSE | typeof CLASS;
+
+export interface CourseBasket {
+  id: number;
+  name: string;
+  lecture: Group | null;
+  class: Group | null;
 }
 
 export interface Group {
@@ -9,7 +16,7 @@ export interface Group {
   time: string;
   lecturer: string;
   room: string;
-  groupType: GroupType;
+  type: GroupType;
   capacity?: number;
 }
 
@@ -18,10 +25,7 @@ export interface Course {
   name: string;
   groups: Array<Group>;
 }
-export interface courseInit {
-  name: string;
-  id: number;
-}
+
 export interface User {
   name?: string;
   surname?: string;

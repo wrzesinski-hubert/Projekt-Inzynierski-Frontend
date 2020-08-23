@@ -77,18 +77,22 @@ interface CourseCardProps {
 export const CourseCard = ({ onCardClick, course, id, isSelected }: CourseCardProps) => {
   const classes = useStyles();
 
-  const { addChoosenGroup, choosenCourses } = useContext(coursesContext)!;
+  const { addChoosenGroup, courses, choosenCourses } = useContext(coursesContext)!;
 
-  const onGroupClick = (group: Group) => addChoosenGroup(group);
+  const choosenCoursesIds = choosenCourses.map(({ id }) => id);
+
+  const choosenCoursesWithGroups = courses.filter(({ id }) => choosenCoursesIds.includes(id));
+
+  const onGroupClick = (group: Group, id: number) => addChoosenGroup(group, id);
 
   return (
     <CourseStyled onClick={onCardClick} id={id}>
       <CourseNameStyled>{course.name}</CourseNameStyled>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
-        {choosenCourses.map((course) => (
+        {choosenCoursesWithGroups.map((course) => (
           <div key={id}>
-            {course.groups.map((group, index) => (
-              <ClassGroupStyled key={index} onClick={() => onGroupClick(group)}>
+            {course.groups!.map((group, index) => (
+              <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
                 <p>
                   {group.time} {group.room} <br></br> {group.lecturer}
                 </p>

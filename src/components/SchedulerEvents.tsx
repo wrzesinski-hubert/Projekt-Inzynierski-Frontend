@@ -16,7 +16,6 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
   interface GroupTimeToEventRowMapping {
     [time: string]: number;
   }
-  //delete later additional mappings
   const groupTimeToEventRowMapping: GroupTimeToEventRowMapping = {
     '8.15': 0,
     '10.00': 1,

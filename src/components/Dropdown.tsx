@@ -38,10 +38,10 @@ const useStyles = makeStyles({
 
 interface DropdownProps {
   clearInput: boolean;
-  handleClearInput: ()=>void;
+  handleClearInput: () => void;
 }
 
-export const Dropdown = ({clearInput,handleClearInput}:DropdownProps) => {
+export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -63,12 +63,12 @@ export const Dropdown = ({clearInput,handleClearInput}:DropdownProps) => {
     filterCourses(input);
   }, [input, open, choosenCourses]);
 
-  useEffect(()=>{
-    if(clearInput){
-      setInput('')
-      handleClearInput()
+  useEffect(() => {
+    if (clearInput) {
+      setInput('');
+      handleClearInput();
     }
-  },[clearInput])
+  }, [clearInput]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
 
@@ -82,16 +82,14 @@ export const Dropdown = ({clearInput,handleClearInput}:DropdownProps) => {
       const id = target.id;
       const name = target.textContent;
 
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/getCourseGroups?id=${id}`);
-
       //porozmawiać z Filipem, żeby odrobinę przerobił endpoint
-      const course: Course = {
+      const choosenCourse = {
         name: name,
         id: parseInt(id),
-        groups: data,
+        groups: [],
       };
 
-      addChoosenCourse(course);
+      addChoosenCourse(choosenCourse);
       setOpen(false);
     }
   };
