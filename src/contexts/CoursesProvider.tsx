@@ -1,13 +1,13 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { Course, Group, CourseBasket } from '../types';
+import { Course, Group, Basket } from '../types';
 import axios from 'axios';
 
 interface CourseContext {
   courses: Array<Course>;
   choosenCourses: Array<Course>;
   choosenGroups: Array<Group>;
-  coursesBasket: Array<CourseBasket>;
-  addChoosenCourse: (courses: Course) => void;
+  basket: Array<Basket>;
+  addToBasket: (courses: Basket) => void;
   addChoosenGroup: (group: Group, id: number) => void;
 }
 export const coursesContext = createContext<CourseContext | null>(null);
@@ -19,14 +19,17 @@ interface CoursesProviderProps {
 export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   //fetch courses with groups
   const [courses, setCourses] = useState<Array<Course>>([]);
-  const [coursesBasket, setCoursesBasket] = useState<Array<CourseBasket>>([]);
+  const [basket, setBasket] = useState<Array<Basket>>([]);
   //with groups
   const [choosenCourses, setChoosenCourses] = useState<Array<Course>>([]);
   const [choosenGroups, setChoosenGroups] = useState<Array<Group>>([]);
 
-  const addChoosenCourse = (choosenCourse: Course) => {
-    setChoosenCourses([...choosenCourses, choosenCourse]);
-  };
+  const addToBasket = (course: Basket) => setBasket([...basket, course]);
+
+  useEffect(() => {
+    console.log(basket);
+  }, [basket]);
+
   const addChoosenGroup = (choosenGroup: Group, id: number) => {
     //move to utilities
     //change type to group type from api
@@ -76,7 +79,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   }, []);
 
   return (
-    <coursesContext.Provider value={{ courses, choosenGroups, choosenCourses, addChoosenCourse, addChoosenGroup }}>
+    <coursesContext.Provider value={{ courses, choosenGroups, choosenCourses, basket, addToBasket, addChoosenGroup }}>
       {children}
     </coursesContext.Provider>
   );

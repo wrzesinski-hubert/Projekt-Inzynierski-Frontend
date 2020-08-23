@@ -3,7 +3,7 @@ const CLASS = 'class';
 
 export type GroupType = typeof COURSE | typeof CLASS;
 
-export interface CourseBasket {
+export interface Basket {
   id: number;
   name: string;
   lecture: Group | null;

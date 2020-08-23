@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Input } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { coursesContext } from '../contexts/CoursesProvider';
-import { Course } from '../types';
+import { Course, Basket } from '../types';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -50,7 +50,7 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
   //courses - choosenCourses
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
 
-  const { courses, choosenCourses, addChoosenCourse } = useContext(coursesContext)!;
+  const { courses, choosenCourses, addToBasket } = useContext(coursesContext)!;
 
   useEffect(() => {
     const filterCourses = (input: string) => {
@@ -83,13 +83,9 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
       const name = target.textContent;
 
       //porozmawiać z Filipem, żeby odrobinę przerobił endpoint
-      const choosenCourse = {
-        name: name,
-        id: parseInt(id),
-        groups: [],
-      };
+      const course: Basket = { name: name, id: parseInt(id), lecture: null, class: null };
 
-      addChoosenCourse(choosenCourse);
+      addToBasket(course);
       setOpen(false);
     }
   };

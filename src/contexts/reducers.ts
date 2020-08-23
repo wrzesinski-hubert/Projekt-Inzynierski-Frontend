@@ -1,14 +1,14 @@
 // import { Group, Course } from '../types';
 
 export enum Types {
-  addChoosenCourse = 'ADD_CHOOSEN_COURSE',
+  addToBasket = 'ADD_CHOOSEN_COURSE',
   removeChoosenCourse = 'REMOVE_CHOOSEN_COURSE',
   addChoosenGroup = 'ADD_CHOOSEN_GROUP',
   removeChoosenGroup = 'REMOVE_CHOOSEN_GROUP',
 }
 
 // type ChoosenCoursesPayload = {
-//   [Types.addChoosenCourse]: {};
+//   [Types.addToBasket]: {};
 // };
 
 // type ChoosenGroupsPayload = {
