@@ -44,14 +44,8 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: courses } = await axios.get(`${process.env.REACT_APP_API_URL}/getCourses`);
-
-      for (const course of courses) {
-        const { data: groups } = await axios.get(`${process.env.REACT_APP_API_URL}/getCourseGroups?id=${course.id}`);
-        //porozmawiać z Filipem, żeby odrobinę przerobił endpoint
-        course.groups = groups;
-      }
-
+      const { data: courses } = await axios.get(`${process.env.REACT_APP_API_URL}/getCoursesWithGroups`);
+      courses.sort((a: Course, b: Course) => (a.name > b.name ? 1 : -1));
       setCourses(courses);
     };
     fetchData();
