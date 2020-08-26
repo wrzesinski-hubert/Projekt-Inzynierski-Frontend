@@ -36,8 +36,8 @@ export const Rightbar = () => {
   const { courses, basket } = useContext(coursesContext)!;
 
   const getBasketGroups = () => {
-    const ids = basket.map(({ id }) => id);
-    return courses.filter(({ id }) => ids.includes(id));
+    const names = basket.map(({ name }) => name);
+    return courses.filter(({ name }) => names.includes(name));
   };
 
   const filteredCourses = getBasketGroups();
