@@ -79,8 +79,6 @@ export const CourseCard = ({ onCardClick, course, id, isSelected }: CourseCardPr
 
   const { addGroup } = useContext(coursesContext)!;
 
-  console.log(`course`);
-  console.log(course);
   const onGroupClick = (group: Group, id: number) => addGroup(group, id);
 
   return (
