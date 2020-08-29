@@ -6,14 +6,15 @@ interface SchedulerEventProps {
   eventIndex: number;
   cellTop: number;
   cellWidth: number;
+  cellHeight: number;
 }
 
 const SchedulerEvent = styled.div<SchedulerEventProps>`
   position: absolute;
-  top: ${(props) => props.cellTop}px;
-  left: ${(props) => props.cellWidth + 5 + props.cellWidth * props.eventIndex}px;
-  width: ${(props) => (props.cellWidth * 2) / 3}px;
-  height: 69px;
+  top: ${({ cellTop }) => cellTop}px;
+  left: ${({ cellWidth, eventIndex }) => cellWidth + 5 + cellWidth * eventIndex}px;
+  width: ${({ cellWidth }) => (cellWidth * 2) / 3}px;
+  height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
   background-color: lightblue;
   z-index: 2;
 `;
@@ -23,11 +24,10 @@ interface SchedulerRowProps {
   indexRow: number;
   cellTop: number;
   cellWidth: number;
+  cellHeight: number;
 }
 
-export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth }: SchedulerRowProps) => {
-
-
+export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight }: SchedulerRowProps) => {
   return (
     <>
       {[...Array(5)].map((_, eventIndex) => (
@@ -35,12 +35,11 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth }: Scheduler
           eventIndex={eventIndex}
           cellTop={cellTop}
           cellWidth={cellWidth}
+          cellHeight={cellHeight}
           key={eventIndex}
           id={`eventRow${indexRow}eventCol${eventIndex}`}
         >
-          {groups.map((group, index) =>
-            group.day === eventIndex && <div key={index}>{groups[index]?.lecturer}</div>,
-          )}
+          {groups.map((group, index) => group.day === eventIndex && <div key={index}>{groups[index]?.lecturer}</div>)}
         </SchedulerEvent>
       ))}
     </>

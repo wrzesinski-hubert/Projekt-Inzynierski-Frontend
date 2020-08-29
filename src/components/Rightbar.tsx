@@ -9,8 +9,8 @@ const RightbarStyled = styled.div`
   padding-right: 15px;
   text-align: center;
   font-family: Lato;
+  height: 100%;
   width: 300px;
-  height: 85vh;
   overflow-y: scroll;
   ::-webkit-scrollbar-track {
     border-radius: 10px;

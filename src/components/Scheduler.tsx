@@ -1,18 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { useState } from 'react';
 import { SchedulerEvents } from './SchedulerEvents';
 import { days, hours } from '../constants/index';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 const SchedulerWrapper = styled.div`
-  flex-grow: 3;
   margin-top: 20px;
   border-collapse: collapse;
+  flex-grow: 1;
 `;
 
 const TableBody = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
 `;
@@ -22,23 +21,25 @@ const TableRow = styled.div`
   flex-direction: row;
 `;
 
-const TableCell = styled.div`
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-  flex: 1;
-`;
-
 const TableHead = styled.div`
   display: flex;
   width: 100%;
 `;
 
-const TableHeadCell = styled.div`
+interface TableCellProps {
+  height: number;
+}
+
+const TableCell = styled.div<TableCellProps>`
+  height: ${({ height }) => height}px;
   border: 1px solid #ddd;
-  padding: 10px;
   text-align: center;
   flex: 1;
+`;
+
+const T = styled.table`
+  width: 100%;
+  height: 100%;
 `;
 
 export const Scheduler = () => {
@@ -47,11 +48,19 @@ export const Scheduler = () => {
   const [cellWidth, setCellWidth] = useState(0);
   const [cellTop, setCellTop] = useState(0);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [wrapperHeight, setWrapperHeight] = useState(0);
+
+  useEffect(() => {
+    console.log(cellTop);
+  }, [cellTop]);
+
   useEffect(() => {
     const handleResize = () => {
-      if (cellRef.current) {
+      if (cellRef.current && wrapperRef.current) {
         setCellWidth(cellRef.current.getBoundingClientRect().width);
         setCellTop(cellRef.current.getBoundingClientRect().top);
+        setWrapperHeight(wrapperRef.current.getBoundingClientRect().height);
       }
     };
     handleResize();
@@ -81,10 +90,12 @@ export const Scheduler = () => {
 
   return (
     <>
-      <SchedulerWrapper>
+      <SchedulerWrapper ref={wrapperRef}>
         <TableHead>
           {days.map((day, index) => (
-            <TableHeadCell key={index}>{day}</TableHeadCell>
+            <TableCell height={wrapperHeight / 13} key={index} ref={cellRef}>
+              {day}
+            </TableCell>
           ))}
         </TableHead>
         <TableBody>
@@ -92,15 +103,17 @@ export const Scheduler = () => {
             <TableRow key={indexRow}>
               {[hour, '', '', '', '', ''].map((value, indexCell) =>
                 indexRow === 0 && indexCell === 1 ? (
-                  <TableCell key={`${indexRow}${indexCell}`} ref={cellRef}></TableCell>
+                  <TableCell height={wrapperHeight / 13} key={`${indexRow}${indexCell}`}></TableCell>
                 ) : (
-                  <TableCell key={`${indexRow}${indexCell}`}>{value}</TableCell>
+                  <TableCell height={wrapperHeight / 13} key={`${indexRow}${indexCell}`}>
+                    {value}
+                  </TableCell>
                 ),
               )}
             </TableRow>
           ))}
         </TableBody>
-        <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} />
+        <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} cellHeight={wrapperHeight / 13} />
       </SchedulerWrapper>
     </>
   );

@@ -2,14 +2,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SchedulerRow } from './SchedulerRow';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { Group, Basket } from '../types';
-import classes from '*.module.css';
 
 interface SchedulerEventsProps {
   cellTop: number;
   cellWidth: number;
+  cellHeight: number;
 }
 
-export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) => {
+export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEventsProps) => {
   const { basket } = useContext(coursesContext)!;
 
   const [choosenGroupsMappedToEvents, setChoosenGroupsMappedToEvents] = useState<any>([]);
@@ -56,13 +56,22 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
           })}
           indexRow={index}
           cellTop={
-            index == 3
-              ? cellTop + (25 + 80 * index)
-              : index < 3
-              ? cellTop + (12 + 80 * index)
-              : cellTop + (25 + 80 * index)
+            index === 0
+              ? cellTop + (cellHeight + cellHeight * 2 * index + cellHeight / 4)
+              : index === 1
+              ? cellTop + (cellHeight + cellHeight * 2 * index)
+              : index === 2
+              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 4)
+              : index === 3
+              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 4)
+              : index === 4
+              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 2)
+              : index === 5
+              ? cellTop + (cellHeight + cellHeight * 2 * index - (cellHeight * 3) / 4)
+              : 0
           }
           cellWidth={cellWidth}
+          cellHeight={cellHeight}
         />
       ))}
     </div>
