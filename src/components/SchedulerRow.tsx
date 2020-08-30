@@ -13,7 +13,7 @@ const SchedulerEvent = styled.div<SchedulerEventProps>`
   position: absolute;
   top: ${({ cellTop }) => cellTop}px;
   left: ${({ cellWidth, eventIndex }) => cellWidth + 5 + cellWidth * eventIndex}px;
-  width: ${({ cellWidth }) => (cellWidth * 2) / 3}px;
+  width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
   height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
   background-color: lightblue;
   z-index: 2;

@@ -5,7 +5,6 @@ import { days, hours } from '../constants/index';
 import styled from 'styled-components/macro';
 
 const SchedulerWrapper = styled.div`
-  margin-top: 20px;
   border-collapse: collapse;
   flex-grow: 1;
 `;
@@ -18,7 +17,6 @@ const TableBody = styled.div`
 
 const TableRow = styled.div`
   display: flex;
-  flex-direction: row;
 `;
 
 const TableHead = styled.div`
@@ -33,8 +31,11 @@ interface TableCellProps {
 const TableCell = styled.div<TableCellProps>`
   height: ${({ height }) => height}px;
   border: 1px solid #ddd;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
+  font-size: 24px;
 `;
 
 const T = styled.table`
