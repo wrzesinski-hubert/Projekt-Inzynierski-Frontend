@@ -1,4 +1,4 @@
-import React, { useContext, MouseEvent } from 'react';
+import React, { useState, useContext, MouseEvent } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandIcon from '../assets/expand.png';
 import { Course, Group } from '../types/index';
@@ -68,13 +68,12 @@ const useStyles = makeStyles({
 });
 
 interface CourseCardProps {
-  onCardClick: (event: MouseEvent) => void;
   course: Course;
-  id: string;
-  isSelected: boolean;
 }
 
-export const CourseCard = ({ onCardClick, course, id, isSelected }: CourseCardProps) => {
+export const CourseCard = ({course }: CourseCardProps) => {
+  
+  const [isSelected, setSelected] = useState(false);
   const classes = useStyles();
 
   const { addGroup } = useContext(coursesContext)!;
@@ -82,8 +81,8 @@ export const CourseCard = ({ onCardClick, course, id, isSelected }: CourseCardPr
   const onGroupClick = (group: Group, id: number) => addGroup(group, id);
 
   return (
-    <CourseStyled onClick={onCardClick} id={id}>
-      <CourseNameStyled>{course.name}</CourseNameStyled>
+    <CourseStyled>
+      <CourseNameStyled onClick={() => setSelected(!isSelected)}>{course.name}</CourseNameStyled>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
         {course.groups.map((group, index) => (
           <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
@@ -93,7 +92,7 @@ export const CourseCard = ({ onCardClick, course, id, isSelected }: CourseCardPr
           </ClassGroupStyled>
         ))}
       </Collapse>
-      <div onClick={onCardClick} id={id}>
+      <div onClick={() => setSelected(!isSelected)}>
         <ClassExandIconStyled isSelected={isSelected} alt="expand" src={ExpandIcon} />
       </div>
     </CourseStyled>

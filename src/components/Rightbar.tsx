@@ -31,8 +31,6 @@ const RightbarTextStyled = styled.div`
 `;
 
 export const Rightbar = () => {
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
-
   const { courses, basket } = useContext(coursesContext)!;
 
   const getBasketGroups = () => {
@@ -41,12 +39,6 @@ export const Rightbar = () => {
   };
 
   const filteredCourses = getBasketGroups();
-
-  //działa clunky
-  const onCardClick = (event: MouseEvent) => {
-    const target = event.currentTarget;
-    selectedCardId === target.id ? setSelectedCardId(null) : setSelectedCardId(target.id);
-  };
 
   //need to insert student name from db and course maybe based on current time or from db too
   return (
@@ -59,9 +51,6 @@ export const Rightbar = () => {
         <CourseCard
           course={course}
           key={index}
-          id={index.toString()}
-          onCardClick={onCardClick}
-          isSelected={selectedCardId === index.toString()}
         />
       ))}
     </RightbarStyled>
