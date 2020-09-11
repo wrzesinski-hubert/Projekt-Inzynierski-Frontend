@@ -73,21 +73,21 @@ export const Scheduler = () => {
       currentEventsIds.map((eventId: string) => {
         const event = document.getElementById(eventId);
         if (event) {
-          event.style.display = 'block';
+          event.style.backgroundColor = 'blue';
         }
       });
     };
     displayEvents();
   }, [currentEventsIds]);
 
-  // const handleClick = (e: React.MouseEvent) => {
-  //   const cellId = e.currentTarget.id;
-  //   const column = cellId.slice(0, 1);
-  //   const row = cellId.slice(1);
-  //   const eventId = `eventCol${column}eventRow${Math.floor(parseInt(row) / 2)}`;
-
-  //   setCurrentEventsIds((currentEventsIds) => [...currentEventsIds, eventId]);
-  // };
+  const handleClick = (e: React.MouseEvent) => {
+    const cellId = e.currentTarget.id;
+    // const column = cellId.slice(0, 9);
+    // const row = cellId.slice(1);
+    //const eventId = `eventCol${column}eventRow${Math.floor(parseInt(row) / 2)}`;
+    console.log(cellId)
+    setCurrentEventsIds((currentEventsIds) => [...currentEventsIds, cellId]);
+  };
 
   return (
     <>
@@ -114,7 +114,7 @@ export const Scheduler = () => {
             </TableRow>
           ))}
         </TableBody>
-        <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} cellHeight={wrapperHeight / 13} />
+        <SchedulerEvents onClick={handleClick} cellTop={cellTop} cellWidth={cellWidth} cellHeight={wrapperHeight / 13}/>
       </SchedulerWrapper>
     </>
   );

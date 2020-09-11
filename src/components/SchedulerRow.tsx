@@ -25,13 +25,15 @@ interface SchedulerRowProps {
   cellTop: number;
   cellWidth: number;
   cellHeight: number;
+  onClick: (e: React.MouseEvent) => void
 }
 
-export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight }: SchedulerRowProps) => {
+export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight, onClick }: SchedulerRowProps) => {
   return (
     <>
       {[...Array(5)].map((_, eventIndex) => (
         <SchedulerEvent
+          onClick={onClick}
           eventIndex={eventIndex}
           cellTop={cellTop}
           cellWidth={cellWidth}

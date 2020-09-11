@@ -7,9 +7,10 @@ interface SchedulerEventsProps {
   cellTop: number;
   cellWidth: number;
   cellHeight: number;
+  onClick: (e: React.MouseEvent) => void
 }
 
-export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEventsProps) => {
+export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight, onClick }: SchedulerEventsProps) => {
   const { basket } = useContext(coursesContext)!;
 
   const [choosenGroupsMappedToEvents, setChoosenGroupsMappedToEvents] = useState<any>([]);
@@ -50,6 +51,7 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
     <div>
       {[...Array(6)].map((_, index) => (
         <SchedulerRow
+          onClick={onClick}
           key={index}
           groups={choosenGroupsMappedToEvents.filter((group: any) => {
             return group.eventRow === index;
