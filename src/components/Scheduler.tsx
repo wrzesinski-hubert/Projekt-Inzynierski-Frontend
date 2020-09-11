@@ -85,7 +85,7 @@ export const Scheduler = () => {
     // const column = cellId.slice(0, 9);
     // const row = cellId.slice(1);
     //const eventId = `eventCol${column}eventRow${Math.floor(parseInt(row) / 2)}`;
-    console.log(cellId)
+    console.log(currentEventsIds)
     setCurrentEventsIds((currentEventsIds) => [...currentEventsIds, cellId]);
   };
 
