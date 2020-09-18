@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, MouseEvent, useRef } from 'react';
 import { useState } from 'react';
 import { SchedulerEvents } from './SchedulerEvents';
 import { days, hours } from '../constants/index';
@@ -44,17 +44,12 @@ const T = styled.table`
 `;
 
 export const Scheduler = () => {
-  const [currentEventsIds, setCurrentEventsIds] = useState<Array<string>>([]);
   const cellRef = useRef<HTMLDivElement>(null);
   const [cellWidth, setCellWidth] = useState(0);
   const [cellTop, setCellTop] = useState(0);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [wrapperHeight, setWrapperHeight] = useState(0);
-
-  useEffect(() => {
-    console.log(cellTop);
-  }, [cellTop]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -67,27 +62,6 @@ export const Scheduler = () => {
     handleResize();
     window.addEventListener('resize', handleResize);
   }, []);
-
-  useEffect(() => {
-    const displayEvents = () => {
-      currentEventsIds.map((eventId: string) => {
-        const event = document.getElementById(eventId);
-        if (event) {
-          event.style.backgroundColor = 'blue';
-        }
-      });
-    };
-    displayEvents();
-  }, [currentEventsIds]);
-
-  const handleClick = (e: React.MouseEvent) => {
-    const cellId = e.currentTarget.id;
-    // const column = cellId.slice(0, 9);
-    // const row = cellId.slice(1);
-    //const eventId = `eventCol${column}eventRow${Math.floor(parseInt(row) / 2)}`;
-    console.log(currentEventsIds)
-    setCurrentEventsIds((currentEventsIds) => [...currentEventsIds, cellId]);
-  };
 
   return (
     <>
@@ -114,7 +88,7 @@ export const Scheduler = () => {
             </TableRow>
           ))}
         </TableBody>
-        <SchedulerEvents onClick={handleClick} cellTop={cellTop} cellWidth={cellWidth} cellHeight={wrapperHeight / 13}/>
+        <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} cellHeight={wrapperHeight / 13} />
       </SchedulerWrapper>
     </>
   );
