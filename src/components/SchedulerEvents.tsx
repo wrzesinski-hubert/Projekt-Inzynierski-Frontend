@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, MouseEvent } from 'react';
 import { SchedulerRow } from './SchedulerRow';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { Group, Basket } from '../types';
@@ -7,7 +7,7 @@ interface SchedulerEventsProps {
   cellTop: number;
   cellWidth: number;
   cellHeight: number;
-  onClick: (e: React.MouseEvent) => void
+  onClick: (e: MouseEvent) => void;
 }
 
 export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight, onClick }: SchedulerEventsProps) => {
@@ -29,17 +29,24 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight, onClick }: Sch
 
   useEffect(() => {
     function mapGroupTimeToEventRow(basket: Array<Basket>) {
-      const classes = basket.map(({ classes }) => classes).filter((cl) => cl !== null) as Array<Group>;
-      const lectures = basket.map(({ lecture }) => lecture).filter((lec) => lec !== null) as Array<Group>;
+      const classes = basket.map(({ classes, name }) => ({ ...classes, name })).filter((cl) => cl !== null) as Array<
+        Group & { name: string }
+      >;
+      const lectures = basket.map(({ lecture, name }) => ({ ...lecture, name })).filter((lec) => lec !== null) as Array<
+        Group & { name: string }
+      >;
       const merged = [...classes, ...lectures];
 
+      console.log('merged');
+      console.log(merged);
       if (merged.length >= 1) {
-        const groupsMapped = merged.map(({ id, day, lecturer, room, time }) => ({
+        const groupsMapped = merged.map(({ id, day, lecturer, room, time, name }) => ({
           id,
           day,
           lecturer,
           room,
           eventRow: groupTimeToEventRowMapping[time],
+          name,
         }));
         setChoosenGroupsMappedToEvents(groupsMapped);
       }

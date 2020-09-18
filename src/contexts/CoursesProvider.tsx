@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, ReactNode } from 'react';
 import { Course, Group, Basket, GroupType } from '../types';
 import axios from 'axios';
 
@@ -11,7 +11,7 @@ interface CourseContext {
 export const coursesContext = createContext<CourseContext | null>(null);
 
 interface CoursesProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const CoursesProvider = ({ children }: CoursesProviderProps) => {

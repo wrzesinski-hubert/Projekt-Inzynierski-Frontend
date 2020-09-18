@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { Group } from '../types';
 import styled from 'styled-components';
 
@@ -21,17 +21,17 @@ const ClassDiv = styled.div<SchedulerEventProps>`
   height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
   z-index: 2;
   border-radius: 10px;
-  padding-left:5px;
+  padding-left: 5px;
   background-color: rgb(100, 181, 246);
 `;
 
 interface SchedulerRowProps {
-  groups: Array<Group>;
+  groups: Array<Group & { name: string }>;
   indexRow: number;
   cellTop: number;
   cellWidth: number;
   cellHeight: number;
-  onClick: (e: React.MouseEvent) => void;
+  onClick: (e: MouseEvent) => void;
 }
 
 export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight, onClick }: SchedulerRowProps) => {
@@ -58,7 +58,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight,
                   id={`eventRow${indexRow}eventCol${eventIndex}`}
                   key={index}
                 >
-                  {groups[index]?.lecturer}
+                  {groups[index].name}
                 </ClassDiv>
               ),
           )}

@@ -83,7 +83,7 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
       const name = target.textContent;
 
       //porozmawiać z Filipem, żeby odrobinę przerobił endpoint
-      const course: Basket = { name: name.trim(), id: parseInt(id), lecture: null, classes: null };
+      const course: Basket = { name: name.trim(), id: parseInt(id) };
 
       addToBasket(course);
       setOpen(false);
