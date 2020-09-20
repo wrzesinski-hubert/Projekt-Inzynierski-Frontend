@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import { Group } from '../types';
 import styled from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
@@ -12,6 +12,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(1),
+      marginLeft: 5,
+      textAlign:"center"
     },
   }),
 );
@@ -38,6 +40,10 @@ const Classes = styled.div<SchedulerEventProps>`
   border-radius: 10px;
   padding-left: 5px;
   background-color: rgb(100, 181, 246);
+  width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
+  height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
+  margin-right:5px;
+  text-align:center;
 `;
 
 interface SchedulerRowProps {
@@ -51,17 +57,24 @@ interface SchedulerRowProps {
 export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight }: SchedulerRowProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
-
+  const [popoverId, setPopoverId] = useState<string|null>(null);
+  
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     setAnchorEl(event.currentTarget);
+    setPopoverId(event.currentTarget.id)
   };
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
+    setPopoverId(null);
   };
 
   const open = Boolean(anchorEl);
+
+  useEffect(()=>{
+    console.log("1231312"+popoverId);
+  },[popoverId])
 
   return (
     <>
@@ -83,35 +96,35 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                     cellTop={cellTop}
                     cellWidth={cellWidth}
                     cellHeight={cellHeight}
-                    id={`eventRow${indexRow}eventCol${eventIndex}`}
+                    id={`eventRow${indexRow}eventCol${eventIndex}${index}`}
                     key={index}
-                    aria-owns={open ? 'mouse-over-popover' : undefined}
+                    aria-owns={open ? `mouse-over-popover` : undefined}
                     aria-haspopup="true"
-                    onMouseEnter={handlePopoverOpen}
+                    onMouseEnter={(e) => handlePopoverOpen(e)}
                     onMouseLeave={handlePopoverClose}
                   >
-                    {groups[index].name}
+                    {groups[index].name}<p>{groups[index].room}</p>
                   </Classes>
                   <Popover
-                    id="mouse-over-popover"
+                    id={`mouse-over-popover`}
                     className={classes.popover}
                     classes={{
                       paper: classes.paper,
                     }}
-                    open={open}
+                    open={(popoverId === `eventRow${indexRow}eventCol${eventIndex}${index}`)}
                     anchorEl={anchorEl}
                     anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
+                      vertical: 'top',
+                      horizontal: 'right',
                     }}
                     transformOrigin={{
-                      vertical: 'top',
+                      vertical: 'center',
                       horizontal: 'left',
                     }}
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
-                    <Typography>I use Popover.</Typography>
+                    <Typography><p>{groups[index].name}</p><p>{groups[index].lecturer}</p><p>{groups[index].room}</p></Typography>
                   </Popover>
                 </>
               ),
