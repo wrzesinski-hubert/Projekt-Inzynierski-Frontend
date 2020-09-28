@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(1),
       marginLeft: 5,
-      textAlign:"center"
+      textAlign: 'center',
     },
   }),
 );
@@ -36,14 +36,16 @@ const SchedulerEvent = styled.div<SchedulerEventProps>`
 `;
 
 const Classes = styled.div<SchedulerEventProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 2;
   border-radius: 10px;
-  padding-left: 5px;
   background-color: rgb(100, 181, 246);
   width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
   height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
-  margin-right:5px;
-  text-align:center;
+  margin-right: 5px;
+  text-align: center;
 `;
 
 interface SchedulerRowProps {
@@ -57,12 +59,12 @@ interface SchedulerRowProps {
 export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight }: SchedulerRowProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
-  const [popoverId, setPopoverId] = useState<string|null>(null);
-  
+  const [popoverId, setPopoverId] = useState<string | null>(null);
+
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     setAnchorEl(event.currentTarget);
-    setPopoverId(event.currentTarget.id)
+    setPopoverId(event.currentTarget.id);
   };
 
   const handlePopoverClose = () => {
@@ -71,10 +73,6 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
   };
 
   const open = Boolean(anchorEl);
-
-  useEffect(()=>{
-    console.log("1231312"+popoverId);
-  },[popoverId])
 
   return (
     <>
@@ -103,7 +101,11 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                     onMouseEnter={(e) => handlePopoverOpen(e)}
                     onMouseLeave={handlePopoverClose}
                   >
-                    {groups[index].name}<p>{groups[index].room}</p>
+                    <p>
+                      {groups[index].name}
+                      <br></br>
+                      {groups[index].room}
+                    </p>
                   </Classes>
                   <Popover
                     id={`mouse-over-popover`}
@@ -111,7 +113,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                     classes={{
                       paper: classes.paper,
                     }}
-                    open={(popoverId === `eventRow${indexRow}eventCol${eventIndex}${index}`)}
+                    open={popoverId === `eventRow${indexRow}eventCol${eventIndex}${index}`}
                     anchorEl={anchorEl}
                     anchorOrigin={{
                       vertical: 'top',
@@ -124,7 +126,11 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
-                    <Typography><p>{groups[index].name}</p><p>{groups[index].lecturer}</p><p>{groups[index].room}</p></Typography>
+                    <Typography>
+                      <p>{groups[index].name}</p>
+                      <p>{groups[index].lecturer}</p>
+                      <p>{groups[index].room}</p>
+                    </Typography>
                   </Popover>
                 </>
               ),

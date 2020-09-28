@@ -5,6 +5,7 @@ import { Course, Group } from '../types/index';
 import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
+import CloseIcon from '../assets/close.svg';
 
 interface ClassExandIconProps {
   isSelected: boolean;
@@ -23,6 +24,7 @@ const CourseStyled = styled.div`
   border-radius: 10px;
   cursor: pointer;
   align-items: stretch;
+  position:relative;
 `;
 
 const CourseNameStyled = styled.div`
@@ -67,21 +69,32 @@ const useStyles = makeStyles({
   },
 });
 
+const DeleteFromBasketIcon = styled.img`
+  width: 20px;
+  cursor: pointer;
+  position:absolute;
+  left:235px;
+  top:5px;
+  :hover{
+    color:red;
+  }
+`;
+
 interface CourseCardProps {
   course: Course;
 }
 
-export const CourseCard = ({course }: CourseCardProps) => {
-  
+export const CourseCard = ({ course }: CourseCardProps) => {
   const [isSelected, setSelected] = useState(false);
   const classes = useStyles();
 
-  const { addGroup } = useContext(coursesContext)!;
+  const { addGroup, deleteFromBasket } = useContext(coursesContext)!;
 
   const onGroupClick = (group: Group, id: number) => addGroup(group, id);
 
   return (
     <CourseStyled>
+      <DeleteFromBasketIcon alt="close" src={CloseIcon} onClick={() => deleteFromBasket(course.id)}></DeleteFromBasketIcon>
       <CourseNameStyled onClick={() => setSelected(!isSelected)}>{course.name}</CourseNameStyled>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
         {course.groups.map((group, index) => (

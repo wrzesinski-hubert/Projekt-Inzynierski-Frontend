@@ -7,6 +7,7 @@ interface CourseContext {
   basket: Array<Basket>;
   addToBasket: (courses: Basket) => void;
   addGroup: (group: Group, id: number) => void;
+  deleteFromBasket: (id: number) => void;
 }
 export const coursesContext = createContext<CourseContext | null>(null);
 
@@ -20,6 +21,9 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const [basket, setBasket] = useState<Array<Basket>>([]);
 
   const addToBasket = (course: Basket) => setBasket([...basket, course]);
+
+  const deleteFromBasket = (id: number) => setBasket(basket.filter(course => course.id !== id));
+
 
   useEffect(() => {
     console.log('BASKET');
@@ -52,6 +56,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   }, []);
 
   return (
-    <coursesContext.Provider value={{ courses, basket, addToBasket, addGroup }}>{children}</coursesContext.Provider>
+    <coursesContext.Provider value={{ courses, basket, addToBasket, addGroup, deleteFromBasket }}>{children}</coursesContext.Provider>
   );
 };
