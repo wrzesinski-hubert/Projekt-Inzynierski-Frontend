@@ -33,13 +33,14 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
       const merged = [...classes, ...lectures];
 
       //deleted if statement, maybe it is needed
-      const groupsMapped = merged.map(({ id, day, lecturer, room, time, name }) => ({
+      const groupsMapped = merged.map(({ id, day, lecturer, room, time, name,type }) => ({
         id,
         day: day === 5 ? 4 : day,
         lecturer,
         room,
         eventRow: groupTimeToEventRowMapping[time],
         name,
+        type,
       }));
       setChoosenGroupsMappedToEvents(groupsMapped);
     }

@@ -1,7 +1,7 @@
 import React, { useState, useContext, MouseEvent } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandIcon from '../assets/expand.png';
-import { Course, Group } from '../types/index';
+import { Course, Group, GroupType } from '../types/index';
 import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
@@ -32,7 +32,11 @@ const CourseNameStyled = styled.div`
   padding-bottom: 10px;
 `;
 
-const ClassGroupStyled = styled.div`
+interface ClassGroupProps{
+  groupType:GroupType;
+}
+
+const ClassGroupStyled = styled.div<ClassGroupProps>`
   padding-top: 1px;
   padding-bottom: 1px;
   :hover {
@@ -40,6 +44,7 @@ const ClassGroupStyled = styled.div`
     transition: 1s;
     background-color: #8bc8fb;
   }
+  background-color:${({groupType})=>groupType === "CLASS" ? "purple" : "red"}
 `;
 
 const ClassExandIconStyled = styled.img<ClassExandIconProps>`
@@ -97,8 +102,8 @@ export const CourseCard = ({ course }: CourseCardProps) => {
       <DeleteFromBasketIcon onClick={() => deleteFromBasket(course.id)}></DeleteFromBasketIcon>
       <CourseNameStyled onClick={() => setSelected(!isSelected)}>{course.name}</CourseNameStyled>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
-        {course.groups.map((group, index) => (
-          <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
+        {course.groups.sort((a,b)=> b.type.localeCompare(a.type)).map((group, index) => (
+          <ClassGroupStyled groupType={group.type} key={index} onClick={() => onGroupClick(group, course.id)}>
             <p>
               {group.time} {group.room} <br></br> {group.lecturer}
             </p>

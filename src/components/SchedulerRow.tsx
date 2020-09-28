@@ -1,5 +1,5 @@
 import React, { MouseEvent, useEffect, useState } from 'react';
-import { Group } from '../types';
+import { Group, GroupType } from '../types';
 import styled from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
@@ -35,17 +35,24 @@ const SchedulerEvent = styled.div<SchedulerEventProps>`
   z-index: 2;
 `;
 
-const Classes = styled.div<SchedulerEventProps>`
+interface ClassesProps{
+  cellWidth: number;
+  cellHeight: number;
+  groupType: GroupType;
+}
+
+const Classes = styled.div<ClassesProps>`
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2;
   border-radius: 10px;
-  background-color: rgb(100, 181, 246);
+  /* background-color: rgb(100, 181, 246); */
   width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
   height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
   margin-right: 5px;
   text-align: center;
+  background-color:${({groupType})=>groupType === "CLASS" ? "purple" : "red"}
 `;
 
 interface SchedulerRowProps {
@@ -60,6 +67,8 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const [popoverId, setPopoverId] = useState<string | null>(null);
+
+  console.log("123s"+JSON.stringify(groups));
 
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -90,8 +99,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
               group.day === eventIndex && (
                 <>
                   <Classes
-                    eventIndex={eventIndex}
-                    cellTop={cellTop}
+                    groupType={group.type}
                     cellWidth={cellWidth}
                     cellHeight={cellHeight}
                     id={`eventRow${indexRow}eventCol${eventIndex}${index}`}

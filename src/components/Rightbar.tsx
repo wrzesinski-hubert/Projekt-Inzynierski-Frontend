@@ -27,7 +27,21 @@ const RightbarStyled = styled.div`
   }
 `;
 const RightbarTextStyled = styled.div`
+  display: flex;
+  flex-direction: column;
   border-bottom: 1px solid;
+`;
+
+const SaveButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(100, 181, 246) !important;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 40px;
+  background-color: red;
+  margin-bottom: 10px;
 `;
 
 export const Rightbar = () => {
@@ -44,14 +58,14 @@ export const Rightbar = () => {
   return (
     <RightbarStyled>
       <RightbarTextStyled>
-        Hubert Wrzesiński<br></br>
-        Semestr zimowy 2020/2021
+        <p>
+          Hubert Wrzesiński<br></br>
+          Semestr zimowy 2020/2021
+        </p>
+        <SaveButton>SAVE</SaveButton>
       </RightbarTextStyled>
       {filteredCourses.map((course, index) => (
-        <CourseCard
-          course={course}
-          key={index}
-        />
+        <CourseCard course={course} key={index} />
       ))}
     </RightbarStyled>
   );
