@@ -42,10 +42,13 @@ const SaveButton = styled.div`
   height: 40px;
   background-color: red;
   margin-bottom: 10px;
+  &:hover {
+    color: #d3d3d3;
+  }
 `;
 
 export const Rightbar = () => {
-  const { courses, basket } = useContext(coursesContext)!;
+  const { courses, basket, saveBasket } = useContext(coursesContext)!;
 
   const getBasketGroups = () => {
     const names = basket.map(({ name }) => name);
@@ -62,7 +65,7 @@ export const Rightbar = () => {
           Hubert Wrzesiński<br></br>
           Semestr zimowy 2020/2021
         </p>
-        <SaveButton>SAVE</SaveButton>
+        <SaveButton onClick={saveBasket}>SAVE</SaveButton>
       </RightbarTextStyled>
       {filteredCourses.map((course, index) => (
         <CourseCard course={course} key={index} />

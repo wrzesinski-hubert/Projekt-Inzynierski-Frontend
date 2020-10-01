@@ -8,6 +8,7 @@ interface CourseContext {
   addToBasket: (courses: Course) => void;
   addGroup: (group: Group, id: number) => void;
   deleteFromBasket: (id: number) => void;
+  saveBasket: () => void;
 }
 export const coursesContext = createContext<CourseContext | null>(null);
 
@@ -32,12 +33,14 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const deleteFromBasket = (id: number) => setBasket(basket.filter((course) => course.id !== id));
 
-  useEffect(() => {
-    console.log('BASKET');
-    console.log(basket);
-  }, [basket]);
-
-  //immutability
+  const saveBasket = () => {
+    // try {
+    //   axios.post(`${process.env.REACT_APP_API_URL}/api/v1/commisions/add`);
+    // } catch (e) {
+    //   console.log(e);
+    // }
+    console.log('saving to basket');
+  };
 
   const addGroup = (choosenGroup: Group, id: number) => {
     const basketCourse = basket.filter((course) => course.id === id)[0];
@@ -74,7 +77,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   }, []);
 
   return (
-    <coursesContext.Provider value={{ courses, basket, addToBasket, addGroup, deleteFromBasket }}>
+    <coursesContext.Provider value={{ courses, basket, addToBasket, addGroup, deleteFromBasket, saveBasket }}>
       {children}
     </coursesContext.Provider>
   );
