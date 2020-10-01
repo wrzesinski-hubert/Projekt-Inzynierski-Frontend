@@ -32,8 +32,8 @@ const CourseNameStyled = styled.div`
   padding-bottom: 10px;
 `;
 
-interface ClassGroupProps{
-  groupType:GroupType;
+interface ClassGroupProps {
+  groupType: GroupType;
 }
 
 const ClassGroupStyled = styled.div<ClassGroupProps>`
@@ -42,8 +42,8 @@ const ClassGroupStyled = styled.div<ClassGroupProps>`
   :hover {
     cursor: pointer;
   }
-    outline-offset: -5px;
-    outline:${({groupType})=>groupType === "CLASS" ? "2px solid #5642AA" : "2px solid #866DF7"};
+  outline-offset: -5px;
+  outline: ${({ groupType }) => (groupType === 'CLASS' ? '2px solid #5642AA' : '2px solid #866DF7')};
 `;
 
 const ClassExandIconStyled = styled.img<ClassExandIconProps>`
@@ -89,10 +89,10 @@ interface CourseCardProps {
 }
 
 export const CourseCard = ({ course }: CourseCardProps) => {
-  const [isSelected, setSelected] = useState(false);
   const classes = useStyles();
-
   const { addGroup, deleteFromBasket } = useContext(coursesContext)!;
+  const [isSelected, setSelected] = useState(false);
+  const groups = course.lectures === undefined ? course.classes : [...course.lectures, ...course.classes];
 
   const onGroupClick = (group: Group, id: number) => addGroup(group, id);
 
@@ -101,13 +101,15 @@ export const CourseCard = ({ course }: CourseCardProps) => {
       <DeleteFromBasketIcon onClick={() => deleteFromBasket(course.id)}></DeleteFromBasketIcon>
       <CourseNameStyled onClick={() => setSelected(!isSelected)}>{course.name}</CourseNameStyled>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
-        {course.groups.sort((a,b)=> b.type.localeCompare(a.type)).map((group, index) => (
-          <ClassGroupStyled groupType={group.type} key={index} onClick={() => onGroupClick(group, course.id)}>
-            <p>
-              {group.time} {group.room} <br></br> {group.lecturer}
-            </p>
-          </ClassGroupStyled>
-        ))}
+        {groups
+          .sort((a, b) => b.type.localeCompare(a.type))
+          .map((group, index) => (
+            <ClassGroupStyled groupType={group.type} key={index} onClick={() => onGroupClick(group, course.id)}>
+              <p>
+                {group.time} {group.room} <br></br> {group.lecturer}
+              </p>
+            </ClassGroupStyled>
+          ))}
       </Collapse>
       <div onClick={() => setSelected(!isSelected)}>
         <ClassExandIconStyled isSelected={isSelected} alt="expand" src={ExpandIcon} />

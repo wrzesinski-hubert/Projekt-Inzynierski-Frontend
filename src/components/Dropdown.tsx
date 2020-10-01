@@ -7,6 +7,13 @@ import { Course, Basket } from '../types';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 
+const DropdownStyled = styled.div`
+  max-height: 420px;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+`;
+
 const CourseStyled = styled.div`
   position: relative;
   z-index: 10;
@@ -15,17 +22,10 @@ const CourseStyled = styled.div`
   background-color: #e6c759;
   font-size: 18px;
   font-family: Lato;
+  scroll-snap-align: end;
   :hover {
     background-color: #d4b851;
     cursor: pointer;
-  }
-`;
-
-const DropdownStyled = styled.div`
-  max-height: 400px;
-  overflow-y: auto;
-  ::-webkit-scrollbar {
-    display: none;
   }
 `;
 
@@ -76,12 +76,9 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
   const onCourseClick = async (event: MouseEvent) => {
     const target = event.currentTarget;
     if (target.id && target.textContent) {
-      const id = target.id;
-      const name = target.textContent;
-
-      //porozmawiać z Filipem, żeby odrobinę przerobił endpoint
-      const course: Basket = { name: name.trim(), id: parseInt(id) };
-
+      const course = filteredCourses.find(({ id }) => id.toString() === target.id)!;
+      console.log('added course is');
+      console.log(course);
       addToBasket(course);
       setOpen(false);
     }
