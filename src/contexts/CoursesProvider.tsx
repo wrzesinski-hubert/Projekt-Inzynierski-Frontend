@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, ReactNode } from 'react';
 import { Course, Group, Basket, GroupType } from '../types';
 import axios from 'axios';
 
@@ -7,11 +7,12 @@ interface CourseContext {
   basket: Array<Basket>;
   addToBasket: (courses: Basket) => void;
   addGroup: (group: Group, id: number) => void;
+  deleteFromBasket: (id: number) => void;
 }
 export const coursesContext = createContext<CourseContext | null>(null);
 
 interface CoursesProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const CoursesProvider = ({ children }: CoursesProviderProps) => {
@@ -20,6 +21,9 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const [basket, setBasket] = useState<Array<Basket>>([]);
 
   const addToBasket = (course: Basket) => setBasket([...basket, course]);
+
+  const deleteFromBasket = (id: number) => setBasket(basket.filter(course => course.id !== id));
+
 
   useEffect(() => {
     console.log('BASKET');
@@ -52,6 +56,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   }, []);
 
   return (
-    <coursesContext.Provider value={{ courses, basket, addToBasket, addGroup }}>{children}</coursesContext.Provider>
+    <coursesContext.Provider value={{ courses, basket, addToBasket, addGroup, deleteFromBasket }}>{children}</coursesContext.Provider>
   );
 };

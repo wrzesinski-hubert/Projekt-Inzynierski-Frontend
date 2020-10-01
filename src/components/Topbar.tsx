@@ -102,9 +102,9 @@ export default function ({ handleTransfer }: TopbarProps) {
       <TopbarInputStyled>
         <TopbarInputIconStyled alt="search" src={Search} />
         <TopbarInputFieldStyled>
-          <Dropdown clearInput={clearInput} handleClearInput={handleClearInput}/>
+          <Dropdown clearInput={clearInput} handleClearInput={handleClearInput} />
         </TopbarInputFieldStyled>
-        <TopbarInputIconStyled alt="close" src={CloseIcon} onClick={handleClearInput}/>
+        <TopbarInputIconStyled alt="close" src={CloseIcon} onClick={handleClearInput} />
       </TopbarInputStyled>
       <TopbarIconBox>
         <TopbarIcon alt="transfer" src={Transfer} onClick={handleTransfer} />
@@ -114,4 +114,4 @@ export default function ({ handleTransfer }: TopbarProps) {
       </TopbarIconBox>
     </Topbar>
   );
-};
+}

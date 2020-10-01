@@ -6,8 +6,8 @@ export enum GroupType {
 export interface Basket {
   id: number;
   name: string;
-  lecture: Group | null;
-  classes: Group | null;
+  lecture?: Group;
+  classes?: Group;
 }
 
 export interface Group {

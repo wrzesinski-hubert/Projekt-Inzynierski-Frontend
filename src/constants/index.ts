@@ -1,10 +1,10 @@
 export const days = [
   "",
-  "poniedziałek",
-  "wtorek",
-  "środa",
-  "czwartek",
-  "piątek",
+  "Poniedziałek",
+  "Wtorek",
+  "Środa",
+  "Czwartek",
+  "Piątek",
 ];
 export const hours = [
   "8:00",
