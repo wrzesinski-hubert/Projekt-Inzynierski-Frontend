@@ -52,7 +52,7 @@ const Classes = styled.div<ClassesProps>`
   height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
   margin-right: 5px;
   text-align: center;
-  background-color:${({groupType})=>groupType === "CLASS" ? "purple" : "red"}
+  background-color:${({groupType})=>groupType === "CLASS" ? "#5642AA" : "#866DF7"}
 `;
 
 interface SchedulerRowProps {

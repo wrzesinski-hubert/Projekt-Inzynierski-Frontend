@@ -41,10 +41,9 @@ const ClassGroupStyled = styled.div<ClassGroupProps>`
   padding-bottom: 1px;
   :hover {
     cursor: pointer;
-    transition: 1s;
-    background-color: #8bc8fb;
   }
-  background-color:${({groupType})=>groupType === "CLASS" ? "purple" : "red"}
+    outline-offset: -5px;
+    outline:${({groupType})=>groupType === "CLASS" ? "2px solid #5642AA" : "2px solid #866DF7"};
 `;
 
 const ClassExandIconStyled = styled.img<ClassExandIconProps>`
