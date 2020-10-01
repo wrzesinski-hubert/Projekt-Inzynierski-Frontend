@@ -7,11 +7,11 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   display: flex;
+  height: calc(100vh - 80px);
 `;
 
 export const App = () => {
   const [isOpenTransfer, setOpenTransfer] = useState(false);
-
 
   const handleTransfer = () => {
     setOpenTransfer(!isOpenTransfer);
@@ -19,7 +19,7 @@ export const App = () => {
 
   return (
     <>
-      <Topbar handleTransfer={handleTransfer}  />
+      <Topbar handleTransfer={handleTransfer} />
       <Transfer isOpen={isOpenTransfer} handleClose={handleTransfer} />
       <Wrapper>
         <Scheduler />

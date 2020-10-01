@@ -9,8 +9,8 @@ const RightbarStyled = styled.div`
   padding-right: 15px;
   text-align: center;
   font-family: Lato;
+  height: 100%;
   width: 300px;
-  height: 85vh;
   overflow-y: scroll;
   ::-webkit-scrollbar-track {
     border-radius: 10px;
@@ -27,12 +27,24 @@ const RightbarStyled = styled.div`
   }
 `;
 const RightbarTextStyled = styled.div`
+  display: flex;
+  flex-direction: column;
   border-bottom: 1px solid;
 `;
 
-export const Rightbar = () => {
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+const SaveButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(100, 181, 246) !important;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 40px;
+  background-color: red;
+  margin-bottom: 10px;
+`;
 
+export const Rightbar = () => {
   const { courses, basket } = useContext(coursesContext)!;
 
   const getBasketGroups = () => {
@@ -42,27 +54,18 @@ export const Rightbar = () => {
 
   const filteredCourses = getBasketGroups();
 
-  //działa clunky
-  const onCardClick = (event: MouseEvent) => {
-    const target = event.currentTarget;
-    selectedCardId === target.id ? setSelectedCardId(null) : setSelectedCardId(target.id);
-  };
-
   //need to insert student name from db and course maybe based on current time or from db too
   return (
     <RightbarStyled>
       <RightbarTextStyled>
-        Hubert Wrzesiński<br></br>
-        Semestr zimowy 2020/2021
+        <p>
+          Hubert Wrzesiński<br></br>
+          Semestr zimowy 2020/2021
+        </p>
+        <SaveButton>SAVE</SaveButton>
       </RightbarTextStyled>
       {filteredCourses.map((course, index) => (
-        <CourseCard
-          course={course}
-          key={index}
-          id={index.toString()}
-          onCardClick={onCardClick}
-          isSelected={selectedCardId === index.toString()}
-        />
+        <CourseCard course={course} key={index} />
       ))}
     </RightbarStyled>
   );

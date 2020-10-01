@@ -1,10 +1,11 @@
-import React, { useContext, MouseEvent } from 'react';
+import React, { useState, useContext, MouseEvent } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandIcon from '../assets/expand.png';
-import { Course, Group } from '../types/index';
+import { Course, Group, GroupType } from '../types/index';
 import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
+import { ReactComponent as CloseIcon } from '../assets/close.svg';
 
 interface ClassExandIconProps {
   isSelected: boolean;
@@ -23,6 +24,7 @@ const CourseStyled = styled.div`
   border-radius: 10px;
   cursor: pointer;
   align-items: stretch;
+  position: relative;
 `;
 
 const CourseNameStyled = styled.div`
@@ -30,14 +32,18 @@ const CourseNameStyled = styled.div`
   padding-bottom: 10px;
 `;
 
-const ClassGroupStyled = styled.div`
+interface ClassGroupProps{
+  groupType:GroupType;
+}
+
+const ClassGroupStyled = styled.div<ClassGroupProps>`
   padding-top: 1px;
   padding-bottom: 1px;
   :hover {
     cursor: pointer;
-    transition: 1s;
-    background-color: #8bc8fb;
   }
+    outline-offset: -5px;
+    outline:${({groupType})=>groupType === "CLASS" ? "2px solid #5642AA" : "2px solid #866DF7"};
 `;
 
 const ClassExandIconStyled = styled.img<ClassExandIconProps>`
@@ -67,33 +73,43 @@ const useStyles = makeStyles({
   },
 });
 
+const DeleteFromBasketIcon = styled(CloseIcon)`
+  width: 20px;
+  cursor: pointer;
+  position: absolute;
+  left: 235px;
+  top: -10px;
+  &:hover {
+    fill: #d3d3d3;
+  }
+`;
+
 interface CourseCardProps {
-  onCardClick: (event: MouseEvent) => void;
   course: Course;
-  id: string;
-  isSelected: boolean;
 }
 
-export const CourseCard = ({ onCardClick, course, id, isSelected }: CourseCardProps) => {
+export const CourseCard = ({ course }: CourseCardProps) => {
+  const [isSelected, setSelected] = useState(false);
   const classes = useStyles();
 
-  const { addGroup } = useContext(coursesContext)!;
+  const { addGroup, deleteFromBasket } = useContext(coursesContext)!;
 
   const onGroupClick = (group: Group, id: number) => addGroup(group, id);
 
   return (
-    <CourseStyled onClick={onCardClick} id={id}>
-      <CourseNameStyled>{course.name}</CourseNameStyled>
+    <CourseStyled>
+      <DeleteFromBasketIcon onClick={() => deleteFromBasket(course.id)}></DeleteFromBasketIcon>
+      <CourseNameStyled onClick={() => setSelected(!isSelected)}>{course.name}</CourseNameStyled>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
-        {course.groups.map((group, index) => (
-          <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
+        {course.groups.sort((a,b)=> b.type.localeCompare(a.type)).map((group, index) => (
+          <ClassGroupStyled groupType={group.type} key={index} onClick={() => onGroupClick(group, course.id)}>
             <p>
               {group.time} {group.room} <br></br> {group.lecturer}
             </p>
           </ClassGroupStyled>
         ))}
       </Collapse>
-      <div onClick={onCardClick} id={id}>
+      <div onClick={() => setSelected(!isSelected)}>
         <ClassExandIconStyled isSelected={isSelected} alt="expand" src={ExpandIcon} />
       </div>
     </CourseStyled>

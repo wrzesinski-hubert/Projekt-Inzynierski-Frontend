@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, MouseEvent } from 'react';
+import React, { useState, useContext, useEffect, MouseEvent, ChangeEvent } from 'react';
 import axios from 'axios';
 import { Input } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -64,13 +64,10 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
   }, [input, open, basket]);
 
   useEffect(() => {
-    if (clearInput) {
-      setInput('');
-      handleClearInput();
-    }
+    clearInput && (setInput(''), handleClearInput());
   }, [clearInput]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
 
   const handleClick = () => setOpen(true);
 
@@ -83,7 +80,7 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
       const name = target.textContent;
 
       //porozmawiać z Filipem, żeby odrobinę przerobił endpoint
-      const course: Basket = { name: name.trim(), id: parseInt(id), lecture: null, classes: null };
+      const course: Basket = { name: name.trim(), id: parseInt(id) };
 
       addToBasket(course);
       setOpen(false);

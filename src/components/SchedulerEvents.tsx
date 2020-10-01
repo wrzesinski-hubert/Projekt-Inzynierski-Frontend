@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, MouseEvent } from 'react';
 import { SchedulerRow } from './SchedulerRow';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { Group, Basket } from '../types';
-import classes from '*.module.css';
 
 interface SchedulerEventsProps {
   cellTop: number;
   cellWidth: number;
+  cellHeight: number;
 }
 
-export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) => {
+export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEventsProps) => {
   const { basket } = useContext(coursesContext)!;
 
   const [choosenGroupsMappedToEvents, setChoosenGroupsMappedToEvents] = useState<any>([]);
@@ -28,20 +28,21 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
 
   useEffect(() => {
     function mapGroupTimeToEventRow(basket: Array<Basket>) {
-      const classes = basket.map(({ classes }) => classes).filter((cl) => cl !== null) as Array<Group>;
-      const lectures = basket.map(({ lecture }) => lecture).filter((lec) => lec !== null) as Array<Group>;
+      const classes = basket.map(({ classes, name }) => ({ ...classes, name })) as Array<Group & { name: string }>;
+      const lectures = basket.map(({ lecture, name }) => ({ ...lecture, name })) as Array<Group & { name: string }>;
       const merged = [...classes, ...lectures];
 
-      if (merged.length >= 1) {
-        const groupsMapped = merged.map(({ id, day, lecturer, room, time }) => ({
-          id,
-          day,
-          lecturer,
-          room,
-          eventRow: groupTimeToEventRowMapping[time],
-        }));
-        setChoosenGroupsMappedToEvents(groupsMapped);
-      }
+      //deleted if statement, maybe it is needed
+      const groupsMapped = merged.map(({ id, day, lecturer, room, time, name,type }) => ({
+        id,
+        day: day === 5 ? 4 : day,
+        lecturer,
+        room,
+        eventRow: groupTimeToEventRowMapping[time],
+        name,
+        type,
+      }));
+      setChoosenGroupsMappedToEvents(groupsMapped);
     }
     mapGroupTimeToEventRow(basket);
   }, [basket]);
@@ -51,18 +52,25 @@ export const SchedulerEvents = ({ cellTop, cellWidth }: SchedulerEventsProps) =>
       {[...Array(6)].map((_, index) => (
         <SchedulerRow
           key={index}
-          groups={choosenGroupsMappedToEvents.filter((group: any) => {
-            return group.eventRow === index;
-          })}
+          groups={choosenGroupsMappedToEvents.filter((group: any) => group.eventRow === index)}
           indexRow={index}
           cellTop={
-            index == 3
-              ? cellTop + (25 + 80 * index)
-              : index < 3
-              ? cellTop + (12 + 80 * index)
-              : cellTop + (25 + 80 * index)
+            index === 0
+              ? cellTop + (cellHeight + cellHeight * 2 * index + cellHeight / 4)
+              : index === 1
+              ? cellTop + (cellHeight + cellHeight * 2 * index)
+              : index === 2
+              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 4)
+              : index === 3
+              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 4)
+              : index === 4
+              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 2)
+              : index === 5
+              ? cellTop + (cellHeight + cellHeight * 2 * index - (cellHeight * 3) / 4)
+              : 0
           }
           cellWidth={cellWidth}
+          cellHeight={cellHeight}
         />
       ))}
     </div>
