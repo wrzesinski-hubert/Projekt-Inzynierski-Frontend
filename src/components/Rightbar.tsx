@@ -1,7 +1,10 @@
-import React, { useState, useContext, MouseEvent } from 'react';
+import React, { useContext } from 'react';
+import Snackbar from '@material-ui/core/Snackbar';
 import { CourseCard } from './CourseCard';
 import { coursesContext } from '../contexts/CoursesProvider';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import styled from 'styled-components';
+
 
 const RightbarStyled = styled.div`
   padding-top: 10px;
@@ -47,8 +50,14 @@ const SaveButton = styled.div`
   }
 `;
 
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export const Rightbar = () => {
   const { courses, basket, saveBasket } = useContext(coursesContext)!;
+
+  const [open, setOpen] = React.useState(false);
 
   const getBasketGroups = () => {
     const names = basket.map(({ name }) => name);
@@ -56,6 +65,19 @@ export const Rightbar = () => {
   };
 
   const filteredCourses = getBasketGroups();
+
+  const save = () => {
+    saveBasket();
+    setOpen(true);
+  }
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   //need to insert student name from db and course maybe based on current time or from db too
   return (
@@ -65,11 +87,16 @@ export const Rightbar = () => {
           Hubert Wrzesiński<br></br>
           Semestr zimowy 2020/2021
         </p>
-        <SaveButton onClick={saveBasket}>SAVE</SaveButton>
+        <SaveButton onClick={save}>SAVE</SaveButton>
       </RightbarTextStyled>
       {filteredCourses.map((course, index) => (
         <CourseCard course={course} key={index} />
       ))}
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          This is a success message!
+        </Alert>
+      </Snackbar>
     </RightbarStyled>
   );
 };
