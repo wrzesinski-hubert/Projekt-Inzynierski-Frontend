@@ -5,7 +5,6 @@ import { coursesContext } from '../contexts/CoursesProvider';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import styled from 'styled-components';
 
-
 const RightbarStyled = styled.div`
   padding-top: 10px;
   padding-left: 15px;
@@ -32,22 +31,22 @@ const RightbarStyled = styled.div`
 const RightbarTextStyled = styled.div`
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid;
 `;
 
 const SaveButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(100, 181, 246) !important;
+  background-color: #417cab !important;
   border-radius: 10px;
   cursor: pointer;
   height: 40px;
   background-color: red;
   margin-bottom: 10px;
   &:hover {
-    color: #d3d3d3;
+    color: white;
   }
+  box-shadow: 6px 6px 6px -2px rgba(0,0,0,0.59);
 `;
 
 function Alert(props: AlertProps) {
@@ -69,7 +68,7 @@ export const Rightbar = () => {
   const save = () => {
     saveBasket();
     setOpen(true);
-  }
+  };
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
@@ -87,14 +86,14 @@ export const Rightbar = () => {
           Hubert Wrzesiński<br></br>
           Semestr zimowy 2020/2021
         </p>
-        <SaveButton onClick={save}>SAVE</SaveButton>
+        <SaveButton onClick={save}>ZAPISZ</SaveButton>
       </RightbarTextStyled>
       {filteredCourses.map((course, index) => (
         <CourseCard course={course} key={index} />
       ))}
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          This is a success message!
+          Zapisano plan!
         </Alert>
       </Snackbar>
     </RightbarStyled>

@@ -12,6 +12,22 @@ const DropdownStyled = styled.div`
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+  z-index: 100;
+ position: relative;
+  border-radius:0px 0px 0px 15px;
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #f5f5f5;
+  }
+  ::-webkit-scrollbar {
+    width: 12px;
+    background-color: #f5f5f5;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #d4b851;
+    border: 1px solid;
+  }
 `;
 
 const CourseStyled = styled.div`
@@ -23,6 +39,7 @@ const CourseStyled = styled.div`
   font-size: 18px;
   font-family: Lato;
   scroll-snap-align: end;
+  border-bottom:1px solid;
   :hover {
     background-color: #d4b851;
     cursor: pointer;
