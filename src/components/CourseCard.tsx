@@ -13,7 +13,7 @@ interface ClassExandIconProps {
 
 const CourseStyled = styled.div`
   display: flex;
-  min-height: 50px;
+  min-height: 40px;
   background-color: rgb(100, 181, 246) !important;
   align-items: center;
   justify-content: center;
@@ -25,25 +25,28 @@ const CourseStyled = styled.div`
   cursor: pointer;
   align-items: stretch;
   position: relative;
+  box-shadow: 9px 9px 8px -2px rgba(0,0,0,0.59);
 `;
 
 const CourseNameStyled = styled.div`
-  padding-top: 10px;
-  padding-bottom: 10px;
+padding-top:20px;
+padding-bottom:10px;
+padding-left:35px;
+padding-right:35px;
 `;
 
-interface ClassGroupProps{
-  groupType:GroupType;
+interface ClassGroupProps {
+  groupType: GroupType;
 }
 
-const ClassGroupStyled = styled.div<ClassGroupProps>`
+const ClassGroupStyled = styled.div`
+position:relative;
   padding-top: 1px;
   padding-bottom: 1px;
   :hover {
     cursor: pointer;
+    background-color:#9ED3FF;
   }
-    outline-offset: -5px;
-    outline:${({groupType})=>groupType === "CLASS" ? "2px solid #5642AA" : "2px solid #866DF7"};
 `;
 
 const ClassExandIconStyled = styled.img<ClassExandIconProps>`
@@ -53,19 +56,25 @@ const ClassExandIconStyled = styled.img<ClassExandIconProps>`
   transform: ${(props) => (props.isSelected ? 'scaleY(-1);' : 'scaleY(1);')};
 `;
 
+const TypeClass = styled.div<ClassGroupProps>`
+  position:absolute;
+  min-width:55px;
+  padding:1px;
+  top:5px;
+  border-radius:1px;
+`;
+
 const useStyles = makeStyles({
   expanded: {
     maxHeight: '244px',
     overflowY: 'auto',
-  },
-  '@global': {
-    '*::-webkit-scrollbar': {
+    '&::-webkit-scrollbar': {
       width: '0.4em',
     },
-    '*::-webkit-scrollbar-track': {
+    '&::-webkit-scrollbar-track': {
       '-webkit-box-shadow': 'inset 0 0 6px rgba(1,0,0,0.1)',
     },
-    '*::-webkit-scrollbar-thumb': {
+    '&::-webkit-scrollbar-thumb': {
       borderRadius: '10px',
       backgroundColor: '#d4b851',
       outline: '1px solid slategrey',
@@ -77,10 +86,10 @@ const DeleteFromBasketIcon = styled(CloseIcon)`
   width: 20px;
   cursor: pointer;
   position: absolute;
-  left: 235px;
-  top: -10px;
+  left: 230px;
+  top: -5px;
   &:hover {
-    fill: #d3d3d3;
+    fill: white;
   }
 `;
 
@@ -89,10 +98,10 @@ interface CourseCardProps {
 }
 
 export const CourseCard = ({ course }: CourseCardProps) => {
-  const [isSelected, setSelected] = useState(false);
   const classes = useStyles();
-
   const { addGroup, deleteFromBasket } = useContext(coursesContext)!;
+  const [isSelected, setSelected] = useState(false);
+  const groups = course.lectures === undefined ? course.classes : [...course.lectures, ...course.classes];
 
   const onGroupClick = (group: Group, id: number) => addGroup(group, id);
 
@@ -101,13 +110,16 @@ export const CourseCard = ({ course }: CourseCardProps) => {
       <DeleteFromBasketIcon onClick={() => deleteFromBasket(course.id)}></DeleteFromBasketIcon>
       <CourseNameStyled onClick={() => setSelected(!isSelected)}>{course.name}</CourseNameStyled>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
-        {course.groups.sort((a,b)=> b.type.localeCompare(a.type)).map((group, index) => (
-          <ClassGroupStyled groupType={group.type} key={index} onClick={() => onGroupClick(group, course.id)}>
-            <p>
-              {group.time} {group.room} <br></br> {group.lecturer}
-            </p>
-          </ClassGroupStyled>
-        ))}
+        {groups
+          .sort((a, b) => b.type.localeCompare(a.type))
+          .map((group, index) => (
+            <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
+              <TypeClass groupType={group.type}>{group.type==="CLASS"? "(Ćw.)" : "(Wyk.)"}</TypeClass>
+              <p>
+                {group.time} {group.room} <br></br> {group.lecturer}
+              </p>
+            </ClassGroupStyled>
+          ))}
       </Collapse>
       <div onClick={() => setSelected(!isSelected)}>
         <ClassExandIconStyled isSelected={isSelected} alt="expand" src={ExpandIcon} />
