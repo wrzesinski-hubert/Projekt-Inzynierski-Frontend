@@ -4,6 +4,7 @@ import { CourseCard } from './CourseCard';
 import { coursesContext } from '../contexts/CoursesProvider';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import styled from 'styled-components';
+import { debounce } from "lodash";
 
 const RightbarStyled = styled.div`
   padding-top: 10px;
@@ -65,10 +66,11 @@ export const Rightbar = () => {
 
   const filteredCourses = getBasketGroups();
 
-  const save = () => {
+  const save = debounce(() => {
     saveBasket();
     setOpen(true);
-  };
+    console.log("chujec")
+  },500);
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
@@ -91,7 +93,7 @@ export const Rightbar = () => {
       {filteredCourses.map((course, index) => (
         <CourseCard course={course} key={index} />
       ))}
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           Zapisano plan!
         </Alert>
