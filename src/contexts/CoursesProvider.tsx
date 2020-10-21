@@ -1,6 +1,7 @@
-import React, { useState, createContext, useEffect, ReactNode } from 'react';
+import React, { useState, createContext, useEffect, ReactNode, useContext } from 'react';
 import { Course, Group, Basket, GroupType } from '../types';
 import axios from 'axios';
+import { CASContext, CASProvider } from './CASProvider';
 
 interface CourseContext {
   courses: Array<Course>;
@@ -10,7 +11,7 @@ interface CourseContext {
   deleteFromBasket: (id: number) => void;
   saveBasket: () => void;
 }
-export const coursesContext = createContext<CourseContext | null>(null);
+export const coursesContext = createContext<CourseContext | undefined>(undefined);
 
 interface CoursesProviderProps {
   children: ReactNode;
@@ -21,6 +22,9 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [basket, setBasket] = useState<Array<Basket>>([]);
 
+  const CAS = useContext(CASContext)!;
+  const token = CAS?.user?.token;
+
   const addToBasket = (course: Course) => {
     const courseToBasket = {
       name: course.name,
@@ -30,15 +34,26 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     } as Basket;
     setBasket([...basket, courseToBasket]);
   };
-
   const deleteFromBasket = (id: number) => setBasket(basket.filter((course) => course.id !== id));
 
-  const saveBasket = () => {
-    // try {
-    //   axios.post(`${process.env.REACT_APP_API_URL}/api/v1/commisions/add`);
-    // } catch (e) {
-    //   console.log(e);
-    // }
+  const saveBasket = async () => {
+    try {
+      let data = [7, 43, 54];
+      let json = JSON.stringify(data);
+      let post_data = { json_data: json };
+      const ech = await axios.post<Array<number>>(
+        `${process.env.REACT_APP_API_URL}/api/v1/commisions/add?`,
+        [7, 43, 54],
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      console.log('api response;', ech);
+    } catch (e) {
+      console.log(e);
+    }
     console.log('saving to basket');
   };
 
@@ -67,8 +82,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         lectures: groups.filter(({ type }) => type === GroupType.LECTURE),
         classes: groups.filter(({ type }) => type === GroupType.CLASS),
       })) as Array<Course>;
-      console.log('courses mapped');
-      console.log(courses);
       courses.sort((a: Course, b: Course) => (a.name > b.name ? 1 : -1));
 
       setCourses(courses);

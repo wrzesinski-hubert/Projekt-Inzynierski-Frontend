@@ -1,35 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, ReactNode } from 'react';
 import { User } from '../types';
+import axios from 'axios';
 
 export interface CASContext {
-  user: User | null;
+  user?: User;
   logout: () => void;
 }
 
-export const CASContext = React.createContext<CASContext | null>(null);
+export const CASContext = createContext<CASContext | undefined>(undefined);
 
 export interface CASProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const CASProvider = ({ children }: CASProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
-
+  const [user, setUser] = useState<User | undefined>(undefined);
   useEffect(() => {
     login();
   }, []);
 
-  function login() {
+  const login = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const ticket = urlParams.get('ticket');
-
     if (!ticket) {
       redirectToCASLoginService();
     }
-    if (ticket) {
-      setUser({ ...user, ticket: ticket });
+    try {
+      if (!sessionStorage.getItem('userToken')) {
+        const { data: token } = await axios.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
+        sessionStorage.setItem('userToken', token);
+        setUser({ ...user, token });
+      }
+      const token = sessionStorage.getItem('userToken');
+      setUser({ ...user, token });
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
 
   function logout() {
     redirectToCASLogoutService();

@@ -30,5 +30,5 @@ export interface Course {
 export interface User {
   name?: string;
   surname?: string;
-  ticket: string | null;
+  token: string | null;
 }
