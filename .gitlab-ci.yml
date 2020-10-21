@@ -8,7 +8,7 @@ build:
   image: node
   script:
     - echo "Start building App"
-    - npm install typescript
+    - npm install typescript eslint
     - npm install
     - npm run build
     - echo "Build successfully!"
