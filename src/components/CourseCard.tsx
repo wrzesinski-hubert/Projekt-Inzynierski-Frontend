@@ -56,7 +56,7 @@ const ClassExandIconStyled = styled.img<ClassExandIconProps>`
   transform: ${(props) => (props.isSelected ? 'scaleY(-1);' : 'scaleY(1);')};
 `;
 
-const TypeClass = styled.div<ClassGroupProps>`
+const TypeClass = styled.div`
   font-size:12px;
   position:absolute;
   border-radius:15px;
@@ -119,7 +119,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
           .sort((a, b) => b.type.localeCompare(a.type))
           .map((group, index) => (
             <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
-              <TypeClass groupType={group.type}>{group.type==="CLASS"? "Ćw." : "Wyk."}</TypeClass>
+              <TypeClass>{group.type==="CLASS"? "Ćw." : "Wyk."}</TypeClass>
               <p>
                 {group.time} {group.room} <br></br> {group.lecturer}
               </p>
