@@ -10,7 +10,6 @@ build:
     - echo "Start building App"
     - npm install typescript
     - npm install
-    - npm audit fix
     - npm run build
     - echo "Build successfully!"
   artifacts:
