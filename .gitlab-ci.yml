@@ -1,0 +1,37 @@
+tages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  image: node
+  script:
+    - echo "Start building App"
+    - npm install typescript
+    - npm install
+    - npm audit fix
+    - npm run build
+    - echo "Build successfully!"
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - build
+      - node_modules/
+
+test:
+  stage: test
+  image: node
+  script:
+    - echo "Testing App"
+    - CI=true npm test --passWithNoTests
+    - echo "Test successfully!"
+
+deploy_production:
+    stage: deploy
+    script:
+        - echo "Deploying to server"
+        - rsync --progress -r build/* --delete root@35.207.132.68:/var/www/plannaplan.pl
+        - echo "Deployed"
+    only:
+        - master
