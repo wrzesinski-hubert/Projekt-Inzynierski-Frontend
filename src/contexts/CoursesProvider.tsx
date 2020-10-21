@@ -26,18 +26,20 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const token = CAS?.user?.token;
 
   const addToBasket = (course: Course) => {
-    const courseToBasket = {
+    const courseToBasket: Basket = {
       name: course.name,
       id: course.id,
       classes: course.classes[0],
       lecture: course.lectures !== undefined ? course.lectures[0] : undefined,
-    } as Basket;
+    };
     setBasket([...basket, courseToBasket]);
   };
+
   const deleteFromBasket = (id: number) => setBasket(basket.filter((course) => course.id !== id));
 
   const saveBasket = async () => {
     try {
+      //to be deleted
       let data = [7, 43, 54];
       let json = JSON.stringify(data);
       let post_data = { json_data: json };

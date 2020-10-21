@@ -1,7 +1,7 @@
 import React, { useState, useContext, MouseEvent } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandIcon from '../assets/expand.png';
-import { Course, Group, GroupType } from '../types/index';
+import { Course, Group } from '../types/index';
 import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
@@ -35,9 +35,7 @@ padding-left:35px;
 padding-right:35px;
 `;
 
-interface ClassGroupProps {
-  groupType: GroupType;
-}
+
 
 const ClassGroupStyled = styled.div`
 position:relative;

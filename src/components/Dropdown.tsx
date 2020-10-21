@@ -1,20 +1,19 @@
 import React, { useState, useContext, useEffect, MouseEvent, ChangeEvent } from 'react';
-import axios from 'axios';
 import { Input } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { coursesContext } from '../contexts/CoursesProvider';
-import { Course, Basket } from '../types';
+import { Course } from '../types';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 
-const DropdownStyled = styled.div`
+const DropdownContainer = styled.div`
   max-height: 420px;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   z-index: 100;
- position: relative;
-  border-radius:0px 0px 0px 15px;
+  position: relative;
+  border-radius: 0px 0px 0px 15px;
   ::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: #f5f5f5;
@@ -30,7 +29,7 @@ const DropdownStyled = styled.div`
   }
 `;
 
-const CourseStyled = styled.div`
+const CourseContainer = styled.div`
   position: relative;
   z-index: 10;
   padding: 5px;
@@ -39,7 +38,7 @@ const CourseStyled = styled.div`
   font-size: 18px;
   font-family: Lato;
   scroll-snap-align: end;
-  border-bottom:1px solid;
+  border-bottom: 1px solid;
   :hover {
     background-color: #d4b851;
     cursor: pointer;
@@ -113,13 +112,13 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
           value={input}
         />
         {open && (
-          <DropdownStyled>
+          <DropdownContainer>
             {filteredCourses.map(({ name, id }, index) => (
-              <CourseStyled key={index} id={id.toString()} onClick={onCourseClick}>
+              <CourseContainer key={index} id={id.toString()} onClick={onCourseClick}>
                 <p>{name} </p>
-              </CourseStyled>
+              </CourseContainer>
             ))}
-          </DropdownStyled>
+          </DropdownContainer>
         )}
       </div>
     </ClickAwayListener>
