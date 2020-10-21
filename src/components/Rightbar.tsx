@@ -69,6 +69,7 @@ export const Rightbar = () => {
   const save = debounce(() => {
     saveBasket();
     setOpen(true);
+    console.log("zmiana")
   },500);
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
