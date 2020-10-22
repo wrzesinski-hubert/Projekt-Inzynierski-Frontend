@@ -60,11 +60,12 @@ interface DropdownProps {
 export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
-  const [input, setInput] = useState<string>('');
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState('');
 
   //courses - choosenCourses
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
+
 
   const { courses, basket, addToBasket } = useContext(coursesContext)!;
 
@@ -72,7 +73,17 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
     const filterCourses = (input: string) => {
       const choosenCoursesNames = basket.map(({ name }) => name.trim());
       const filteredCourses = courses.filter(
-        ({ name }) => name.toLowerCase().includes(input.toLowerCase()) && !choosenCoursesNames.includes(name),
+        ({ name }) =>
+          name
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .includes(
+              input
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, ''),
+            ) && !choosenCoursesNames.includes(name),
       );
       setFilteredCourses(filteredCourses);
     };

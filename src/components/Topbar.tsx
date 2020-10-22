@@ -107,7 +107,7 @@ export default function ({ handleTransfer }: TopbarProps) {
         <TopbarInputIconStyled alt="close" src={CloseIcon} onClick={handleClearInput} />
       </TopbarInputStyled>
       <TopbarIconBox>
-        <TopbarIcon alt="transfer" src={Transfer} onClick={handleTransfer} />
+        {/* <TopbarIcon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
         <TopbarIcon alt="change_language" src={isPolish ? UK : PL} onClick={onLangChange} />
         <TopbarIcon alt="profile" src={User} onClick={handleProfile} />
         <Profile anchorEl={anchorEl} handleClose={handleClose} />
