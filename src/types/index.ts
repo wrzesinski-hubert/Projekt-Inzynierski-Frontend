@@ -7,7 +7,7 @@ export interface Basket {
   id: number;
   name: string;
   lecture?: Group;
-  classes?: Group;
+  classes: Group;
 }
 
 export interface Group {
@@ -23,11 +23,12 @@ export interface Group {
 export interface Course {
   id: number;
   name: string;
-  groups: Array<Group>;
+  lectures?: Array<Group>;
+  classes: Array<Group>;
 }
 
 export interface User {
   name?: string;
   surname?: string;
-  ticket: string | null;
+  token: string | null;
 }

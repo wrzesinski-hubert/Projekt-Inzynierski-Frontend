@@ -35,7 +35,7 @@ const TableCell = styled.div<TableCellProps>`
   align-items: center;
   justify-content: center;
   flex: 1;
-  font-size: 24px;
+  font-size: 1.25vw;
 `;
 
 const T = styled.table`
@@ -67,20 +67,28 @@ export const Scheduler = () => {
     <>
       <SchedulerWrapper ref={wrapperRef}>
         <TableHead>
-          {days.map((day, index) => (
-            <TableCell height={wrapperHeight / 13} key={index} ref={cellRef}>
-              {day}
-            </TableCell>
-          ))}
+          {days.map((day, indexCell) =>
+            indexCell === 0 ? (
+              <TableCell /* style={{ flexGrow: 1 }} */ height={wrapperHeight / 13} key={indexCell} ref={cellRef}>
+                {day}
+              </TableCell>
+            ) : (
+              <TableCell /* style={{ flexGrow: 3 }} */ height={wrapperHeight / 13} key={indexCell} ref={cellRef}>
+                {day}
+              </TableCell>
+            ),
+          )}
         </TableHead>
         <TableBody>
           {hours.map((hour, indexRow) => (
             <TableRow key={indexRow}>
               {[hour, '', '', '', '', ''].map((value, indexCell) =>
-                indexRow === 0 && indexCell === 1 ? (
-                  <TableCell height={wrapperHeight / 13} key={`${indexRow}${indexCell}`}></TableCell>
+                indexCell === 0 ? (
+                  <TableCell /* style={{ flexGrow: 1 }} */ height={wrapperHeight / 13} key={`${indexRow}${indexCell}`}>
+                    {value}
+                  </TableCell>
                 ) : (
-                  <TableCell height={wrapperHeight / 13} key={`${indexRow}${indexCell}`}>
+                  <TableCell /* style={{ flexGrow: 3 }} */ height={wrapperHeight / 13} key={`${indexRow}${indexCell}`}>
                     {value}
                   </TableCell>
                 ),

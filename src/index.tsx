@@ -7,12 +7,12 @@ import { GlobalStyles } from './styles/GlobalStyles';
 
 ReactDOM.render(
   <>
-    <CoursesProvider>
-      <CASProvider>
+    <CASProvider>
+      <CoursesProvider>
         <GlobalStyles />
         <App />
-      </CASProvider>
-    </CoursesProvider>
+      </CoursesProvider>
+    </CASProvider>
   </>,
   document.getElementById('root'),
 );

@@ -47,12 +47,15 @@ const Classes = styled.div<ClassesProps>`
   align-items: center;
   z-index: 2;
   border-radius: 10px;
+  
+  font-size:0.90vw;
   /* background-color: rgb(100, 181, 246); */
   width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
   height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
   margin-right: 5px;
   text-align: center;
-  background-color:${({groupType})=>groupType === "CLASS" ? "#5642AA" : "#866DF7"}
+  background-color:${({groupType})=>groupType === "CLASS" ? "#FFDC61" : "#A68820"};
+  box-shadow: 9px 9px 8px -2px rgba(0,0,0,0.59);
 `;
 
 interface SchedulerRowProps {
@@ -67,8 +70,6 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const [popoverId, setPopoverId] = useState<string | null>(null);
-
-  console.log("123s"+JSON.stringify(groups));
 
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {

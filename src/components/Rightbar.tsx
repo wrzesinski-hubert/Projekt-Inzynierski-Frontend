@@ -1,7 +1,10 @@
-import React, { useState, useContext, MouseEvent } from 'react';
+import React, { useContext } from 'react';
+import Snackbar from '@material-ui/core/Snackbar';
 import { CourseCard } from './CourseCard';
 import { coursesContext } from '../contexts/CoursesProvider';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import styled from 'styled-components';
+import { debounce } from "lodash";
 
 const RightbarStyled = styled.div`
   padding-top: 10px;
@@ -29,23 +32,32 @@ const RightbarStyled = styled.div`
 const RightbarTextStyled = styled.div`
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid;
 `;
 
 const SaveButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(100, 181, 246) !important;
+  background-color: #417cab !important;
   border-radius: 10px;
   cursor: pointer;
   height: 40px;
   background-color: red;
   margin-bottom: 10px;
+  &:hover {
+    color: white;
+  }
+  box-shadow: 6px 6px 6px -2px rgba(0,0,0,0.59);
 `;
 
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export const Rightbar = () => {
-  const { courses, basket } = useContext(coursesContext)!;
+  const { courses, basket, saveBasket } = useContext(coursesContext)!;
+
+  const [open, setOpen] = React.useState(false);
 
   const getBasketGroups = () => {
     const names = basket.map(({ name }) => name);
@@ -53,6 +65,20 @@ export const Rightbar = () => {
   };
 
   const filteredCourses = getBasketGroups();
+
+  const save = debounce(() => {
+    saveBasket();
+    setOpen(true);
+    console.log("zmiana")
+  },500);
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   //need to insert student name from db and course maybe based on current time or from db too
   return (
@@ -62,11 +88,16 @@ export const Rightbar = () => {
           Hubert Wrzesiński<br></br>
           Semestr zimowy 2020/2021
         </p>
-        <SaveButton>SAVE</SaveButton>
+        <SaveButton onClick={save}>ZAPISZ</SaveButton>
       </RightbarTextStyled>
       {filteredCourses.map((course, index) => (
         <CourseCard course={course} key={index} />
       ))}
+      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Zapisano plan!
+        </Alert>
+      </Snackbar>
     </RightbarStyled>
   );
 };
