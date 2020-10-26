@@ -75,18 +75,10 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get<Array<{ id: number; name: string; lectures: Array<Group>, classes:Array<Group> }>>(
+      const { data: courses } = await axios.get<Array<Course>>(
         `${process.env.REACT_APP_API_URL}/api/v1/courses/getCoursesWithGroups`,
       );
-      console.log(data);
-      const courses = data.map(({ id, name, lectures, classes }) => ({
-      id,
-      name,
-      lectures,
-      classes,
-      })) as Array<Course>;
       courses.sort((a: Course, b: Course) => (a.name > b.name ? 1 : -1));
-
       setCourses(courses);
     };
     fetchData();

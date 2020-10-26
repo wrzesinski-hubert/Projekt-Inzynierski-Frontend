@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
+import React, { MouseEvent, useState } from 'react';
 import { Group, GroupType } from '../types';
 import styled from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
@@ -35,7 +35,7 @@ const SchedulerEvent = styled.div<SchedulerEventProps>`
   z-index: 2;
 `;
 
-interface ClassesProps{
+interface ClassesProps {
   cellWidth: number;
   cellHeight: number;
   groupType: GroupType;
@@ -47,15 +47,15 @@ const Classes = styled.div<ClassesProps>`
   align-items: center;
   z-index: 2;
   border-radius: 10px;
-  
-  font-size:0.90vw;
+
+  font-size: 0.9vw;
   /* background-color: rgb(100, 181, 246); */
   width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
   height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
   margin-right: 5px;
   text-align: center;
-  background-color:${({groupType})=>groupType === "CLASS" ? "#FFDC61" : "#A68820"};
-  box-shadow: 9px 9px 8px -2px rgba(0,0,0,0.59);
+  background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#A68820')};
+  box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
 `;
 
 interface SchedulerRowProps {
@@ -98,7 +98,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
           {groups.map(
             (group, index) =>
               group.day === eventIndex && (
-                <>
+                <div key={index}>
                   <Classes
                     groupType={group.type}
                     cellWidth={cellWidth}
@@ -141,7 +141,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                       <p>{groups[index].room}</p>
                     </Typography>
                   </Popover>
-                </>
+                </div>
               ),
           )}
         </SchedulerEvent>

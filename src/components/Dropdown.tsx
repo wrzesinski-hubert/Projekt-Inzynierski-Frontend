@@ -66,7 +66,6 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
   //courses - choosenCourses
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
 
-
   const { courses, basket, addToBasket } = useContext(coursesContext)!;
 
   useEffect(() => {
