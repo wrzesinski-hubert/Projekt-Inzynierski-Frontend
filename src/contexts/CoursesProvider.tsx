@@ -24,6 +24,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const [basket, setBasket] = useState<Array<Basket>>([]);
 
   const { enqueueSnackbar } = useSnackbar();
+  const { closeSnackbar } = useSnackbar();
 
   const CAS = useContext(CASContext)!;
   const token = CAS?.user?.token;
@@ -60,14 +61,28 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       data: JSON.stringify(basketIds),
     };
 
+    const action = (key: any) => (
+      <>
+        <button
+          onClick={() => {
+            closeSnackbar(key);
+          }}
+        >
+          X
+        </button>
+      </>
+    );
+
     try {
       await axios.request(config);
       enqueueSnackbar('Plan został zapisany', {
         variant: 'success',
+        action,
       });
     } catch (e) {
       enqueueSnackbar('Zapisywanie planu nie powiodło się', {
         variant: 'error',
+        action,
       });
     }
   };
