@@ -1,10 +1,8 @@
 import React, { useContext } from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
 import { CourseCard } from './CourseCard';
 import { coursesContext } from '../contexts/CoursesProvider';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import styled from 'styled-components';
-import { debounce } from "lodash";
+import { debounce } from 'lodash';
 
 const RightbarStyled = styled.div`
   padding-top: 10px;
@@ -47,17 +45,11 @@ const SaveButton = styled.div`
   &:hover {
     color: white;
   }
-  box-shadow: 6px 6px 6px -2px rgba(0,0,0,0.59);
+  box-shadow: 6px 6px 6px -2px rgba(0, 0, 0, 0.59);
 `;
-
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 export const Rightbar = () => {
   const { courses, basket, saveBasket } = useContext(coursesContext)!;
-
-  const [open, setOpen] = React.useState(false);
 
   const getBasketGroups = () => {
     const names = basket.map(({ name }) => name);
@@ -66,19 +58,7 @@ export const Rightbar = () => {
 
   const filteredCourses = getBasketGroups();
 
-  const save = debounce(() => {
-    saveBasket();
-    setOpen(true);
-    console.log("zmiana")
-  },500);
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const handleSave = debounce(() => saveBasket(), 500);
 
   //need to insert student name from db and course maybe based on current time or from db too
   return (
@@ -88,16 +68,11 @@ export const Rightbar = () => {
           Hubert Wrzesiński<br></br>
           Semestr zimowy 2020/2021
         </p>
-        <SaveButton onClick={save}>ZAPISZ</SaveButton>
+        <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>
       </RightbarTextStyled>
       {filteredCourses.map((course, index) => (
         <CourseCard course={course} key={index} />
       ))}
-      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success">
-          Zapisano plan!
-        </Alert>
-      </Snackbar>
     </RightbarStyled>
   );
 };
