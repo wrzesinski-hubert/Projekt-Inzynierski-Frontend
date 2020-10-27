@@ -86,15 +86,33 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const getNewestTimetable = async () => {
+    //todo
+    try {
+      const { data: basket } = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/v1/assignments/getCurrentAssignments`,
+      );
+      // setBasket(basket);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const fetchClasses = async () => {
+    try {
       const { data: courses } = await axios.get<Array<Course>>(
         `${process.env.REACT_APP_API_URL}/api/v1/courses/getCoursesWithGroups`,
       );
       courses.sort((a, b) => (a.name > b.name ? 1 : -1));
       setCourses(courses);
-    };
-    fetchData();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchClasses();
+    getNewestTimetable();
   }, []);
 
   return (
