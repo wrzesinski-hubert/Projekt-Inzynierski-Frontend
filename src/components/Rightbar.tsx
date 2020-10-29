@@ -9,7 +9,6 @@ const RightbarStyled = styled.div`
   padding-left: 15px;
   padding-right: 15px;
   text-align: center;
-  font-family: Lato;
   height: 100%;
   width: 300px;
   overflow-y: scroll;
@@ -64,10 +63,6 @@ export const Rightbar = () => {
   return (
     <RightbarStyled>
       <RightbarTextStyled>
-        <p>
-          Hubert Wrzesiński<br></br>
-          Semestr zimowy 2020/2021
-        </p>
         <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>
       </RightbarTextStyled>
       {filteredCourses.map((course, index) => (

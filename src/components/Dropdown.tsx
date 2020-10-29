@@ -1,19 +1,21 @@
 import React, { useState, useContext, useEffect, MouseEvent, ChangeEvent } from 'react';
-import { Input } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { Course } from '../types';
 import styled from 'styled-components';
-import { makeStyles } from '@material-ui/core/styles';
 
 const DropdownContainer = styled.div`
-  max-height: 420px;
-  overflow-y: auto;
+    position: absolute;
+    left: 280px;
+    top: 65px;
+    z-index: 99;
+    min-width: 70%;
+    max-height: 420px;
+    border-radius:3px;
+    overflow-y: auto;
+    box-shadow: 0.05em 0.2em 0.6em rgba(0,0,0,.2);
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  z-index: 100;
-  position: relative;
-  border-radius: 0px 0px 0px 15px;
   ::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: #f5f5f5;
@@ -24,33 +26,35 @@ const DropdownContainer = styled.div`
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #d4b851;
+    background-color: black;
     border: 1px solid;
   }
 `;
 
 const CourseContainer = styled.div`
-  position: relative;
-  z-index: 10;
   padding: 5px;
   padding-left: 20px;
-  background-color: #e6c759;
+  background-color: #f2f4f7;
   font-size: 18px;
-  font-family: Lato;
+  font-weight: 500;
   scroll-snap-align: end;
-  border-bottom: 1px solid;
   :hover {
-    background-color: #d4b851;
+    background-color: #ECEEF4;
     cursor: pointer;
   }
 `;
 
-const useStyles = makeStyles({
-  topbarInput: {
-    marginTop: '8px',
-    width: '100%',
-  },
-});
+const Input = styled.input`
+    background-color: #F1F2F5;
+     font-size: 20px;
+     height: 100%;
+     width: 100%; 
+     border: none;
+     &:focus {
+      outline: none;
+     }
+     
+`
 
 interface DropdownProps {
   clearInput: boolean;
@@ -58,7 +62,6 @@ interface DropdownProps {
 }
 
 export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
-  const classes = useStyles();
 
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -111,12 +114,10 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClickAway}>
-      <div>
+    // <ClickAwayListener onClickAway={handleClickAway}>
+      <>
         <Input
-          placeholder="Wyszukaj..."
-          inputProps={{ 'aria-label': 'description' }}
-          className={classes.topbarInput}
+          placeholder="Wyszukaj przedmiot..."
           onChange={handleChange}
           onClick={handleClick}
           value={input}
@@ -130,7 +131,7 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
             ))}
           </DropdownContainer>
         )}
-      </div>
-    </ClickAwayListener>
+      </>
+    // </ClickAwayListener>
   );
 };
