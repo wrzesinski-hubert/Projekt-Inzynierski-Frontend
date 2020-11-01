@@ -7,10 +7,6 @@ import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import { ReactComponent as CloseIcon } from '../assets/close.svg';
 
-interface ClassExandIconProps {
-  isSelected: boolean;
-}
-
 const CourseStyled = styled.div`
   display: flex;
   min-height: 40px;
@@ -20,51 +16,58 @@ const CourseStyled = styled.div`
   flex-direction: column;
   margin-top: 10px;
   padding-top: 10px;
-  padding-bottom: 10px;
   border-radius: 10px;
   cursor: pointer;
   align-items: stretch;
   position: relative;
-  box-shadow: 9px 9px 8px -2px rgba(0,0,0,0.59);
+  box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
 `;
 
 const CourseNameStyled = styled.div`
-padding-top:20px;
-padding-bottom:10px;
-padding-left:35px;
-padding-right:35px;
+  padding-top: 25px;
+  padding-bottom: 5px;
+  font-size: 16px;
 `;
 
-
-
 const ClassGroupStyled = styled.div`
-position:relative;
+  position: relative;
   padding-top: 1px;
   padding-bottom: 1px;
   :hover {
     cursor: pointer;
-    background-color:#9ED3FF;
+    background-color: #9ed3ff;
   }
 `;
 
-const ClassExandIconStyled = styled.img<ClassExandIconProps>`
-  margin-top: 5px;
+interface ExpandIconProps {
+  isSelected: boolean;
+}
+
+const Flexbox = styled.div`
+  padding-bottom: 5px;
+  padding-top: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Expand = styled.img<ExpandIconProps>`
   width: 20px;
   transition: 0.2s;
   transform: ${(props) => (props.isSelected ? 'scaleY(-1);' : 'scaleY(1);')};
 `;
 
 const TypeClass = styled.div`
-  font-size:12px;
-  position:absolute;
-  border-radius:15px;
-  background-color:#00506B;
-  border:2px solid;
-  min-width:45px;
-  top:5px;
-  left:5px;
-  color:white;
-  font-weight:bold;
+  font-size: 12px;
+  position: absolute;
+  border-radius: 15px;
+  background-color: #00506b;
+  border: 2px solid;
+  min-width: 45px;
+  top: 5px;
+  left: 5px;
+  color: white;
+  font-weight: bold;
 `;
 
 const useStyles = makeStyles({
@@ -117,16 +120,16 @@ export const CourseCard = ({ course }: CourseCardProps) => {
           .sort((a, b) => b.type.localeCompare(a.type))
           .map((group, index) => (
             <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
-              <TypeClass>{group.type==="CLASS"? "Ćw." : "Wyk."}</TypeClass>
+              <TypeClass>{group.type === 'CLASS' ? 'Ćw.' : 'Wyk.'}</TypeClass>
               <p>
                 {group.time} {group.room} <br></br> {group.lecturer}
               </p>
             </ClassGroupStyled>
           ))}
       </Collapse>
-      <div onClick={() => setSelected(!isSelected)}>
-        <ClassExandIconStyled isSelected={isSelected} alt="expand" src={ExpandIcon} />
-      </div>
+      <Flexbox onClick={() => setSelected(!isSelected)}>
+        <Expand isSelected={isSelected} alt="expand" src={ExpandIcon} />
+      </Flexbox>
     </CourseStyled>
   );
 };

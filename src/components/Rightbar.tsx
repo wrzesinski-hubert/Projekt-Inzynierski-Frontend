@@ -26,20 +26,14 @@ const RightbarStyled = styled.div`
     border: 1px solid;
   }
 `;
-const RightbarTextStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 const SaveButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #417cab !important;
+  background-color: #417cab;
   border-radius: 10px;
   cursor: pointer;
   height: 40px;
-  background-color: red;
   margin-bottom: 10px;
   &:hover {
     color: white;
@@ -62,9 +56,7 @@ export const Rightbar = () => {
   //need to insert student name from db and course maybe based on current time or from db too
   return (
     <RightbarStyled>
-      <RightbarTextStyled>
-        <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>
-      </RightbarTextStyled>
+      <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>
       {filteredCourses.map((course, index) => (
         <CourseCard course={course} key={index} />
       ))}
