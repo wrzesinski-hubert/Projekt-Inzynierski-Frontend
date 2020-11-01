@@ -102,12 +102,19 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   };
 
   const getNewestTimetable = async () => {
-    //todo
+    const config = {
+      method: 'get' as const,
+      url: `${process.env.REACT_APP_API_URL}/api/v1/assignments/getCurrentAssignments`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
     try {
-      const { data: basket } = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/v1/assignments/getCurrentAssignments`,
-      );
-      // setBasket(basket);
+      let { data: basket } = await axios.request(config);
+      if (basket === '') {
+        basket = [];
+      }
+      setBasket(basket);
     } catch (e) {
       console.log(e);
     }
@@ -127,8 +134,10 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   useEffect(() => {
     fetchClasses();
-    getNewestTimetable();
-  }, []);
+    if (token) {
+      getNewestTimetable();
+    }
+  }, [token]);
 
   return (
     <coursesContext.Provider value={{ courses, basket, addToBasket, addGroup, deleteFromBasket, saveBasket }}>
