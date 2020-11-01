@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent, ChangeEvent, useEffect } from 'react';
 import Transfer from '../assets/transfer.png';
 import Search from '../assets/search.svg';
 import CloseIcon from '../assets/close.svg';
@@ -8,11 +8,10 @@ import { Dropdown } from './Dropdown';
 import PolishIcon from '../assets/poland.svg';
 import EnglishIcon from '../assets/united-kingdom.svg';
 import styled from 'styled-components/macro';
-
-
+import ClickAwayListener from 'react-click-away-listener';
 
 const Topbar = styled.div`
-  background-color:#ECEEF4;
+  background-color: #eceef4;
   height: 80px;
   padding: 5px;
   font-size: 24px;
@@ -45,18 +44,32 @@ const Text = styled.div`
   }
 `;
 
+const FlexboxColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 9;
+  max-width: 1200px;
+`;
+
 const InputWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;  
-  margin: 10px;
-  flex-grow: 9;
-  background-color:#f2f4f7;
-  border-radius: 5px;
+  justify-content: center;
+  margin-top: 15px;
+  background-color: #f2f4f7;
+  border-radius: 6px;
 `;
 
-const Input = styled.div`
-width: 100%;
+const Input = styled.input`
+  background-color: #f1f2f5;
+  font-size: 20px;
+  height: 40px;
+  width: 100%;
+  margin-left: 5px;
+  border: none;
+  &:focus {
+    outline: none;
+  }
 `;
 
 const InputIcon = styled.img`
@@ -82,12 +95,11 @@ const Icon = styled.img`
   }
 `;
 
-
-
 const VerticalLine = styled.div`
   border-left: 1px solid black;
   height: 30px;
-`
+`;
+
 
 
 interface TopbarProps {
@@ -98,6 +110,8 @@ export default function ({ handleTransfer }: TopbarProps) {
   const [clearInput, setClearInput] = useState(false);
   const [isPolish, setIsPolish] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState('');
 
   const onLangChange = () => setIsPolish(!isPolish);
 
@@ -107,20 +121,36 @@ export default function ({ handleTransfer }: TopbarProps) {
 
   const handleClearInput = () => setClearInput(!clearInput);
 
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
+
+  const handleClick = () => setOpen(true);
+
+  const handleCloseDropdown = () => setOpen(false);
+
+  const handleClickAway = () => setOpen(false);
+
+  useEffect(() => {
+    clearInput && (setInput(''), handleClearInput());
+  }, [clearInput]);
+
   return (
     <Topbar>
       <LogoWrapper>
         <Logo alt="logo" src="https://plannaplan.pl/img/logo.svg" />
         <Text> plan na plan </Text>
       </LogoWrapper>
-      <InputWrapper>
-        <Input>
-          <Dropdown clearInput={clearInput} handleClearInput={handleClearInput} />
-        </Input>
-        <InputIcon alt="close" src={CloseIcon} onClick={handleClearInput} />
-        <VerticalLine/>
-        <InputIcon alt="search" src={Search} />
-      </InputWrapper>
+      <FlexboxColumn>
+        <ClickAwayListener onClickAway={handleClickAway}>
+          <InputWrapper>
+            <Input placeholder="Wyszukaj przedmiot..." onChange={handleChange} onClick={handleClick} value={input} />
+            <InputIcon alt="close" src={CloseIcon} onClick={handleClearInput} />
+            <VerticalLine />
+            <InputIcon alt="search" src={Search} />
+          </InputWrapper>
+          <Dropdown open={open} input={input} handleCloseDropdown={handleCloseDropdown} />
+        </ClickAwayListener>
+      </FlexboxColumn>
+
       <IconWrapper>
         {/* <Icon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
         <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} />

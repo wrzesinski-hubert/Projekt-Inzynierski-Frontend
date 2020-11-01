@@ -1,19 +1,19 @@
-import React, { useState, useContext, useEffect, MouseEvent, ChangeEvent } from 'react';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import React, { useState, useContext, useEffect, MouseEvent, forwardRef } from 'react';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { Course } from '../types';
 import styled from 'styled-components';
 
+const WrapperIchuj = styled.div`
+  max-width: 1200px;
+`;
+
 const DropdownContainer = styled.div`
-    position: absolute;
-    left: 280px;
-    top: 65px;
-    z-index: 99;
-    min-width: 70%;
-    max-height: 420px;
-    border-radius:3px;
-    overflow-y: auto;
-    box-shadow: 0.05em 0.2em 0.6em rgba(0,0,0,.2);
+  position: relative;
+  z-index: 99999999;
+  max-height: 420px;
+  border-radius: 3px;
+  overflow-y: auto;
+  box-shadow: 0.05em 0.2em 0.6em rgba(0, 0, 0, 0.2);
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   ::-webkit-scrollbar-track {
@@ -39,37 +39,34 @@ const CourseContainer = styled.div`
   font-weight: 500;
   scroll-snap-align: end;
   :hover {
-    background-color: #ECEEF4;
+    background-color: #eceef4;
     cursor: pointer;
   }
 `;
 
-const Input = styled.input`
-    background-color: #F1F2F5;
-     font-size: 20px;
-     height: 100%;
-     width: 100%; 
-     border: none;
-     &:focus {
-      outline: none;
-     }
-     
-`
-
 interface DropdownProps {
-  clearInput: boolean;
-  handleClearInput: () => void;
+  open: boolean;
+  input: string;
+  handleCloseDropdown: () => void;
 }
 
-export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
-
-  const [open, setOpen] = useState(false);
-  const [input, setInput] = useState('');
-
+export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: DropdownProps, ref: any) => {
   //courses - choosenCourses
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
 
   const { courses, basket, addToBasket } = useContext(coursesContext)!;
+
+  useEffect(() => {
+    console.log('wut');
+  }, [open, input, handleCloseDropdown]);
+
+  useEffect(() => {
+    console.log('input is: ', input);
+  }, [input]);
+
+  useEffect(() => {
+    console.log('is open: ', open);
+  }, [open]);
 
   useEffect(() => {
     const filterCourses = (input: string) => {
@@ -90,17 +87,7 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
       setFilteredCourses(filteredCourses);
     };
     filterCourses(input);
-  }, [input, open, basket]);
-
-  useEffect(() => {
-    clearInput && (setInput(''), handleClearInput());
-  }, [clearInput]);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
-
-  const handleClick = () => setOpen(true);
-
-  const handleClickAway = () => setOpen(false);
+  }, [input, basket]);
 
   const onCourseClick = async (event: MouseEvent) => {
     const target = event.currentTarget;
@@ -109,29 +96,21 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
       console.log('added course is');
       console.log(course);
       addToBasket(course);
-      setOpen(false);
+      handleCloseDropdown();
     }
   };
 
   return (
-    // <ClickAwayListener onClickAway={handleClickAway}>
-      <>
-        <Input
-          placeholder="Wyszukaj przedmiot..."
-          onChange={handleChange}
-          onClick={handleClick}
-          value={input}
-        />
-        {open && (
-          <DropdownContainer>
-            {filteredCourses.map(({ name, id }, index) => (
-              <CourseContainer key={index} id={id.toString()} onClick={onCourseClick}>
-                <p>{name} </p>
-              </CourseContainer>
-            ))}
-          </DropdownContainer>
-        )}
-      </>
-    // </ClickAwayListener>
+    <WrapperIchuj>
+      {open && (
+        <DropdownContainer>
+          {filteredCourses.map(({ name, id }, index) => (
+            <CourseContainer key={index} id={id.toString()} onClick={onCourseClick}>
+              <p>{name} </p>
+            </CourseContainer>
+          ))}
+        </DropdownContainer>
+      )}
+    </WrapperIchuj>
   );
-};
+});

@@ -11,6 +11,7 @@
     "axios": "^0.19.2",
     "notistack": "^1.0.1",
     "react": "^16.13.1",
+    "react-click-away-listener": "^1.4.3",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "styled-components": "^5.1.1"
