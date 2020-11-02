@@ -20,3 +20,6 @@ export const hours = [
   "18:00",
   "19:00",
 ];
+
+
+export const MONDAY_TO_FRIDAY = 5;

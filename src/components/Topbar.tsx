@@ -48,7 +48,7 @@ const FlexboxColumn = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 9;
-  max-width: 1200px;
+  max-width: 1400px;
 `;
 
 const InputWrapper = styled.div`

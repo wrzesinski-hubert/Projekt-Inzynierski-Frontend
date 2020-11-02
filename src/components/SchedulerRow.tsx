@@ -47,13 +47,10 @@ const Classes = styled.div<ClassesProps>`
   align-items: center;
   z-index: 2;
   border-radius: 10px;
-
-  font-size: 0.9vw;
-  /* background-color: rgb(100, 181, 246); */
   width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
   height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
-  margin-right: 5px;
-  text-align: center;
+  padding-left: 10px;
+  text-align: left;
   background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#A68820')};
   box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
 `;
@@ -98,7 +95,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
           {groups.map(
             (group, index) =>
               group.day === eventIndex && (
-                <div key={index}>
+                <>
                   <Classes
                     groupType={group.type}
                     cellWidth={cellWidth}
@@ -110,11 +107,10 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                     onMouseEnter={(e) => handlePopoverOpen(e)}
                     onMouseLeave={handlePopoverClose}
                   >
-                    <p>
-                      {groups[index].name}
-                      <br></br>
-                      {groups[index].room}
-                    </p>
+                    <div>
+                      <p style={{ fontWeight: 700 }}>{groups[index].name}</p>
+                      <span>{groups[index].room}</span>
+                    </div>
                   </Classes>
                   <Popover
                     id={`mouse-over-popover`}
@@ -141,7 +137,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                       <p>{groups[index].room}</p>
                     </Typography>
                   </Popover>
-                </div>
+                </>
               ),
           )}
         </SchedulerEvent>

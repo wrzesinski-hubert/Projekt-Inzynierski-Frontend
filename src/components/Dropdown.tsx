@@ -4,7 +4,7 @@ import { Course } from '../types';
 import styled from 'styled-components';
 
 const WrapperIchuj = styled.div`
-  max-width: 1200px;
+  max-width: 1400px;
 `;
 
 const DropdownContainer = styled.div`
@@ -86,8 +86,9 @@ export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: Dropdo
       );
       setFilteredCourses(filteredCourses);
     };
+    console.log("filtering courses");
     filterCourses(input);
-  }, [input, basket]);
+  }, [open, input, basket]);
 
   const onCourseClick = async (event: MouseEvent) => {
     const target = event.currentTarget;
