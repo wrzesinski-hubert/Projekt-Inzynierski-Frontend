@@ -51,7 +51,7 @@ const Classes = styled.div<ClassesProps>`
   height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
   padding-left: 10px;
   text-align: left;
-  background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#A68820')};
+  background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
   box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
 `;
 
@@ -109,7 +109,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                   >
                     <div>
                       <p style={{ fontWeight: 700 }}>{groups[index].name}</p>
-                      <span>{groups[index].room}</span>
+                      <p >{groups[index].room}</p>
                     </div>
                   </Classes>
                   <Popover

@@ -3,9 +3,7 @@ import { coursesContext } from '../contexts/CoursesProvider';
 import { Course } from '../types';
 import styled from 'styled-components';
 
-const WrapperIchuj = styled.div`
-  max-width: 1400px;
-`;
+
 
 const DropdownContainer = styled.div`
   position: relative;
@@ -102,16 +100,16 @@ export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: Dropdo
   };
 
   return (
-    <WrapperIchuj>
+    <DropdownContainer>
       {open && (
-        <DropdownContainer>
+        <>
           {filteredCourses.map(({ name, id }, index) => (
             <CourseContainer key={index} id={id.toString()} onClick={onCourseClick}>
               <p>{name} </p>
             </CourseContainer>
           ))}
-        </DropdownContainer>
+        </>
       )}
-    </WrapperIchuj>
+    </DropdownContainer>
   );
 });

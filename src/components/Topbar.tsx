@@ -22,13 +22,12 @@ const Topbar = styled.div`
 
 const LogoWrapper = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
-  flex-grow: 0.5;
-  justify-content: flex-start;
+  flex: 2;
 `;
 
 const Logo = styled.img`
-  flex-grow: 1;
   width: 70px;
   height: 70px;
   @media only screen and (max-width: 670px) {
@@ -38,7 +37,6 @@ const Logo = styled.img`
 `;
 
 const Text = styled.div`
-  flex-grow: 2;
   @media only screen and (max-width: 670px) {
     display: none;
   }
@@ -47,14 +45,11 @@ const Text = styled.div`
 const FlexboxColumn = styled.div`
   display: flex;
   flex-direction: column;
-  flex-grow: 9;
-  max-width: 1400px;
+  flex: 9;
 `;
 
 const InputWrapper = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
   margin-top: 15px;
   background-color: #f2f4f7;
   border-radius: 6px;
@@ -82,9 +77,9 @@ const InputIcon = styled.img`
 
 const IconWrapper = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-around;
-  flex-grow: 0.5;
+  flex: 2;
 `;
 
 const Icon = styled.img`
@@ -152,7 +147,7 @@ export default function ({ handleTransfer }: TopbarProps) {
       </FlexboxColumn>
 
       <IconWrapper>
-        {/* <Icon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
+        <Icon alt="transfer" src={Transfer} onClick={handleTransfer} />
         <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} />
         <Icon alt="profile" src={ProfileIcon} onClick={handleProfile} />
         <Profile anchorEl={anchorEl} handleClose={handleClose} />
