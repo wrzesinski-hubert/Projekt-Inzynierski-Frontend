@@ -6,7 +6,7 @@ import styled from 'styled-components/macro';
 
 const SchedulerWrapper = styled.div`
   border-collapse: collapse;
-  flex-grow: 1;
+  flex: 1;
 `;
 
 const TableBody = styled.div`
@@ -26,22 +26,26 @@ const TableHead = styled.div`
 
 interface TableCellProps {
   height: number;
+  isHourColumn?: boolean;
 }
 
 const TableCell = styled.div<TableCellProps>`
   height: ${({ height }) => height}px;
-  border: 1px solid #ddd;
+  /* border: ${({ isHourColumn }) => !isHourColumn && '1px solid #ddd'}; */
+  border-width: ${({ isHourColumn }) => !isHourColumn && '1px'};
+  border-style: ${({ isHourColumn }) => !isHourColumn && 'solid dotted dotted dotted'};
+  /* border-bottom: ${({ isHourColumn }) => !isHourColumn && '1px dotted #ddd'}; */
+  margin-top: ${({ isHourColumn, height }) => isHourColumn ? -(height / 2) : 0}px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex: 1;
-  font-size: 1.25vw;
+  justify-content: ${({ isHourColumn }) => isHourColumn ? 'flex-end' : 'center'};
+  flex: ${({ isHourColumn }) => isHourColumn ? '1' : '5'};
+  margin-right: ${({ isHourColumn }) => isHourColumn ? '10px' : '0px'};
+  font-size:  0.75vw;
+  user-select: none;
+  border-collapse:collapse; 
 `;
 
-const T = styled.table`
-  width: 100%;
-  height: 100%;
-`;
 
 export const Scheduler = () => {
   const cellRef = useRef<HTMLDivElement>(null);
@@ -69,14 +73,14 @@ export const Scheduler = () => {
         <TableHead>
           {days.map((day, indexCell) =>
             indexCell === 0 ? (
-              <TableCell /* style={{ flexGrow: 1 }} */ height={wrapperHeight / 13} key={indexCell} ref={cellRef}>
+              <TableCell height={wrapperHeight / 26} isHourColumn={true} key={indexCell} ref={cellRef}>
                 {day}
               </TableCell>
             ) : (
-              <TableCell /* style={{ flexGrow: 3 }} */ height={wrapperHeight / 13} key={indexCell} ref={cellRef}>
-                {day}
-              </TableCell>
-            ),
+                <TableCell height={wrapperHeight / 26} key={indexCell} ref={cellRef}>
+                  {day}
+                </TableCell>
+              ),
           )}
         </TableHead>
         <TableBody>
@@ -84,19 +88,19 @@ export const Scheduler = () => {
             <TableRow key={indexRow}>
               {[hour, '', '', '', '', ''].map((value, indexCell) =>
                 indexCell === 0 ? (
-                  <TableCell /* style={{ flexGrow: 1 }} */ height={wrapperHeight / 13} key={`${indexRow}${indexCell}`}>
+                  <TableCell height={wrapperHeight / 26} isHourColumn={true} key={`${indexRow}${indexCell}`}>
                     {value}
                   </TableCell>
                 ) : (
-                  <TableCell /* style={{ flexGrow: 3 }} */ height={wrapperHeight / 13} key={`${indexRow}${indexCell}`}>
-                    {value}
-                  </TableCell>
-                ),
+                    <TableCell height={wrapperHeight / 26} key={`${indexRow}${indexCell}`}>
+                      {value}
+                    </TableCell>
+                  ),
               )}
             </TableRow>
           ))}
         </TableBody>
-        <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} cellHeight={wrapperHeight / 13} />
+        <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} cellHeight={wrapperHeight / 26} />
       </SchedulerWrapper>
     </>
   );
