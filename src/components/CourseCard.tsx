@@ -1,32 +1,51 @@
 import React, { useState, useContext, MouseEvent } from 'react';
 import Collapse from '@material-ui/core/Collapse';
-import ExpandIcon from '../assets/expand.png';
+import { ReactComponent as Expand } from '../assets/expand.svg';
 import { Course, Group } from '../types/index';
 import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
-import { ReactComponent as CloseIcon } from '../assets/close.svg';
+import { ReactComponent as Bin } from '../assets/bin.svg';
 
-const CourseStyled = styled.div`
+const CourseCardWrapper = styled.div`
+  position: relative;
   display: flex;
   min-height: 40px;
-  background-color: rgb(100, 181, 246) !important;
+  background-color: rgb(100, 181, 246);
   align-items: center;
   justify-content: center;
   flex-direction: column;
   margin-top: 10px;
-  padding-top: 10px;
-  border-radius: 10px;
+  border-radius: 10px; 
   cursor: pointer;
   align-items: stretch;
-  position: relative;
   box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
 `;
 
-const CourseNameStyled = styled.div`
-  padding-top: 25px;
-  padding-bottom: 5px;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center; 
+  justify-content: space-between;
+  padding: 10px;
+`
+
+const BinIcon = styled(Bin)`
+  width: 20px;
+  height: 20px;
+  max-width: 20px;
+  min-width: 20px;
+  cursor: pointer;
+  &:hover {
+    fill: white;
+  }
+`;
+
+const CourseName = styled.div`
+  padding-left: 3px;
+  padding-right: 3px;
   font-size: 16px;
+  user-select: none;
 `;
 
 const ClassGroupStyled = styled.div`
@@ -43,18 +62,13 @@ interface ExpandIconProps {
   isSelected: boolean;
 }
 
-const Flexbox = styled.div`
-  padding-bottom: 5px;
-  padding-top: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Expand = styled.img<ExpandIconProps>`
+const ExpandIcon = styled(Expand) <ExpandIconProps>`
   width: 20px;
+  height: 20px;
+  max-width: 20px;
+  min-width: 20px;
   transition: 0.2s;
-  transform: ${(props) => (props.isSelected ? 'scaleY(-1);' : 'scaleY(1);')};
+  transform: ${({ isSelected }) => (isSelected ? 'scaleY(-1);' : 'scaleY(1);')};
 `;
 
 const TypeClass = styled.div`
@@ -88,16 +102,7 @@ const useStyles = makeStyles({
   },
 });
 
-const DeleteFromBasketIcon = styled(CloseIcon)`
-  width: 20px;
-  cursor: pointer;
-  position: absolute;
-  left: 230px;
-  top: -5px;
-  &:hover {
-    fill: white;
-  }
-`;
+
 
 interface CourseCardProps {
   course: Course;
@@ -112,9 +117,12 @@ export const CourseCard = ({ course }: CourseCardProps) => {
   const onGroupClick = (group: Group, id: number) => addGroup(group, id);
 
   return (
-    <CourseStyled>
-      <DeleteFromBasketIcon onClick={() => deleteFromBasket(course.id)}></DeleteFromBasketIcon>
-      <CourseNameStyled onClick={() => setSelected(!isSelected)}>{course.name}</CourseNameStyled>
+    <CourseCardWrapper>
+      <TitleWrapper>
+        <BinIcon onClick={() => deleteFromBasket(course.id)}></BinIcon>
+        <CourseName onClick={() => setSelected(!isSelected)}>{course.name}</CourseName>
+        <ExpandIcon onClick={() => setSelected(!isSelected)} isSelected={isSelected} />
+      </TitleWrapper>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
         {groups
           .sort((a, b) => b.type.localeCompare(a.type))
@@ -127,9 +135,6 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             </ClassGroupStyled>
           ))}
       </Collapse>
-      <Flexbox onClick={() => setSelected(!isSelected)}>
-        <Expand isSelected={isSelected} alt="expand" src={ExpandIcon} />
-      </Flexbox>
-    </CourseStyled>
+    </CourseCardWrapper>
   );
 };

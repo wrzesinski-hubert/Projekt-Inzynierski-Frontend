@@ -37,6 +37,7 @@ const Logo = styled.img`
 `;
 
 const Text = styled.div`
+ user-select: none;
   @media only screen and (max-width: 670px) {
     display: none;
   }
@@ -151,7 +152,7 @@ export default function ({ handleTransfer }: TopbarProps) {
         <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} />
         <Icon alt="profile" src={ProfileIcon} onClick={handleProfile} />
         <Profile anchorEl={anchorEl} handleClose={handleClose} />
-        <span>nasz student</span>
+        <Text>nasz student</Text>
       </IconWrapper>
     </Topbar>
   );

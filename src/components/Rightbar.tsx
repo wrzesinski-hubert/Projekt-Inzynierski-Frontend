@@ -22,7 +22,7 @@ const RightbarStyled = styled.div`
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #d4b851;
+    background-color: black;
     border: 1px solid;
   }
 `;
@@ -30,6 +30,7 @@ const SaveButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
   background-color: #417cab;
   border-radius: 10px;
   cursor: pointer;
