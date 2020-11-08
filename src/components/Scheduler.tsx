@@ -5,8 +5,17 @@ import { days, hours } from '../constants/index';
 import styled from 'styled-components/macro';
 
 const SchedulerWrapper = styled.div`
+  display: flex;
   border-collapse: collapse;
   flex: 1;
+  background-color: white;
+  padding: 5px 15px 5px 5px;
+  border-radius: 5px;
+  margin-right: 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 3px 3px 3px -2px rgba(0, 0, 0, 0.59);
 `;
 
 const TableBody = styled.div`
@@ -31,10 +40,9 @@ interface TableCellProps {
 
 const TableCell = styled.div<TableCellProps>`
   height: ${({ height }) => height}px;
-  /* border: ${({ isHourColumn }) => !isHourColumn && '1px solid #ddd'}; */
-  border-width: ${({ isHourColumn }) => !isHourColumn && '1px'};
-  border-style: ${({ isHourColumn }) => !isHourColumn && 'solid dotted dotted dotted'};
-  /* border-bottom: ${({ isHourColumn }) => !isHourColumn && '1px dotted #ddd'}; */
+  border-width: ${({ isHourColumn }) => !isHourColumn && '2px'};
+  border-style: ${({ isHourColumn }) => !isHourColumn && 'none solid dotted none'};
+  border-color: rgb(242, 243, 245);  
   margin-top: ${({ isHourColumn, height }) => isHourColumn ? -(height / 2) : 0}px;
   display: flex;
   align-items: center;
@@ -43,8 +51,12 @@ const TableCell = styled.div<TableCellProps>`
   margin-right: ${({ isHourColumn }) => isHourColumn ? '10px' : '0px'};
   font-size:  0.75vw;
   user-select: none;
-  border-collapse:collapse; 
-`;
+  border-collapse:collapse;
+  :nth-child(2) {
+    border-left: 2px solid rgb(242, 243, 245);
+  }
+  font-weight: bold;
+  `;
 
 
 export const Scheduler = () => {
@@ -77,7 +89,7 @@ export const Scheduler = () => {
                 {day}
               </TableCell>
             ) : (
-                <TableCell height={wrapperHeight / 26} key={indexCell} ref={cellRef}>
+                <TableCell height={wrapperHeight / 26} style={{ borderStyle: 'none none solid none' }} key={indexCell} ref={cellRef}>
                   {day}
                 </TableCell>
               ),
@@ -91,11 +103,21 @@ export const Scheduler = () => {
                   <TableCell height={wrapperHeight / 26} isHourColumn={true} key={`${indexRow}${indexCell}`}>
                     {value}
                   </TableCell>
-                ) : (
-                    <TableCell height={wrapperHeight / 26} key={`${indexRow}${indexCell}`}>
-                      {value}
-                    </TableCell>
-                  ),
+                ) : indexRow === 23 ? (
+                  <TableCell height={wrapperHeight / 26} style={{ borderBottom: '2px solid rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
+                    {value}
+                  </TableCell>
+                ) : indexCell === 5 ? (
+                  <TableCell height={wrapperHeight / 26} key={`${indexRow}${indexCell}`}>
+                    {value}
+                  </TableCell>
+                ) : indexRow % 2 !== 0 ? (
+                  <TableCell height={wrapperHeight / 26} style={{ borderBottom: '2px solid rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
+                    {value}
+                  </TableCell>
+                ) : <TableCell height={wrapperHeight / 26} key={`${indexRow}${indexCell}`}>
+                          {value}
+                        </TableCell>
               )}
             </TableRow>
           ))}

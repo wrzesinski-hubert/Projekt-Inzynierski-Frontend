@@ -25,6 +25,9 @@ const RightbarStyled = styled.div`
     background-color: black;
     border: 1px solid;
   }
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 3px 3px 3px -2px rgba(0, 0, 0, 0.59);
 `;
 const SaveButton = styled.div`
   display: flex;

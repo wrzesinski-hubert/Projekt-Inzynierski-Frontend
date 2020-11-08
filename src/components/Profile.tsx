@@ -12,9 +12,8 @@ export const Profile = ({ anchorEl, handleClose }: ProfileProps) => {
 
   return (
     <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-      <MenuItem>Profile</MenuItem>
-      <MenuItem>My account</MenuItem>
-      <MenuItem onClick={logout}>Logout</MenuItem>
+      <MenuItem>Profil</MenuItem>
+      <MenuItem onClick={logout}>Wyloguj</MenuItem>
     </Menu>
   );
 };

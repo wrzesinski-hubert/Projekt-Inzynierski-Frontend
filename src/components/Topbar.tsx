@@ -1,7 +1,7 @@
 import React, { useState, MouseEvent, ChangeEvent, useEffect } from 'react';
 import Transfer from '../assets/transfer.png';
 import Search from '../assets/search.svg';
-import CloseIcon from '../assets/close.svg';
+import { ReactComponent as Close } from '../assets/close.svg';
 import ProfileIcon from '../assets/account.svg';
 import { Profile } from './Profile';
 import { Dropdown } from './Dropdown';
@@ -11,7 +11,7 @@ import styled from 'styled-components/macro';
 import ClickAwayListener from 'react-click-away-listener';
 
 const Topbar = styled.div`
-  background-color: #eceef4;
+  background-color: #E3E5ED;
   height: 80px;
   padding: 5px;
   font-size: 24px;
@@ -22,9 +22,10 @@ const Topbar = styled.div`
 
 const LogoWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex: 2;
+  margin-left: 10px;
 `;
 
 const Logo = styled.img`
@@ -37,6 +38,8 @@ const Logo = styled.img`
 `;
 
 const Text = styled.div`
+ margin-left: 10px;
+ font-size: 1.4rem;
  user-select: none;
   @media only screen and (max-width: 670px) {
     display: none;
@@ -46,7 +49,7 @@ const Text = styled.div`
 const FlexboxColumn = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 9;
+  flex: 12;
 `;
 
 const InputWrapper = styled.div`
@@ -54,6 +57,7 @@ const InputWrapper = styled.div`
   margin-top: 15px;
   background-color: #f2f4f7;
   border-radius: 6px;
+  align-items: center;
 `;
 
 const Input = styled.input`
@@ -61,40 +65,45 @@ const Input = styled.input`
   font-size: 20px;
   height: 40px;
   width: 100%;
-  margin-left: 5px;
   border: none;
+  margin-left: 5px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
   &:focus {
     outline: none;
   }
 `;
 
-const InputIcon = styled.img`
+const CloseIcon = styled(Close)`
   width: 30px;
+  height: 30px;
+  margin-right: 5px;
   @media only screen and (max-width: 670px) {
     width: 25px;
   }
   cursor: pointer;
+  :hover {
+    fill: grey;
+  }
 `;
 
 const IconWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  flex: 2;
+  width: 335px;
 `;
 
 const Icon = styled.img`
   width: 40px;
+  margin: 5px;
   cursor: pointer;
   @media only screen and (max-width: 670px) {
     width: 35px;
   }
 `;
 
-const VerticalLine = styled.div`
-  border-left: 1px solid black;
-  height: 30px;
-`;
+
 
 
 
@@ -139,20 +148,18 @@ export default function ({ handleTransfer }: TopbarProps) {
         <ClickAwayListener onClickAway={handleClickAway}>
           <InputWrapper>
             <Input placeholder="Wyszukaj przedmiot..." onChange={handleChange} onClick={handleClick} value={input} />
-            <InputIcon alt="close" src={CloseIcon} onClick={handleClearInput} />
-            <VerticalLine />
-            <InputIcon alt="search" src={Search} />
+            <CloseIcon onClick={handleClearInput} />
           </InputWrapper>
           <Dropdown open={open} input={input} handleCloseDropdown={handleCloseDropdown} />
         </ClickAwayListener>
       </FlexboxColumn>
 
       <IconWrapper>
-        <Icon alt="transfer" src={Transfer} onClick={handleTransfer} />
+        {/* <Text>Maciej Głowacki</Text> */}
+        {/* <Icon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
         <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} />
         <Icon alt="profile" src={ProfileIcon} onClick={handleProfile} />
         <Profile anchorEl={anchorEl} handleClose={handleClose} />
-        <Text>nasz student</Text>
       </IconWrapper>
     </Topbar>
   );
