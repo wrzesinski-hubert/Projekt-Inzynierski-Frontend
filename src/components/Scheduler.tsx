@@ -1,11 +1,10 @@
-import React, { useEffect, MouseEvent, useRef } from 'react';
+import React, { useEffect, MouseEvent, useRef, useCallback, useLayoutEffect } from 'react';
 import { useState } from 'react';
 import { SchedulerEvents } from './SchedulerEvents';
 import { days, hours } from '../constants/index';
 import styled from 'styled-components/macro';
 
 const SchedulerWrapper = styled.div`
-  display: flex;
   border-collapse: collapse;
   flex: 1;
   background-color: white;
@@ -66,18 +65,34 @@ export const Scheduler = () => {
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [wrapperHeight, setWrapperHeight] = useState(0);
+  const [, updateState] = useState<any>();
+  const forceUpdate = useCallback(() => updateState({}), []);
+
 
   useEffect(() => {
     const handleResize = () => {
-      if (cellRef.current && wrapperRef.current) {
+      if (cellRef.current) {
         setCellWidth(cellRef.current.getBoundingClientRect().width);
         setCellTop(cellRef.current.getBoundingClientRect().top);
-        setWrapperHeight(wrapperRef.current.getBoundingClientRect().height);
+        cellRef.current.style.backgroundColor = "blue";
+        console.log("XDDD")
       }
+
     };
     handleResize();
-    window.addEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    const handleWrapperResize = () => {
+      if (wrapperRef.current) {
+        setWrapperHeight(wrapperRef.current.getBoundingClientRect().height);
+      }
+    }
+    window.addEventListener('resize', handleWrapperResize);
+    return () => window.removeEventListener('resize', handleWrapperResize);
+
+  }, [])
+
 
   return (
     <>
@@ -85,11 +100,11 @@ export const Scheduler = () => {
         <TableHead>
           {days.map((day, indexCell) =>
             indexCell === 0 ? (
-              <TableCell height={wrapperHeight / 26} isHourColumn={true} key={indexCell} ref={cellRef}>
+              <TableCell height={wrapperHeight / 26} isHourColumn={true} key={indexCell} >
                 {day}
               </TableCell>
             ) : (
-                <TableCell height={wrapperHeight / 26} style={{ borderStyle: 'none none solid none' }} key={indexCell} ref={cellRef}>
+                <TableCell height={wrapperHeight / 26} style={{ borderStyle: 'none none solid none' }} key={indexCell}>
                   {day}
                 </TableCell>
               ),
@@ -102,22 +117,25 @@ export const Scheduler = () => {
                 indexCell === 0 ? (
                   <TableCell height={wrapperHeight / 26} isHourColumn={true} key={`${indexRow}${indexCell}`}>
                     {value}
-                  </TableCell>
-                ) : indexRow === 23 ? (
-                  <TableCell height={wrapperHeight / 26} style={{ borderBottom: '2px solid rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
+                  </TableCell>)
+                  : (indexRow === 0 && indexCell === 1) ? (<TableCell height={wrapperHeight / 26} ref={cellRef} key={`${indexRow}${indexCell}`}>
                     {value}
                   </TableCell>
-                ) : indexCell === 5 ? (
-                  <TableCell height={wrapperHeight / 26} key={`${indexRow}${indexCell}`}>
-                    {value}
-                  </TableCell>
-                ) : indexRow % 2 !== 0 ? (
-                  <TableCell height={wrapperHeight / 26} style={{ borderBottom: '2px solid rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
-                    {value}
-                  </TableCell>
-                ) : <TableCell height={wrapperHeight / 26} key={`${indexRow}${indexCell}`}>
-                          {value}
-                        </TableCell>
+                  ) : indexRow === 23 ? (
+                    <TableCell height={wrapperHeight / 26} style={{ borderBottom: '2px solid rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
+                      {value}
+                    </TableCell>
+                  ) : indexCell === 5 ? (
+                    <TableCell height={wrapperHeight / 26} key={`${indexRow}${indexCell}`}>
+                      {value}
+                    </TableCell>
+                  ) : indexRow % 2 !== 0 ? (
+                    <TableCell height={wrapperHeight / 26} style={{ borderBottom: '2px solid rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
+                      {value}
+                    </TableCell>
+                  ) : <TableCell height={wrapperHeight / 26} key={`${indexRow}${indexCell}`}>
+                            {value}
+                          </TableCell>
               )}
             </TableRow>
           ))}

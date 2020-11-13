@@ -31,7 +31,7 @@ const SchedulerEvent = styled.div<SchedulerEventProps>`
   top: ${({ cellTop }) => cellTop}px;
   left: ${({ cellWidth, eventIndex }) => cellWidth + 5 + cellWidth * eventIndex}px;
   width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
-  height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
+  height: ${({ cellHeight }) => cellHeight * 3}px;
   z-index: 2;
 `;
 
@@ -48,7 +48,7 @@ const Classes = styled.div<ClassesProps>`
   z-index: 2;
   border-radius: 10px;
   width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
-  height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 4}px;
+  height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 2}px;
   padding-left: 10px;
   text-align: left;
   background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
@@ -82,7 +82,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
   const open = Boolean(anchorEl);
 
   return (
-    <>
+    <div>
       {[...Array(5)].map((_, eventIndex) => (
         <SchedulerEvent
           eventIndex={eventIndex}
@@ -142,6 +142,6 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
           )}
         </SchedulerEvent>
       ))}
-    </>
+    </div>
   );
 };

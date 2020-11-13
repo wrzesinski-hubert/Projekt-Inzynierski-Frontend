@@ -11,7 +11,7 @@ interface SchedulerEventsProps {
 
 export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEventsProps) => {
   const { basket } = useContext(coursesContext)!;
-
+  console.log(`values: cellTop: ${cellTop}, cellWidth: ${cellWidth}, cellHeight: ${cellHeight}`);
   const [choosenGroupsMappedToEvents, setChoosenGroupsMappedToEvents] = useState<any>([]);
 
   interface GroupTimeToEventRowMapping {
@@ -33,7 +33,7 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
       const merged = [...classes, ...lectures];
 
       //deleted if statement, maybe it is needed
-      const groupsMapped = merged.map(({ id, day, lecturer, room, time, name,type }) => ({
+      const groupsMapped = merged.map(({ id, day, lecturer, room, time, name, type }) => ({
         id,
         day,
         lecturer,
@@ -56,18 +56,18 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
           indexRow={index}
           cellTop={
             index === 0
-              ? cellTop + (cellHeight + cellHeight * 2 * index + cellHeight / 4)
+              ? cellTop + cellHeight/2
               : index === 1
-              ? cellTop + (cellHeight + cellHeight * 2 * index)
-              : index === 2
-              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 4)
-              : index === 3
-              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 4)
-              : index === 4
-              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 2)
-              : index === 5
-              ? cellTop + (cellHeight + cellHeight * 2 * index - (cellHeight * 3) / 4)
-              : 0
+                ? cellTop + (cellHeight + cellHeight * 2 * index)
+                : index === 2
+                  ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 2)
+                  : index === 3
+                    ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 2)
+                    : index === 4
+                      ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight)
+                      : index === 5
+                        ? cellTop + (cellHeight + cellHeight * 2 * index - (cellHeight * 3) / 2)
+                        : 0
           }
           cellWidth={cellWidth}
           cellHeight={cellHeight}
