@@ -14,10 +14,7 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
   console.log(`values: cellTop: ${cellTop}, cellWidth: ${cellWidth}, cellHeight: ${cellHeight}`);
   const [choosenGroupsMappedToEvents, setChoosenGroupsMappedToEvents] = useState<any>([]);
 
-  interface GroupTimeToEventRowMapping {
-    [time: string]: number;
-  }
-  const groupTimeToEventRowMapping: GroupTimeToEventRowMapping = {
+  const groupTimeToEventRowMapping: { [time: string]: number } = {
     '8.15': 0,
     '10.00': 1,
     '11.45': 2,
@@ -56,18 +53,18 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
           indexRow={index}
           cellTop={
             index === 0
-              ? cellTop + cellHeight/2
+              ? cellHeight / 2
               : index === 1
-                ? cellTop + (cellHeight + cellHeight * 2 * index)
-                : index === 2
-                  ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 2)
-                  : index === 3
-                    ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 2)
-                    : index === 4
-                      ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight)
-                      : index === 5
-                        ? cellTop + (cellHeight + cellHeight * 2 * index - (cellHeight * 3) / 2)
-                        : 0
+              ? cellHeight * 4
+              : index === 2
+              ? cellHeight * 7.5
+              : index === 3
+              ? cellHeight * 11.5
+              : index === 4
+              ? cellHeight * 15
+              : index === 5
+              ? cellHeight * 18.5
+              : 0
           }
           cellWidth={cellWidth}
           cellHeight={cellHeight}

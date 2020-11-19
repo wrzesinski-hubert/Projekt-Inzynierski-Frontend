@@ -18,38 +18,38 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface SchedulerEventProps {
+interface ClassesWrapperProps {
   eventIndex: number;
   cellTop: number;
   cellWidth: number;
   cellHeight: number;
 }
 
-const SchedulerEvent = styled.div<SchedulerEventProps>`
+const ClassesWrapper = styled.div<ClassesWrapperProps>`
   position: absolute;
   display: flex;
   top: ${({ cellTop }) => cellTop}px;
-  left: ${({ cellWidth, eventIndex }) => cellWidth + 5 + cellWidth * eventIndex}px;
-  width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
+  left: ${({ cellWidth, eventIndex }) => (cellWidth * 1) / 5 + 15 + cellWidth * eventIndex}px;
+  width: ${({ cellWidth }) => cellWidth - 10}px;
   height: ${({ cellHeight }) => cellHeight * 3}px;
   z-index: 2;
+  padding-left: 10px;
 `;
 
 interface ClassesProps {
-  cellWidth: number;
   cellHeight: number;
   groupType: GroupType;
 }
 
 const Classes = styled.div<ClassesProps>`
   display: flex;
+  flex: 1;
   justify-content: center;
   align-items: center;
   z-index: 2;
   border-radius: 10px;
-  width: ${({ cellWidth }) => (cellWidth * 2.5) / 3}px;
-  height: ${({ cellHeight }) => (cellHeight * 2 * 3) / 2}px;
-  padding-left: 10px;
+  height: ${({ cellHeight }) => cellHeight * 3}px;
+  margin-right: 5px;
   text-align: left;
   background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
   box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
@@ -84,7 +84,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
   return (
     <div>
       {[...Array(5)].map((_, eventIndex) => (
-        <SchedulerEvent
+        <ClassesWrapper
           eventIndex={eventIndex}
           cellTop={cellTop}
           cellWidth={cellWidth}
@@ -97,8 +97,10 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
               group.day === eventIndex && (
                 <>
                   <Classes
+                    onClick={() => {
+                      console.log('group: ', group);
+                    }}
                     groupType={group.type}
-                    cellWidth={cellWidth}
                     cellHeight={cellHeight}
                     id={`eventRow${indexRow}eventCol${eventIndex}${index}`}
                     key={index}
@@ -109,7 +111,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                   >
                     <div>
                       <p style={{ fontWeight: 700 }}>{groups[index].name}</p>
-                      <p >{groups[index].room}</p>
+                      <p>{groups[index].room}</p>
                     </div>
                   </Classes>
                   <Popover
@@ -140,7 +142,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                 </>
               ),
           )}
-        </SchedulerEvent>
+        </ClassesWrapper>
       ))}
     </div>
   );
