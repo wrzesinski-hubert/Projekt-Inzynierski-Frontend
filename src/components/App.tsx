@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Topbar from './Topbar';
+import {Admin} from './Admin';
 import { Transfer } from './Transfer';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
@@ -9,7 +10,6 @@ const Wrapper = styled.div`
   display: flex;
   height: calc(100vh - 80px);
   background-color: #ECEEF4;
-  padding:  20px;
 `;
 
 export const App = () => {
@@ -24,8 +24,9 @@ export const App = () => {
       <Topbar handleTransfer={handleTransfer} />
       <Transfer isOpen={isOpenTransfer} handleClose={handleTransfer} />
       <Wrapper>
-        <Scheduler />
-        <Rightbar />
+        <Admin/>
+        {/* <Scheduler />
+        <Rightbar /> */}
       </Wrapper>
     </>
   );

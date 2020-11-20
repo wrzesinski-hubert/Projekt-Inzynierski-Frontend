@@ -1,6 +1,4 @@
 import React, { useState, MouseEvent, ChangeEvent, useEffect } from 'react';
-import Transfer from '../assets/transfer.png';
-import Search from '../assets/search.svg';
 import { ReactComponent as Close } from '../assets/close.svg';
 import ProfileIcon from '../assets/account.svg';
 import { Profile } from './Profile';
@@ -102,10 +100,6 @@ const Icon = styled.img`
     width: 35px;
   }
 `;
-
-
-
-
 
 interface TopbarProps {
   handleTransfer: (e: MouseEvent) => void;
