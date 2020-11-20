@@ -125,7 +125,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       const { data: courses } = await axios.get<Array<Course>>(
         `${process.env.REACT_APP_API_URL}/api/v1/courses/getCoursesWithGroups`,
       );
-      courses.sort((a, b) => (a.name > b.name ? 1 : -1));
       setCourses(courses);
     } catch (e) {
       console.log(e);

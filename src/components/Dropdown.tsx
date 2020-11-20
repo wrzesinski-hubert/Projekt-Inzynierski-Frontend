@@ -54,6 +54,8 @@ export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: Dropdo
 
   const { courses, basket, addToBasket } = useContext(coursesContext)!;
 
+  const sortedCourses = courses.sort((a, b) => (a.name > b.name ? 1 : -1));
+
   useEffect(() => {
     console.log('wut');
   }, [open, input, handleCloseDropdown]);
@@ -69,7 +71,7 @@ export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: Dropdo
   useEffect(() => {
     const filterCourses = (input: string) => {
       const choosenCoursesNames = basket.map(({ name }) => name.trim());
-      const filteredCourses = courses.filter(
+      const filteredCourses = sortedCourses.filter(
         ({ name }) =>
           name
             .toLowerCase()

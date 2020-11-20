@@ -50,7 +50,18 @@ export const Rightbar = () => {
 
   const getBasketGroups = () => {
     const names = basket.map(({ name }) => name);
-    return courses.filter(({ name }) => names.includes(name));
+
+    const list = []
+
+    for (const basketName of names){
+        const course = courses.find(({name})=>basketName===name)!
+
+        list.push(course);
+    }
+
+    console.log("asdasdsa1", list);
+    console.log("asdasdsa2", courses.filter(({ name }) => names.includes(name)));
+    return list;
   };
 
   const filteredCourses = getBasketGroups();
