@@ -11,13 +11,10 @@ interface SchedulerEventsProps {
 
 export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEventsProps) => {
   const { basket } = useContext(coursesContext)!;
-
+  console.log(`values: cellTop: ${cellTop}, cellWidth: ${cellWidth}, cellHeight: ${cellHeight}`);
   const [choosenGroupsMappedToEvents, setChoosenGroupsMappedToEvents] = useState<any>([]);
 
-  interface GroupTimeToEventRowMapping {
-    [time: string]: number;
-  }
-  const groupTimeToEventRowMapping: GroupTimeToEventRowMapping = {
+  const groupTimeToEventRowMapping: { [time: string]: number } = {
     '8.15': 0,
     '10.00': 1,
     '11.45': 2,
@@ -33,7 +30,7 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
       const merged = [...classes, ...lectures];
 
       //deleted if statement, maybe it is needed
-      const groupsMapped = merged.map(({ id, day, lecturer, room, time, name,type }) => ({
+      const groupsMapped = merged.map(({ id, day, lecturer, room, time, name, type }) => ({
         id,
         day,
         lecturer,
@@ -56,17 +53,17 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
           indexRow={index}
           cellTop={
             index === 0
-              ? cellTop + (cellHeight + cellHeight * 2 * index + cellHeight / 4)
+              ? cellHeight / 2
               : index === 1
-              ? cellTop + (cellHeight + cellHeight * 2 * index)
+              ? cellHeight * 4
               : index === 2
-              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 4)
+              ? cellHeight * 7.5
               : index === 3
-              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 4)
+              ? cellHeight * 11.5
               : index === 4
-              ? cellTop + (cellHeight + cellHeight * 2 * index - cellHeight / 2)
+              ? cellHeight * 15
               : index === 5
-              ? cellTop + (cellHeight + cellHeight * 2 * index - (cellHeight * 3) / 4)
+              ? cellHeight * 18.5
               : 0
           }
           cellWidth={cellWidth}

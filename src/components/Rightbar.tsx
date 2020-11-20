@@ -1,17 +1,14 @@
 import React, { useContext } from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
 import { CourseCard } from './CourseCard';
 import { coursesContext } from '../contexts/CoursesProvider';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import styled from 'styled-components';
-import { debounce } from "lodash";
+import { debounce } from 'lodash';
 
 const RightbarStyled = styled.div`
   padding-top: 10px;
   padding-left: 15px;
   padding-right: 15px;
   text-align: center;
-  font-family: Lato;
   height: 100%;
   width: 300px;
   overflow-y: scroll;
@@ -25,39 +22,31 @@ const RightbarStyled = styled.div`
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #d4b851;
+    background-color: black;
     border: 1px solid;
   }
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 3px 3px 3px -2px rgba(0, 0, 0, 0.59);
 `;
-const RightbarTextStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 const SaveButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #417cab !important;
+  user-select: none;
+  background-color: #417cab;
   border-radius: 10px;
   cursor: pointer;
   height: 40px;
-  background-color: red;
   margin-bottom: 10px;
   &:hover {
     color: white;
   }
-  box-shadow: 6px 6px 6px -2px rgba(0,0,0,0.59);
+  box-shadow: 6px 6px 6px -2px rgba(0, 0, 0, 0.59);
 `;
-
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 export const Rightbar = () => {
   const { courses, basket, saveBasket } = useContext(coursesContext)!;
-
-  const [open, setOpen] = React.useState(false);
 
   const getBasketGroups = () => {
     const names = basket.map(({ name }) => name);
@@ -66,38 +55,15 @@ export const Rightbar = () => {
 
   const filteredCourses = getBasketGroups();
 
-  const save = debounce(() => {
-    saveBasket();
-    setOpen(true);
-    console.log("zmiana")
-  },500);
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const handleSave = debounce(() => saveBasket(), 500);
 
   //need to insert student name from db and course maybe based on current time or from db too
   return (
     <RightbarStyled>
-      <RightbarTextStyled>
-        <p>
-          Hubert Wrzesiński<br></br>
-          Semestr zimowy 2020/2021
-        </p>
-        <SaveButton onClick={save}>ZAPISZ</SaveButton>
-      </RightbarTextStyled>
+      <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>
       {filteredCourses.map((course, index) => (
         <CourseCard course={course} key={index} />
       ))}
-      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success">
-          Zapisano plan!
-        </Alert>
-      </Snackbar>
     </RightbarStyled>
   );
 };

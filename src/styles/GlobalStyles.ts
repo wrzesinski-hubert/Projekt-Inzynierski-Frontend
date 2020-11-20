@@ -11,7 +11,7 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
     line-height: 24px;
-    
+    font-family: 'Roboto', sans-serif;
   }
 
   body::-webkit-scrollbar {

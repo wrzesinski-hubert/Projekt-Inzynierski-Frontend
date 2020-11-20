@@ -53,7 +53,6 @@ const TransferReceiveStyled = styled.div`
 `;
 
 const TransferTextStyled = styled.div`
-  font-family: Lato;
   font-size: 30px;
   margin-bottom: 10px;
 `;

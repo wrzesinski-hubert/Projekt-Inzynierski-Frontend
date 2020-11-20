@@ -1,20 +1,19 @@
-import React, { useState, useContext, useEffect, MouseEvent, ChangeEvent } from 'react';
-import axios from 'axios';
-import { Input } from '@material-ui/core';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import React, { useState, useContext, useEffect, MouseEvent, forwardRef } from 'react';
 import { coursesContext } from '../contexts/CoursesProvider';
-import { Course, Basket } from '../types';
+import { Course } from '../types';
 import styled from 'styled-components';
-import { makeStyles } from '@material-ui/core/styles';
 
-const DropdownStyled = styled.div`
+
+
+const DropdownContainer = styled.div`
+  position: relative;
+  z-index: 99999999;
   max-height: 420px;
+  border-radius: 3px;
   overflow-y: auto;
+  box-shadow: 0.05em 0.2em 0.6em rgba(0, 0, 0, 0.2);
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  z-index: 100;
- position: relative;
-  border-radius:0px 0px 0px 15px;
   ::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: #f5f5f5;
@@ -25,70 +24,69 @@ const DropdownStyled = styled.div`
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #d4b851;
+    background-color: black;
     border: 1px solid;
   }
 `;
 
-const CourseStyled = styled.div`
-  position: relative;
-  z-index: 10;
+const CourseContainer = styled.div`
   padding: 5px;
   padding-left: 20px;
-  background-color: #e6c759;
+  background-color: #f2f4f7;
   font-size: 18px;
-  font-family: Lato;
+  font-weight: 500;
   scroll-snap-align: end;
-  border-bottom:1px solid;
   :hover {
-    background-color: #d4b851;
+    background-color: #eceef4;
     cursor: pointer;
   }
 `;
 
-const useStyles = makeStyles({
-  topbarInput: {
-    marginTop: '8px',
-    width: '100%',
-  },
-});
-
 interface DropdownProps {
-  clearInput: boolean;
-  handleClearInput: () => void;
+  open: boolean;
+  input: string;
+  handleCloseDropdown: () => void;
 }
 
-export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
-  const classes = useStyles();
-
-  const [open, setOpen] = React.useState(false);
-  const [input, setInput] = useState<string>('');
-
+export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: DropdownProps, ref: any) => {
   //courses - choosenCourses
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
 
   const { courses, basket, addToBasket } = useContext(coursesContext)!;
 
   useEffect(() => {
+    console.log('wut');
+  }, [open, input, handleCloseDropdown]);
+
+  useEffect(() => {
+    console.log('input is: ', input);
+  }, [input]);
+
+  useEffect(() => {
+    console.log('is open: ', open);
+  }, [open]);
+
+  useEffect(() => {
     const filterCourses = (input: string) => {
       const choosenCoursesNames = basket.map(({ name }) => name.trim());
       const filteredCourses = courses.filter(
-        ({ name }) => name.toLowerCase().includes(input.toLowerCase()) && !choosenCoursesNames.includes(name),
+        ({ name }) =>
+          name
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .includes(
+              input
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, ''),
+            ) && !choosenCoursesNames.includes(name),
       );
       setFilteredCourses(filteredCourses);
     };
+    console.log("filtering courses");
     filterCourses(input);
-  }, [input, open, basket]);
-
-  useEffect(() => {
-    clearInput && (setInput(''), handleClearInput());
-  }, [clearInput]);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
-
-  const handleClick = () => setOpen(true);
-
-  const handleClickAway = () => setOpen(false);
+  }, [open, input, basket]);
 
   const onCourseClick = async (event: MouseEvent) => {
     const target = event.currentTarget;
@@ -97,31 +95,21 @@ export const Dropdown = ({ clearInput, handleClearInput }: DropdownProps) => {
       console.log('added course is');
       console.log(course);
       addToBasket(course);
-      setOpen(false);
+      handleCloseDropdown();
     }
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClickAway}>
-      <div>
-        <Input
-          placeholder="Wyszukaj..."
-          inputProps={{ 'aria-label': 'description' }}
-          className={classes.topbarInput}
-          onChange={handleChange}
-          onClick={handleClick}
-          value={input}
-        />
-        {open && (
-          <DropdownStyled>
-            {filteredCourses.map(({ name, id }, index) => (
-              <CourseStyled key={index} id={id.toString()} onClick={onCourseClick}>
-                <p>{name} </p>
-              </CourseStyled>
-            ))}
-          </DropdownStyled>
-        )}
-      </div>
-    </ClickAwayListener>
+    <DropdownContainer>
+      {open && (
+        <>
+          {filteredCourses.map(({ name, id }, index) => (
+            <CourseContainer key={index} id={id.toString()} onClick={onCourseClick}>
+              <p>{name} </p>
+            </CourseContainer>
+          ))}
+        </>
+      )}
+    </DropdownContainer>
   );
-};
+});

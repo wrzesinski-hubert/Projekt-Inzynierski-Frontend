@@ -8,6 +8,8 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   display: flex;
   height: calc(100vh - 80px);
+  background-color: #ECEEF4;
+  padding:  20px;
 `;
 
 export const App = () => {
