@@ -10,6 +10,8 @@ const Wrapper = styled.div`
   display: flex;
   height: calc(100vh - 80px);
   background-color: #ECEEF4;
+  padding-top:20px;
+  padding-bottom:20px;
 `;
 
 export const App = () => {
@@ -24,9 +26,9 @@ export const App = () => {
       <Topbar handleTransfer={handleTransfer} />
       <Transfer isOpen={isOpenTransfer} handleClose={handleTransfer} />
       <Wrapper>
-        <Admin/>
-        {/* <Scheduler />
-        <Rightbar /> */}
+        {/* <Admin/> */}
+        <Scheduler />
+        <Rightbar />
       </Wrapper>
     </>
   );

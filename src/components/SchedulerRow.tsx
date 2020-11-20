@@ -29,7 +29,7 @@ const ClassesWrapper = styled.div<ClassesWrapperProps>`
   position: absolute;
   display: flex;
   top: ${({ cellTop }) => cellTop}px;
-  left: ${({ cellWidth, eventIndex }) => (cellWidth * 1) / 5 + 5 + cellWidth * eventIndex}px;
+  left: ${({ cellWidth, eventIndex }) => (cellWidth * 1) / 5 + 4 + cellWidth * eventIndex}px;
   width: ${({ cellWidth }) => cellWidth - 10}px;
   height: ${({ cellHeight }) => cellHeight * 3}px;
   z-index: 2;
@@ -53,12 +53,16 @@ const Classes = styled.div<ClassesProps>`
   height: ${({ cellHeight }) => cellHeight * 3}px;
   width: ${({ cellWidth }) => cellWidth *3/4}px;
   margin-right: 5px;
-  padding: 5px 2px 2px 5px;
+  padding: 5px 5px 5px 5px;
   text-align: center;
   background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
-  box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
+  box-shadow:  3px 3px 3px 0px rgba(0,0,0,0.75);
 
 `;
+
+const StyledTypography = styled(Typography)`
+background-color:white;
+`
 
 interface SchedulerRowProps {
   groups: Array<Group & { name: string }>;
@@ -117,7 +121,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                   >
                     <div>
                       <p style={{ fontWeight: 700 }}>{groups[index].name}</p>
-                      <p>{groups[index].room}</p>
+                  <p>{groups[index].time[0]} - {groups[index].time[1]}</p>
                     </div>
                   </Classes>
                   <Popover
@@ -139,11 +143,11 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
-                    <Typography>
+                    <StyledTypography>
                       <p>{groups[index].name}</p>
                       <p>{groups[index].lecturer}</p>
                       <p>{groups[index].room}</p>
-                    </Typography>
+                    </StyledTypography>
                   </Popover>
                 </>
               ),

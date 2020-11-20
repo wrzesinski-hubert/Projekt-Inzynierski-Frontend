@@ -21,7 +21,17 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
     '13.45': 3,
     '15.30': 4,
     '17.15': 5,
+    '18.45': 6,
   };
+
+
+  const createClassTime = (startTime:string) => {
+    const startTimeMapped = groupTimeToEventRowMapping[startTime];
+    const endTime = Object.keys(groupTimeToEventRowMapping).find(key => groupTimeToEventRowMapping[key] === startTimeMapped + 1);
+
+    return [startTime, endTime]
+
+  }
 
   useEffect(() => {
     function mapGroupTimeToEventRow(basket: Array<Basket>) {
@@ -36,6 +46,7 @@ export const SchedulerEvents = ({ cellTop, cellWidth, cellHeight }: SchedulerEve
         lecturer,
         room,
         eventRow: groupTimeToEventRowMapping[time],
+        time: createClassTime(time),
         name,
         type,
       }));
