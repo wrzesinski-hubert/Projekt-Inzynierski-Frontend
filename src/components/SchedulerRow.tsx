@@ -1,9 +1,10 @@
 import React, { MouseEvent, useState } from 'react';
-import { Group, GroupType } from '../types';
+import { GroupType, SchedulerEvent } from '../types';
 import styled from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { MONDAY_TO_FRIDAY } from '../constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,17 +19,17 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface ClassesWrapperProps {
+interface SchedulerEventsWrapperProps {
   eventIndex: number;
-  cellTop: number;
+  rowTop: number;
   cellWidth: number;
   cellHeight: number;
 }
 
-const ClassesWrapper = styled.div<ClassesWrapperProps>`
+const SchedulerEventsWrapper = styled.div<SchedulerEventsWrapperProps>`
   position: absolute;
   display: flex;
-  top: ${({ cellTop }) => cellTop}px;
+  top: ${({ rowTop }) => rowTop}px;
   left: ${({ cellWidth, eventIndex }) => (cellWidth * 1) / 5 + 4 + cellWidth * eventIndex}px;
   width: ${({ cellWidth }) => cellWidth - 10}px;
   height: ${({ cellHeight }) => cellHeight * 3}px;
@@ -36,13 +37,13 @@ const ClassesWrapper = styled.div<ClassesWrapperProps>`
   padding-left: 10px;
 `;
 
-interface ClassesProps {
+interface SchedulerEventProps {
   cellWidth: number;
   cellHeight: number;
   groupType: GroupType;
 }
 
-const Classes = styled.div<ClassesProps>`
+const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,28 +52,27 @@ const Classes = styled.div<ClassesProps>`
   line-height: normal;
   border-radius: 10px;
   height: ${({ cellHeight }) => cellHeight * 3}px;
-  width: ${({ cellWidth }) => cellWidth *3/4}px;
+  width: ${({ cellWidth }) => (cellWidth * 3) / 4}px;
   margin-right: 5px;
   padding: 5px 5px 5px 5px;
   text-align: center;
   background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
-  box-shadow:  3px 3px 3px 0px rgba(0,0,0,0.75);
-
+  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
 `;
 
 const StyledTypography = styled(Typography)`
-background-color:white;
-`
+  background-color: white;
+`;
 
 interface SchedulerRowProps {
-  groups: Array<Group & { name: string }>;
+  groups: Array<SchedulerEvent>;
   indexRow: number;
-  cellTop: number;
+  rowTop: number;
   cellWidth: number;
   cellHeight: number;
 }
 
-export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight }: SchedulerRowProps) => {
+export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }: SchedulerRowProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const [popoverId, setPopoverId] = useState<string | null>(null);
@@ -92,10 +92,10 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
 
   return (
     <div>
-      {[...Array(5)].map((_, eventIndex) => (
-        <ClassesWrapper
+      {[...Array(MONDAY_TO_FRIDAY)].map((_, eventIndex) => (
+        <SchedulerEventsWrapper
           eventIndex={eventIndex}
-          cellTop={cellTop}
+          rowTop={rowTop}
           cellWidth={cellWidth}
           cellHeight={cellHeight}
           key={eventIndex}
@@ -105,10 +105,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
             (group, index) =>
               group.day === eventIndex && (
                 <>
-                  <Classes
-                    onClick={() => {
-                      console.log('group: ', group);
-                    }}
+                  <StyledSchedulerEvent
                     groupType={group.type}
                     cellWidth={cellWidth}
                     cellHeight={cellHeight}
@@ -121,9 +118,11 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                   >
                     <div>
                       <p style={{ fontWeight: 700 }}>{groups[index].name}</p>
-                  <p>{groups[index].time[0]} - {groups[index].time[1]}</p>
+                      <p>
+                        {groups[index].time[0]} - {groups[index].time[1]}
+                      </p>
                     </div>
-                  </Classes>
+                  </StyledSchedulerEvent>
                   <Popover
                     id={`mouse-over-popover`}
                     className={classes.popover}
@@ -152,7 +151,7 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                 </>
               ),
           )}
-        </ClassesWrapper>
+        </SchedulerEventsWrapper>
       ))}
     </div>
   );

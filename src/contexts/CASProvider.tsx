@@ -5,6 +5,7 @@ import axios from 'axios';
 export interface CASContext {
   user?: User;
   logout: () => void;
+  token?: string | null;
 }
 
 export const CASContext = createContext<CASContext | undefined>(undefined);
@@ -15,6 +16,7 @@ export interface CASProviderProps {
 
 export const CASProvider = ({ children }: CASProviderProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [token, setToken] = useState<string | null>(null);
   useEffect(() => {
     login();
   }, []);
@@ -29,10 +31,9 @@ export const CASProvider = ({ children }: CASProviderProps) => {
       if (!sessionStorage.getItem('userToken')) {
         const { data: token } = await axios.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
         sessionStorage.setItem('userToken', token);
-        setUser({ ...user, token });
       }
       const token = sessionStorage.getItem('userToken');
-      setUser({ ...user, token });
+      setToken(token);
     } catch (e) {
       console.log(e);
     }
@@ -50,5 +51,5 @@ export const CASProvider = ({ children }: CASProviderProps) => {
     window.location.replace(`https://cas.amu.edu.pl/cas/login?service=${window.origin}&locale=pl`);
   }
 
-  return <CASContext.Provider value={{ user, logout }}>{children}</CASContext.Provider>;
+  return <CASContext.Provider value={{ user, token, logout }}>{children}</CASContext.Provider>;
 };

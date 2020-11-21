@@ -1,4 +1,4 @@
-import React, { useState, useContext, MouseEvent } from 'react';
+import React, { useState, useContext } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import { ReactComponent as Expand } from '../assets/expand.svg';
 import { Course, Group } from '../types/index';
@@ -16,19 +16,18 @@ const CourseCardWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   margin-top: 10px;
-  border-radius: 10px; 
+  border-radius: 10px;
   cursor: pointer;
   align-items: stretch;
   box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
 `;
 
-
 const TitleWrapper = styled.div`
   display: flex;
-  align-items: center; 
+  align-items: center;
   justify-content: space-between;
   padding: 10px;
-`
+`;
 
 const BinIcon = styled(Bin)`
   width: 20px;
@@ -59,16 +58,16 @@ const ClassGroupStyled = styled.div`
 `;
 
 interface ExpandIconProps {
-  isSelected: boolean;
+  selected: boolean;
 }
 
-const ExpandIcon = styled(Expand) <ExpandIconProps>`
+const ExpandIcon = styled(Expand)<ExpandIconProps>`
   width: 20px;
   height: 20px;
   max-width: 20px;
   min-width: 20px;
   transition: 0.2s;
-  transform: ${({ isSelected }) => (isSelected ? 'scaleY(-1);' : 'scaleY(1);')};
+  transform: ${({ selected }) => (selected ? 'scaleY(-1);' : 'scaleY(1);')};
 `;
 
 const TypeClass = styled.div`
@@ -102,38 +101,36 @@ const useStyles = makeStyles({
   },
 });
 
-
-
 interface CourseCardProps {
   course: Course;
 }
 
 export const CourseCard = ({ course }: CourseCardProps) => {
   const classes = useStyles();
-  const { addGroup, deleteFromBasket } = useContext(coursesContext)!;
-  const [isSelected, setSelected] = useState(false);
-  const groups = course.lectures === undefined ? course.classes : [...course.lectures, ...course.classes];
+  const { changeGroupInBasket, deleteFromBasket } = useContext(coursesContext)!;
 
-  const onGroupClick = (group: Group, id: number) => addGroup(group, id);
+  const [isSelected, setSelected] = useState(false);
+
+  const groups = [...course.lectures!, ...course.classes!];
+
+  const onGroupClick = (group: Group, id: number) => changeGroupInBasket(group, id);
 
   return (
     <CourseCardWrapper>
       <TitleWrapper>
         <BinIcon onClick={() => deleteFromBasket(course.id)}></BinIcon>
         <CourseName onClick={() => setSelected(!isSelected)}>{course.name}</CourseName>
-        <ExpandIcon onClick={() => setSelected(!isSelected)} isSelected={isSelected} />
+        <ExpandIcon onClick={() => setSelected(!isSelected)} selected={isSelected} />
       </TitleWrapper>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
-        {groups
-          .sort((a, b) => b.type.localeCompare(a.type))
-          .map((group, index) => (
-            <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
-              <TypeClass>{group.type === 'CLASS' ? 'Ćw.' : 'Wyk.'}</TypeClass>
-              <p>
-                {group.time} {group.room} <br></br> {group.lecturer}
-              </p>
-            </ClassGroupStyled>
-          ))}
+        {groups.map((group, index) => (
+          <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
+            <TypeClass>{group.type === 'CLASS' ? 'Ćw.' : 'Wyk.'}</TypeClass>
+            <p>
+              {group.time} {group.room} <br></br> {group.lecturer}
+            </p>
+          </ClassGroupStyled>
+        ))}
       </Collapse>
     </CourseCardWrapper>
   );

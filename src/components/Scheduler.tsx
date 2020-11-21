@@ -1,4 +1,4 @@
-import React, { useEffect, MouseEvent, useRef, useCallback, useLayoutEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { SchedulerEvents } from './SchedulerEvents';
 import { days, hours } from '../constants/index';
@@ -11,7 +11,7 @@ const SchedulerWrapper = styled.div`
   padding: 10px 40px 25px 10px;
   border-radius: 5px;
   margin-right: 20px;
-  margin-left:20px;
+  margin-left: 20px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -62,18 +62,15 @@ const TableCell = styled.div<TableCellProps>`
 `;
 
 export const Scheduler = () => {
+
   const cellRef = useRef<HTMLDivElement>(null);
   const [cellWidth, setCellWidth] = useState(0);
-  const [cellTop, setCellTop] = useState(0);
   const [cellHeight, setCellHeight] = useState(0);
-
-  console.log('cell height: ', cellHeight);
 
   useEffect(() => {
     const handleResize = () => {
       if (cellRef.current) {
         setCellWidth(cellRef.current.getBoundingClientRect().width);
-        setCellTop(cellRef.current.getBoundingClientRect().top);
         setCellHeight(cellRef.current.getBoundingClientRect().height);
       }
     };
@@ -115,9 +112,9 @@ export const Scheduler = () => {
                     {value}
                   </TableCell>
                 ) : indexRow === 5 ? (
-                  <TableCell style={{ borderBottom: '2px solid  rgb(242, 243, 245)'  }} key={`${indexRow}${indexCell}`}>
+                  <TableCell style={{ borderBottom: '2px solid  rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
                     {value}
-                    </TableCell>
+                  </TableCell>
                 ) : indexRow % 2 !== 0 ? (
                   <TableCell style={{ borderBottom: '2px solid  rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
                     {value}
@@ -128,7 +125,7 @@ export const Scheduler = () => {
               )}
             </TableRow>
           ))}
-          <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} cellHeight={cellHeight} />
+          <SchedulerEvents cellWidth={cellWidth} cellHeight={cellHeight} />
         </TableBody>
       </SchedulerWrapper>
     </>

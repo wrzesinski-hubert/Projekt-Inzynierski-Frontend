@@ -1,9 +1,7 @@
-import React, { useState, useContext, useEffect, MouseEvent, forwardRef } from 'react';
+import React, { useState, useContext, useEffect, MouseEvent } from 'react';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { Course } from '../types';
 import styled from 'styled-components';
-
-
 
 const DropdownContainer = styled.div`
   position: relative;
@@ -48,30 +46,25 @@ interface DropdownProps {
   handleCloseDropdown: () => void;
 }
 
-export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: DropdownProps, ref: any) => {
-  //courses - choosenCourses
+export const Dropdown = ({ open, input, handleCloseDropdown }: DropdownProps) => {
+  
+  const { courses, basket, addCourseToBasket } = useContext(coursesContext)!;
+  const basketNames = basket.map(({ name }) => name.trim());
+
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
 
-  const { courses, basket, addToBasket } = useContext(coursesContext)!;
-
-  const sortedCourses = courses.sort((a, b) => (a.name > b.name ? 1 : -1));
-
-  useEffect(() => {
-    console.log('wut');
-  }, [open, input, handleCloseDropdown]);
-
-  useEffect(() => {
-    console.log('input is: ', input);
-  }, [input]);
-
-  useEffect(() => {
-    console.log('is open: ', open);
-  }, [open]);
+  const onCourseClick = (event: MouseEvent) => {
+    const target = event.currentTarget;
+    if (target.id && target.textContent) {
+      const course = filteredCourses.find(({ id }) => id.toString() === target.id)!;
+      addCourseToBasket(course);
+      handleCloseDropdown();
+    }
+  };
 
   useEffect(() => {
     const filterCourses = (input: string) => {
-      const choosenCoursesNames = basket.map(({ name }) => name.trim());
-      const filteredCourses = sortedCourses.filter(
+      const filteredCourses = courses.filter(
         ({ name }) =>
           name
             .toLowerCase()
@@ -82,24 +75,12 @@ export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: Dropdo
                 .toLowerCase()
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, ''),
-            ) && !choosenCoursesNames.includes(name),
+            ) && !basketNames.includes(name),
       );
       setFilteredCourses(filteredCourses);
     };
-    console.log("filtering courses");
     filterCourses(input);
   }, [open, input, basket]);
-
-  const onCourseClick = async (event: MouseEvent) => {
-    const target = event.currentTarget;
-    if (target.id && target.textContent) {
-      const course = filteredCourses.find(({ id }) => id.toString() === target.id)!;
-      console.log('added course is');
-      console.log(course);
-      addToBasket(course);
-      handleCloseDropdown();
-    }
-  };
 
   return (
     <DropdownContainer>
@@ -114,4 +95,4 @@ export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: Dropdo
       )}
     </DropdownContainer>
   );
-});
+};

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { CourseCard } from './CourseCard';
 import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
-import { debounce } from 'lodash';
+import { debounce } from '../utils/index';
 
 const RightbarStyled = styled.div`
   padding-top: 10px;
@@ -46,33 +46,15 @@ const SaveButton = styled.div`
 `;
 
 export const Rightbar = () => {
-  const { courses, basket, saveBasket } = useContext(coursesContext)!;
+  const { selectBasketCourses, saveBasket } = useContext(coursesContext)!;
 
-  const getBasketGroups = () => {
-    const names = basket.map(({ name }) => name);
-
-    const list = []
-
-    for (const basketName of names){
-        const course = courses.find(({name})=>basketName===name)!
-
-        list.push(course);
-    }
-
-    console.log("asdasdsa1", list);
-    console.log("asdasdsa2", courses.filter(({ name }) => names.includes(name)));
-    return list;
-  };
-
-  const filteredCourses = getBasketGroups();
-
+  const basketCourses = selectBasketCourses();
   const handleSave = debounce(() => saveBasket(), 500);
 
-  //need to insert student name from db and course maybe based on current time or from db too
   return (
     <RightbarStyled>
       <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>
-      {filteredCourses.map((course, index) => (
+      {basketCourses.map((course, index) => (
         <CourseCard course={course} key={index} />
       ))}
     </RightbarStyled>
