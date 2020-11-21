@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, ReactNode } from 'react';
 import { User } from '../types';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axiosInstance';
 
 export interface CASContext {
   user?: User;
@@ -29,7 +29,7 @@ export const CASProvider = ({ children }: CASProviderProps) => {
     }
     try {
       if (!sessionStorage.getItem('userToken')) {
-        const { data: token } = await axios.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
+        const { data: token } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
         sessionStorage.setItem('userToken', token);
       }
       const token = sessionStorage.getItem('userToken');
