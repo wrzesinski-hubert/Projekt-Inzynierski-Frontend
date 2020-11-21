@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, ChangeEvent, useEffect } from 'react';
+import React, { useState, MouseEvent, ChangeEvent, useEffect, useRef } from 'react';
 import { ReactComponent as Close } from '../assets/close.svg';
 import ProfileIcon from '../assets/account.svg';
 import { Profile } from './Profile';
@@ -9,7 +9,7 @@ import styled from 'styled-components/macro';
 import ClickAwayListener from 'react-click-away-listener';
 
 const Topbar = styled.div`
-  background-color: #E3E5ED;
+  background-color: #e3e5ed;
   height: 80px;
   padding: 5px;
   font-size: 24px;
@@ -36,9 +36,9 @@ const Logo = styled.img`
 `;
 
 const Text = styled.div`
- margin-left: 10px;
- font-size: 1.4rem;
- user-select: none;
+  margin-left: 10px;
+  font-size: 1.4rem;
+  user-select: none;
   @media only screen and (max-width: 670px) {
     display: none;
   }
@@ -59,8 +59,9 @@ const InputWrapper = styled.div`
 `;
 
 const Input = styled.input`
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
   background-color: #f1f2f5;
-  font-size: 20px;
   height: 40px;
   width: 100%;
   border: none;
@@ -116,21 +117,32 @@ export default function ({ handleTransfer }: TopbarProps) {
 
   const handleProfile = (event: MouseEvent<HTMLImageElement>) => setAnchorEl(event.currentTarget);
 
-  const handleClose = () => setAnchorEl(null);
+  const handleCloseProfile = () => setAnchorEl(null);
 
   const handleClearInput = () => setClearInput(!clearInput);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
 
-  const handleClick = () => setOpen(true);
+  const handleShowDropdown = () => {
+    console.log('show dropdown');
+    setOpen(true);
+  };
 
   const handleCloseDropdown = () => setOpen(false);
 
-  const handleClickAway = () => setOpen(false);
-
   useEffect(() => {
-    clearInput && (setInput(''), handleClearInput());
+    if (clearInput) {
+      setInput('');
+      handleClearInput();
+    }
   }, [clearInput]);
+
+  // useEffect(() => {
+  //   console.log('input changed');
+  //   if (!open) {
+  //     setOpen(true);
+  //   }
+  // }, [input]);
 
   return (
     <Topbar>
@@ -139,9 +151,17 @@ export default function ({ handleTransfer }: TopbarProps) {
         <Text> plan na plan </Text>
       </LogoWrapper>
       <FlexboxColumn>
-        <ClickAwayListener onClickAway={handleClickAway}>
+        <ClickAwayListener onClickAway={handleCloseDropdown}>
           <InputWrapper>
-            <Input placeholder="Wyszukaj przedmiot..." onChange={handleChange} onClick={handleClick} value={input} />
+            <Input
+              placeholder="Wyszukaj przedmiot..."
+              onChange={handleChange}
+              value={input}
+              onFocus={() => {
+                console.log('i am in on focus');
+                handleShowDropdown();
+              }}
+            />
             <CloseIcon onClick={handleClearInput} />
           </InputWrapper>
           <Dropdown open={open} input={input} handleCloseDropdown={handleCloseDropdown} />
@@ -153,7 +173,7 @@ export default function ({ handleTransfer }: TopbarProps) {
         {/* <Icon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
         <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} />
         <Icon alt="profile" src={ProfileIcon} onClick={handleProfile} />
-        <Profile anchorEl={anchorEl} handleClose={handleClose} />
+        <Profile anchorEl={anchorEl} handleClose={handleCloseProfile} />
       </IconWrapper>
     </Topbar>
   );

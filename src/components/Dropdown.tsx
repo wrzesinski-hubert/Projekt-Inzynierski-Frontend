@@ -6,7 +6,7 @@ import styled from 'styled-components';
 const DropdownContainer = styled.div`
   position: relative;
   z-index: 99999999;
-  max-height: 420px;
+  max-height: 396px;
   border-radius: 3px;
   overflow-y: auto;
   box-shadow: 0.05em 0.2em 0.6em rgba(0, 0, 0, 0.2);
@@ -31,7 +31,7 @@ const CourseContainer = styled.div`
   padding: 5px;
   padding-left: 20px;
   background-color: #f2f4f7;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   scroll-snap-align: end;
   :hover {
@@ -47,7 +47,6 @@ interface DropdownProps {
 }
 
 export const Dropdown = ({ open, input, handleCloseDropdown }: DropdownProps) => {
-  
   const { courses, basket, addCourseToBasket } = useContext(coursesContext)!;
   const basketNames = basket.map(({ name }) => name.trim());
 
