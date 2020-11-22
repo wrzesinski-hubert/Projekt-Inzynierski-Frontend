@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState } from 'react';
+import React, { Fragment, MouseEvent, useState } from 'react';
 import { GroupType, SchedulerEvent } from '../types';
 import styled from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
@@ -104,7 +104,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
           {groups.map(
             (group, index) =>
               group.day === eventIndex && (
-                <>
+                <Fragment key={index}>
                   <StyledSchedulerEvent
                     groupType={group.type}
                     cellWidth={cellWidth}
@@ -148,7 +148,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                       <p>{groups[index].room}</p>
                     </StyledTypography>
                   </Popover>
-                </>
+                </Fragment>
               ),
           )}
         </SchedulerEventsWrapper>

@@ -135,13 +135,15 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       console.log('courses: ', courses);
       setCourses(sortedCourses);
     } catch (e) {
-      console.log(e); 
+      console.log(e);
     }
   };
 
   useEffect(() => {
-    fetchCourses();
-    getNewestTimetable();
+    setTimeout(() => {
+      fetchCourses();
+      getNewestTimetable();
+    }, 200);
   }, []);
 
   return (
