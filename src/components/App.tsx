@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   background-color: #ECEEF4;
   padding-top:20px;
   padding-bottom:20px;
+  padding-right:20px;
 `;
 
 export const App = () => {

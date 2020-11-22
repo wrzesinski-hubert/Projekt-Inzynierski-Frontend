@@ -137,12 +137,12 @@ export default function ({ handleTransfer }: TopbarProps) {
     }
   }, [clearInput]);
 
-  // useEffect(() => {
-  //   console.log('input changed');
-  //   if (!open) {
-  //     setOpen(true);
-  //   }
-  // }, [input]);
+  useEffect(() => {
+    console.log('input changed');
+    if (!open) {
+      setOpen(true);
+    }
+  }, [input]);
 
   return (
     <Topbar>

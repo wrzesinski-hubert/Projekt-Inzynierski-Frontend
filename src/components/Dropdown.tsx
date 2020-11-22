@@ -13,17 +13,17 @@ const DropdownContainer = styled.div`
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   ::-webkit-scrollbar-track {
+    background-color: #f2f4f7;
     border-radius: 10px;
-    background-color: #f5f5f5;
   }
   ::-webkit-scrollbar {
-    width: 12px;
-    background-color: #f5f5f5;
+    background-color: #f2f4f7;
+    width: 5px;
+    border-style:none;
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: black;
-    border: 1px solid;
+    background-color: #4b4b4b;
   }
 `;
 

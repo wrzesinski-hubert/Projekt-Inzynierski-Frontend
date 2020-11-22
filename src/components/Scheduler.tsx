@@ -80,7 +80,6 @@ export const Scheduler = () => {
   }, []);
 
   return (
-    <>
       <SchedulerWrapper>
         <TableHead>
           {days.map((day, indexCell) =>
@@ -128,6 +127,5 @@ export const Scheduler = () => {
           <SchedulerEvents cellWidth={cellWidth} cellHeight={cellHeight} />
         </TableBody>
       </SchedulerWrapper>
-    </>
   );
 };

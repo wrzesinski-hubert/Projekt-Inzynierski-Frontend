@@ -16,15 +16,16 @@ const LeftSide = styled.div`
 
 const Wrap = styled.div`
   display: flex;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 120px);
   background-color: #ECEEF4;
+  width:100%;
 `;
 
 
 const Wrapper = styled.div`
-flex:5;
+  flex:12;
   display: flex;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 120px);
   background-color: #ECEEF4;
 `;
 
@@ -42,7 +43,8 @@ const LeftPanelElement = styled.div<LeftPanelElement>`
   padding: 20px;
   cursor: pointer;
   box-shadow: ${({isCurrentTab})=>(isCurrentTab === true ? `inset 0px 0px 26px 0px rgba(0,0,0,0.55)` : "")};
-  border-bottom:1px solid;
+  border-bottom:1px solid #979797;
+  
 `;
 const Icon = styled.img`
   width: 40px;
