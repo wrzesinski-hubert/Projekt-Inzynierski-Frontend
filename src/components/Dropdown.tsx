@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, MouseEvent } from 'react';
+import React, { useState, useContext, useEffect, MouseEvent, useMemo } from 'react';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { Course } from '../types';
 import styled from 'styled-components';
@@ -47,9 +47,8 @@ interface DropdownProps {
 }
 
 export const Dropdown = ({ open, input, handleCloseDropdown }: DropdownProps) => {
-  const { courses, basket, addCourseToBasket } = useContext(coursesContext)!;
-  const basketNames = basket.map(({ name }) => name.trim());
-
+  const { courses, selectBasketNames, addCourseToBasket } = useContext(coursesContext)!;
+  const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
 
   const onCourseClick = (event: MouseEvent) => {
@@ -79,7 +78,7 @@ export const Dropdown = ({ open, input, handleCloseDropdown }: DropdownProps) =>
       setFilteredCourses(filteredCourses);
     };
     filterCourses(input);
-  }, [open, input, basket]);
+  }, [basketNames, courses, input]);
 
   return (
     <DropdownContainer>

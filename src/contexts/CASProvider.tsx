@@ -18,26 +18,25 @@ export const CASProvider = ({ children }: CASProviderProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [token, setToken] = useState<string | null>(null);
   useEffect(() => {
+    const login = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ticket = urlParams.get('ticket');
+      if (!ticket) {
+        redirectToCASLoginService();
+      }
+      try {
+        if (!sessionStorage.getItem('userToken')) {
+          const { data: token } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
+          sessionStorage.setItem('userToken', token);
+        }
+        const token = sessionStorage.getItem('userToken');
+        setToken(token);
+      } catch (e) {
+        console.log(e);
+      }
+    };
     login();
   }, []);
-
-  const login = async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ticket = urlParams.get('ticket');
-    if (!ticket) {
-      redirectToCASLoginService();
-    }
-    try {
-      if (!sessionStorage.getItem('userToken')) {
-        const { data: token } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
-        sessionStorage.setItem('userToken', token);
-      }
-      const token = sessionStorage.getItem('userToken');
-      setToken(token);
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   function logout() {
     redirectToCASLogoutService();

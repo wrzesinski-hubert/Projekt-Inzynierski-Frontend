@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, ChangeEvent, useEffect, useRef } from 'react';
+import React, { useState, MouseEvent, ChangeEvent, useEffect, useCallback } from 'react';
 import { ReactComponent as Close } from '../assets/close.svg';
 import ProfileIcon from '../assets/account.svg';
 import { Profile } from './Profile';
@@ -119,14 +119,11 @@ export default function ({ handleTransfer }: TopbarProps) {
 
   const handleCloseProfile = () => setAnchorEl(null);
 
-  const handleClearInput = () => setClearInput(!clearInput);
+  const handleClearInput = useCallback(() => setClearInput((clearInput) => !clearInput), []);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
 
-  const handleShowDropdown = () => {
-    console.log('show dropdown');
-    setOpen(true);
-  };
+  const handleShowDropdown = () => setOpen(true);
 
   const handleCloseDropdown = () => setOpen(false);
 
@@ -135,14 +132,7 @@ export default function ({ handleTransfer }: TopbarProps) {
       setInput('');
       handleClearInput();
     }
-  }, [clearInput]);
-
-  // useEffect(() => {
-  //   console.log('input changed');
-  //   if (!open) {
-  //     setOpen(true);
-  //   }
-  // }, [input]);
+  }, [clearInput, handleClearInput]);
 
   return (
     <Topbar>

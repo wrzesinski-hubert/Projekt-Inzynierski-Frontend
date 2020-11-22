@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect, ReactNode, useContext } from 'react';
+import React, { useState, createContext, useEffect, ReactNode } from 'react';
 import { Course, Group, Basket, GroupType, SchedulerEvent } from '../types';
 import { useSnackbar } from 'notistack';
 import { createClassTime } from '../utils';
@@ -120,7 +120,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       );
       const basket = data === '' ? [] : data;
       setBasket(basket);
-      console.log('newest timetable: ', basket);
     } catch (e) {
       console.log(e);
     }
@@ -132,7 +131,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         `${process.env.REACT_APP_API_URL}/api/v1/courses/getCoursesWithGroups`,
       );
       const sortedCourses = courses.sort((a, b) => (a.name > b.name ? 1 : -1));
-      console.log('courses: ', courses);
       setCourses(sortedCourses);
     } catch (e) {
       console.log(e);
