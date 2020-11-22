@@ -55,6 +55,9 @@ const ClassGroupStyled = styled.div`
     cursor: pointer;
     background-color: #9ed3ff;
   }
+  :last-child {
+    border-radius: 0 0 10px 10px;
+}
 `;
 
 interface ExpandIconProps {
@@ -75,28 +78,27 @@ const TypeClass = styled.div`
   position: absolute;
   border-radius: 15px;
   background-color: #00506b;
-  border: 2px solid;
+  border: 2px solid white;
   min-width: 45px;
   top: 5px;
   left: 5px;
   color: white;
-  font-weight: bold;
 `;
-
+  
 const useStyles = makeStyles({
   expanded: {
     maxHeight: '244px',
     overflowY: 'auto',
     '&::-webkit-scrollbar': {
-      width: '0.4em',
+      width: '0.3em',
+      borderStyle:'none',
     },
     '&::-webkit-scrollbar-track': {
-      '-webkit-box-shadow': 'inset 0 0 6px rgba(1,0,0,0.1)',
+      borderRadius: '10px',
     },
     '&::-webkit-scrollbar-thumb': {
       borderRadius: '10px',
-      backgroundColor: '#d4b851',
-      outline: '1px solid slategrey',
+      backgroundColor: '#4b4b4b',
     },
   },
 });
