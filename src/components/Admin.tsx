@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent} from 'react';
+import React, { useState, MouseEvent } from 'react';
 import styled from 'styled-components/macro';
 import Plan from '../assets/plan.svg';
 import History from '../assets/history.svg';
@@ -9,7 +9,7 @@ import { Rightbar } from './Rightbar';
 const LeftSide = styled.div`
   height: 100%;
   display: flex;
-  flex:1;
+  flex: 1;
   flex-direction: column;
   background-color: white;
 `;
@@ -17,20 +17,19 @@ const LeftSide = styled.div`
 const Wrap = styled.div`
   display: flex;
   height: calc(100vh - 120px);
-  background-color: #ECEEF4;
-  width:100%;
+  background-color: #eceef4;
+  width: 100%;
 `;
-
 
 const Wrapper = styled.div`
-  flex:12;
+  flex: 12;
   display: flex;
   height: calc(100vh - 120px);
-  background-color: #ECEEF4;
+  background-color: #eceef4;
 `;
 
-interface LeftPanelElement{
-    isCurrentTab:boolean;
+interface LeftPanelElement {
+  isCurrentTab: boolean;
 }
 
 const LeftPanelElement = styled.div<LeftPanelElement>`
@@ -42,9 +41,8 @@ const LeftPanelElement = styled.div<LeftPanelElement>`
   //box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.75);
   padding: 20px;
   cursor: pointer;
-  box-shadow: ${({isCurrentTab})=>(isCurrentTab === true ? `inset 0px 0px 26px 0px rgba(0,0,0,0.55)` : "")};
-  border-bottom:1px solid #979797;
-  
+  box-shadow: ${({ isCurrentTab }) => (isCurrentTab === true ? `inset 0px 0px 26px 0px rgba(0,0,0,0.55)` : '')};
+  border-bottom: 1px solid #979797;
 `;
 const Icon = styled.img`
   width: 40px;
@@ -52,33 +50,32 @@ const Icon = styled.img`
 `;
 
 export const Admin = () => {
+  const [currentTab, setCurrentTab] = useState<null | number>(null);
 
-    const[currentTab, setCurrentTab] = useState<null|number>(null);
-
-    const handleClick = (e: MouseEvent<HTMLDivElement>)=>{
-      setCurrentTab(Number(e.currentTarget.id));
-    }
+  const handleClick = (e: MouseEvent<HTMLDivElement>) => {
+    setCurrentTab(Number(e.currentTarget.id));
+  };
 
   return (
     <Wrap>
-    <LeftSide>
-      <LeftPanelElement id={"1"} isCurrentTab={currentTab===1} onClick={handleClick}>
-        <Icon alt="profile" src={Plan} />
-        Pokaż plan
-      </LeftPanelElement>
-      <LeftPanelElement id={"2"} isCurrentTab={currentTab===2} onClick={handleClick}>
-        <Icon alt="history" src={History} />
-        Historia Zmian
-      </LeftPanelElement>
-      <LeftPanelElement id={"3"} isCurrentTab={currentTab===3} onClick={handleClick}>
-        <Icon alt="statistics" src={Statistics} />
-        Statystyki
-      </LeftPanelElement>
-    </LeftSide>
-    <Wrapper>
-    <Scheduler/>
-    <Rightbar/>
-    </Wrapper>
+      <LeftSide>
+        <LeftPanelElement id={'1'} isCurrentTab={currentTab === 1} onClick={handleClick}>
+          <Icon alt="profile" src={Plan} />
+          Pokaż plan
+        </LeftPanelElement>
+        <LeftPanelElement id={'2'} isCurrentTab={currentTab === 2} onClick={handleClick}>
+          <Icon alt="history" src={History} />
+          Historia Zmian
+        </LeftPanelElement>
+        <LeftPanelElement id={'3'} isCurrentTab={currentTab === 3} onClick={handleClick}>
+          <Icon alt="statistics" src={Statistics} />
+          Statystyki
+        </LeftPanelElement>
+      </LeftSide>
+      <Wrapper>
+        <Scheduler />
+        <Rightbar />
+      </Wrapper>
     </Wrap>
   );
 };

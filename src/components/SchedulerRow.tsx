@@ -45,6 +45,7 @@ interface SchedulerEventProps {
 
 const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 2;
@@ -54,7 +55,7 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   height: ${({ cellHeight }) => cellHeight * 3}px;
   width: ${({ cellWidth }) => (cellWidth * 3) / 4}px;
   margin-right: 5px;
-  padding: 5px 5px 5px 5px;
+  padding: 5px 5px 0 5px;
   text-align: center;
   background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
   box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
@@ -62,6 +63,18 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
 
 const StyledTypography = styled(Typography)`
   background-color: white;
+`;
+
+const BoldParagraph = styled.p`
+  font-weight: 700;
+`;
+
+const TextWrapper = styled.div`
+  width: inherit;
+  margin-top: 30px;
+  padding: 0 10px 0 10px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 interface SchedulerRowProps {
@@ -116,12 +129,13 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                     onMouseEnter={(e) => handlePopoverOpen(e)}
                     onMouseLeave={handlePopoverClose}
                   >
-                    <div>
-                      <p style={{ fontWeight: 700 }}>{groups[index].name}</p>
-                      <p>
+                    <BoldParagraph>{groups[index].name}</BoldParagraph>
+                    <TextWrapper>
+                      <div>
                         {groups[index].time[0]} - {groups[index].time[1]}
-                      </p>
-                    </div>
+                      </div>
+                      <div>3/30</div>
+                    </TextWrapper>
                   </StyledSchedulerEvent>
                   <Popover
                     id={`mouse-over-popover`}
