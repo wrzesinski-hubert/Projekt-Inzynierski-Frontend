@@ -58,6 +58,22 @@ const InputWrapper = styled.div`
   align-items: center;
 `;
 
+const SelectSearch = styled.select`
+  display: flex;
+  background-color: #f2f4f7;
+  margin-left: 5px;
+  outline: none;
+  border-style: none;
+  align-items: center;
+`;
+
+const SelectOption = styled.option`
+  background-color: #f2f4f7;
+  outline: none;
+  border-style: none;
+  align-items: center;
+`;
+
 const Input = styled.input`
   font-family: 'Roboto', sans-serif;
   font-size: 18px;
@@ -143,6 +159,10 @@ export default function ({ handleTransfer }: TopbarProps) {
       <FlexboxColumn>
         <ClickAwayListener onClickAway={handleCloseDropdown}>
           <InputWrapper>
+            <SelectSearch>
+              <SelectOption value="Student">Student</SelectOption>
+              <SelectOption value="Przedmiot">Przedmiot</SelectOption>
+            </SelectSearch>
             <Input
               placeholder="Wyszukaj przedmiot..."
               onChange={handleChange}

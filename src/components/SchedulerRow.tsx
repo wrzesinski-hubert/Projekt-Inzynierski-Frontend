@@ -1,4 +1,4 @@
-import React, { Fragment, MouseEvent, useState } from 'react';
+import React, { Fragment, MouseEvent, useState, useEffect, useRef } from 'react';
 import { GroupType, SchedulerEvent } from '../types';
 import styled from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
@@ -66,13 +66,24 @@ const StyledTypography = styled(Typography)`
 `;
 
 const BoldParagraph = styled.p`
+  flex: 3;
+`;
+
+const ClassWrap = styled.div`
   font-weight: 700;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  line-height: normal;
 `;
 
 const TextWrapper = styled.div`
+  flex: 1;
   width: inherit;
-  margin-top: 30px;
-  padding: 0 10px 0 10px;
+  padding: 0 5px 0 5px;
   display: flex;
   justify-content: space-between;
 `;
@@ -85,10 +96,27 @@ interface SchedulerRowProps {
   cellHeight: number;
 }
 
+const getGroupsPerDay = (groups: Array<SchedulerEvent>) => {
+
+  const xd = groups.reduce((sum:any,group:SchedulerEvent)=>{
+    if (sum.hasOwnProperty(group.day))
+    {
+      return sum[group.day]+=1  
+    }
+    else{
+      return sum[group.day]=0}
+  },[])
+
+  console.log("123123123",xd);
+  return xd;
+}
+
 export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }: SchedulerRowProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const [popoverId, setPopoverId] = useState<string | null>(null);
+
+  const groupsPerDay = getGroupsPerDay(groups);
 
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -100,6 +128,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
     setAnchorEl(null);
     setPopoverId(null);
   };
+
 
   const open = Boolean(anchorEl);
 
@@ -129,13 +158,15 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                     onMouseEnter={(e) => handlePopoverOpen(e)}
                     onMouseLeave={handlePopoverClose}
                   >
-                    <BoldParagraph>{groups[index].name}</BoldParagraph>
-                    <TextWrapper>
-                      <div>
-                        {groups[index].time[0]} - {groups[index].time[1]}
-                      </div>
-                      <div>3/30</div>
-                    </TextWrapper>
+                    <ClassWrap>
+                      <BoldParagraph>{groups[index].name}</BoldParagraph>
+                      <TextWrapper>
+                        <div>
+                        {cellWidth > 200 ? `${groups[index].time[0]} - ${groups[index].time[1]}` : ''}
+                        </div>
+                        <div>3/30</div>
+                      </TextWrapper>
+                    </ClassWrap>
                   </StyledSchedulerEvent>
                   <Popover
                     id={`mouse-over-popover`}
