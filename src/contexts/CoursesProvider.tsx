@@ -3,6 +3,15 @@ import { Course, Group, Basket, GroupType, SchedulerEvent } from '../types';
 import { useSnackbar } from 'notistack';
 import { createClassTime } from '../utils';
 import { axiosInstance } from '../utils/axiosInstance';
+import CloseIcon from '@material-ui/icons/Close';
+import styled from 'styled-components';
+
+const StyledCloseIcon = styled(CloseIcon)`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 interface CourseContext {
   courses: Array<Course>;
   basket: Array<Basket>;
@@ -74,13 +83,11 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     const basketIds = selectBasketIds();
     const action = (key: any) => (
       <>
-        <button
+        <StyledCloseIcon
           onClick={() => {
             closeSnackbar(key);
           }}
-        >
-          X
-        </button>
+        ></StyledCloseIcon>
       </>
     );
 
