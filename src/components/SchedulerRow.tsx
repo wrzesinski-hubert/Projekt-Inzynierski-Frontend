@@ -97,7 +97,7 @@ const ClassWrap = styled.div`
 const TextWrapper = styled.div`
   flex: 1;
   width: inherit;
-  padding: 0 5px 5px 5px;
+  padding: 0 3px 5px 3px;
   display: flex;
   justify-content: space-between;
 `;

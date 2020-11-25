@@ -128,7 +128,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
         {groups.map((group, index) => (
           <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
-            <TypeClass>{group.type === 'CLASS' ? 'Ćw.' : 'Wyk.'}</TypeClass>
+            <TypeClass>{group.type === 'CLASS' ? 'ĆW' : 'WYK'}</TypeClass>
             <p>
               {group.time} {group.room} <br></br> {group.lecturer}
             </p>
