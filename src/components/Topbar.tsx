@@ -56,6 +56,12 @@ const InputWrapper = styled.div`
   background-color: #f2f4f7;
   border-radius: 6px;
   align-items: center;
+  &:hover {
+    background-color: #ffffff;
+  }
+  &:hover > input {
+    background-color: #ffffff;
+  }
 `;
 
 const SelectSearch = styled.select`
@@ -65,6 +71,9 @@ const SelectSearch = styled.select`
   outline: none;
   border-style: none;
   align-items: center;
+  &:hover ~ input {
+    background-color: #ffffff;
+  }
 `;
 
 const SelectOption = styled.option`
@@ -72,6 +81,9 @@ const SelectOption = styled.option`
   outline: none;
   border-style: none;
   align-items: center;
+  &:hover ~ input {
+    background-color: #ffffff;
+  }
 `;
 
 const Input = styled.input`
