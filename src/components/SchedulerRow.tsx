@@ -2,7 +2,6 @@ import React, { Fragment, MouseEvent, useState, useEffect, useRef } from 'react'
 import { GroupType, SchedulerEvent } from '../types';
 import styled from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { MONDAY_TO_FRIDAY } from '../constants';
 
@@ -10,14 +9,20 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     popover: {
       pointerEvents: 'none',
+      fontSize: '14px',
     },
     paper: {
-      padding: theme.spacing(1),
-      marginLeft: 5,
-      textAlign: 'center',
+      padding: '15px 15px 15px 15px',
+      textAlign: 'left',
+      lineHeight: `1 !important`,
     },
   }),
 );
+
+const PopoverSpan = styled.span`
+  font-weight: 'bold';
+  margin-right: 2px;
+`;
 
 interface SchedulerEventsWrapperProps {
   eventIndex: number;
@@ -61,17 +66,12 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
 `;
 
-const StyledTypography = styled(Typography)`
-  background-color: white;
-`;
-
 const threeStyles = () => {
   return `
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 70px;`;
 };
-
 
 type BoldParagraphProps = {
   isThree?: boolean;
@@ -97,7 +97,7 @@ const ClassWrap = styled.div`
 const TextWrapper = styled.div`
   flex: 1;
   width: inherit;
-  padding: 0 5px 0 5px;
+  padding: 0 5px 5px 5px;
   display: flex;
   justify-content: space-between;
 `;
@@ -120,9 +120,10 @@ const getGroupsPerDay = (groups: Array<SchedulerEvent>) => {
 
 export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }: SchedulerRowProps) => {
   const classes = useStyles();
+  const groupsPerDay = getGroupsPerDay(groups);
+  console.log('groups: ', groups);
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const [popoverId, setPopoverId] = useState<string | null>(null);
-  const groupsPerDay = getGroupsPerDay(groups);
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     setAnchorEl(event.currentTarget);
@@ -167,11 +168,11 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                       {groupsPerDay[group.day] < 3 ? (
                         <TextWrapper>
                           <div>{`${groups[index].time[0]}-${groups[index].time[1]}`}</div>
-                          <div>3/30</div>
+                          <div>3/{groups[index].capacity}</div>
                         </TextWrapper>
                       ) : (
                         <TextWrapper style={{ flexDirection: 'column' }}>
-                          <div style={{ alignSelf: 'flex-end' }}>3/30</div>
+                          <div style={{ alignSelf: 'flex-end' }}>3/{groups[index].capacity}</div>
                         </TextWrapper>
                       )}
                     </ClassWrap>
@@ -195,11 +196,24 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
-                    <StyledTypography>
-                      <p>{groups[index].name}</p>
-                      <p>{groups[index].lecturer}</p>
-                      <p>{groups[index].room}</p>
-                    </StyledTypography>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <p style={{ margin: '7px 0 7px 0', fontWeight: 'bold' }}>{groups[index].name}</p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <PopoverSpan>Prowadzący:</PopoverSpan> {groups[index].lecturer}
+                      </p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <span style={{ fontWeight: 'bold', marginRight: '2px' }}>Sala zajęć</span>: {groups[index].room}
+                      </p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <span style={{ fontWeight: 'bold', marginRight: '2px' }}>Kod przedmiotu: </span>ACB129
+                      </p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <span style={{ fontWeight: 'bold', marginRight: '2px' }}>Kod grupy: </span>FVJ753
+                      </p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <span style={{ fontWeight: 'bold', marginRight: '2px' }}>Punkty ECTS:</span> 2
+                      </p>
+                    </div>
                   </Popover>
                 </Fragment>
               ),
