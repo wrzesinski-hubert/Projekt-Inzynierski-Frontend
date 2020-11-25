@@ -6,12 +6,13 @@ import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import { ReactComponent as Bin } from '../assets/bin.svg';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const CourseCardWrapper = styled.div`
   position: relative;
   display: flex;
   min-height: 40px;
-  background-color: rgb(100, 181, 246);
+  background-color: rgb(166, 226, 208);
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -23,17 +24,17 @@ const CourseCardWrapper = styled.div`
 `;
 
 const TitleWrapper = styled.div`
+  font-size: 14px;
+  font-weight: 550;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 10px 10px 10px 2px;
 `;
 
-const BinIcon = styled(Bin)`
-  width: 20px;
-  height: 20px;
-  max-width: 20px;
-  min-width: 20px;
+const BinIcon = styled(DeleteIcon)`
+  max-width: 30px;
+  min-width: 30px;
   cursor: pointer;
   &:hover {
     fill: white;
@@ -57,7 +58,7 @@ const ClassGroupStyled = styled.div`
   }
   :last-child {
     border-radius: 0 0 10px 10px;
-}
+  }
 `;
 
 interface ExpandIconProps {
@@ -84,14 +85,14 @@ const TypeClass = styled.div`
   left: 5px;
   color: white;
 `;
-  
+
 const useStyles = makeStyles({
   expanded: {
     maxHeight: '244px',
     overflowY: 'auto',
     '&::-webkit-scrollbar': {
       width: '0.3em',
-      borderStyle:'none',
+      borderStyle: 'none',
     },
     '&::-webkit-scrollbar-track': {
       borderRadius: '10px',

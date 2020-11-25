@@ -10,14 +10,14 @@ const RightbarStyled = styled.div`
   padding-right: 15px;
   text-align: center;
   height: 100%;
-  width: 300px;
+  width: 350px;
   overflow-y: scroll;
   ::-webkit-scrollbar-track {
     border-radius: 10px;
   }
   ::-webkit-scrollbar {
     width: 5px;
-    border-style:none;
+    border-style: none;
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
@@ -32,7 +32,7 @@ const SaveButton = styled.div`
   justify-content: center;
   align-items: center;
   user-select: none;
-  background-color: #417cab;
+  background-color: #244a7c;
   border-radius: 10px;
   cursor: pointer;
   height: 40px;

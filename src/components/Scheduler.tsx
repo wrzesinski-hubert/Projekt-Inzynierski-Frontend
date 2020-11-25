@@ -107,7 +107,7 @@ export const Scheduler = () => {
                     {value}
                   </TableCell>
                 ) : indexRow === 23 ? (
-                  <TableCell style={{ borderBottom: '2px soli  rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
+                  <TableCell style={{ borderBottom: '2px solid  rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
                     {value}
                   </TableCell>
                 ) : indexRow === 5 ? (
