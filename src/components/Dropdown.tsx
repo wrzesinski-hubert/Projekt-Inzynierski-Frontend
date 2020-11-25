@@ -9,6 +9,7 @@ const DropdownContainer = styled.div`
   max-height: 396px;
   border-radius: 3px;
   overflow-y: auto;
+  opacity: 0.97;
   box-shadow: 0.05em 0.2em 0.6em rgba(0, 0, 0, 0.2);
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
@@ -19,7 +20,7 @@ const DropdownContainer = styled.div`
   ::-webkit-scrollbar {
     background-color: #f2f4f7;
     width: 5px;
-    border-style:none;
+    border-style: none;
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;

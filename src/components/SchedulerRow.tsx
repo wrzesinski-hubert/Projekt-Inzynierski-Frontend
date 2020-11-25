@@ -65,8 +65,22 @@ const StyledTypography = styled(Typography)`
   background-color: white;
 `;
 
-const BoldParagraph = styled.p`
+const threeStyles = () => {
+  return `
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 70px;`;
+};
+
+
+type BoldParagraphProps = {
+  isThree?: boolean;
+};
+
+const BoldParagraph = styled.p<BoldParagraphProps>`
+  overflow: hidden;
   flex: 3;
+  ${({ isThree }) => isThree && threeStyles}
 `;
 
 const ClassWrap = styled.div`
@@ -97,27 +111,18 @@ interface SchedulerRowProps {
 }
 
 const getGroupsPerDay = (groups: Array<SchedulerEvent>) => {
-
-  const xd = groups.reduce((sum:any,group:SchedulerEvent)=>{
-    if (sum.hasOwnProperty(group.day))
-    {
-      return sum[group.day]+=1  
-    }
-    else{
-      return sum[group.day]=0}
-  },[])
-
-  console.log("123123123",xd);
-  return xd;
-}
+  const groupsPerDay: any = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
+  for (const group of groups) {
+    groupsPerDay[group.day]++;
+  }
+  return groupsPerDay;
+};
 
 export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }: SchedulerRowProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const [popoverId, setPopoverId] = useState<string | null>(null);
-
   const groupsPerDay = getGroupsPerDay(groups);
-
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     setAnchorEl(event.currentTarget);
@@ -128,7 +133,6 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
     setAnchorEl(null);
     setPopoverId(null);
   };
-
 
   const open = Boolean(anchorEl);
 
@@ -159,13 +163,17 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                     onMouseLeave={handlePopoverClose}
                   >
                     <ClassWrap>
-                      <BoldParagraph>{groups[index].name}</BoldParagraph>
-                      <TextWrapper>
-                        <div>
-                        {cellWidth > 200 ? `${groups[index].time[0]} - ${groups[index].time[1]}` : ''}
-                        </div>
-                        <div>3/30</div>
-                      </TextWrapper>
+                      <BoldParagraph isThree={groupsPerDay[group.day] >= 3}>{groups[index].name}</BoldParagraph>
+                      {groupsPerDay[group.day] < 3 ? (
+                        <TextWrapper>
+                          <div>{`${groups[index].time[0]}-${groups[index].time[1]}`}</div>
+                          <div>3/30</div>
+                        </TextWrapper>
+                      ) : (
+                        <TextWrapper style={{ flexDirection: 'column' }}>
+                          <div style={{ alignSelf: 'flex-end' }}>3/30</div>
+                        </TextWrapper>
+                      )}
                     </ClassWrap>
                   </StyledSchedulerEvent>
                   <Popover
