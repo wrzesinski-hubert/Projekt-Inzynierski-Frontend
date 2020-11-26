@@ -137,6 +137,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, lecture: choosenGroup } : basket)),
       );
     }
+    changeHoveredGroup(choosenGroup);
   };
 
   const restoreGroupInBasket = (restoreGroup: Group, courseId: number) => {

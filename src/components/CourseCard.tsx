@@ -169,13 +169,15 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             onClick={() => onGroupClick(group, course.id)}
             onMouseEnter={() => {
               if (group.type === GroupType.CLASS && courseClasses !== undefined) {
-                changeHoveredGroup(courseClasses);
                 changeGroupInBasket(group, course.id);
+                // setTimeout(()=> { changeHoveredGroup(courseClasses)},[500])
+
               }
               if (group.type === GroupType.LECTURE && courseLecture !== undefined) {
-                changeHoveredGroup(courseLecture);
                 changeGroupInBasket(group, course.id);
+                // setTimeout(()=> { changeHoveredGroup(courseLecture)},[500])
               }
+
             }}
             onMouseLeave={() => {
               if (hoveredGroup) {
