@@ -15,13 +15,17 @@ const StyledCloseIcon = styled(CloseIcon)`
 interface CourseContext {
   courses: Array<Course>;
   basket: Array<Basket>;
+  hoveredGroup: Group | undefined | null;
   addCourseToBasket: (courses: Course) => void;
-  changeGroupInBasket: (group: Group, id: number) => void;
+  changeHoveredGroup: (group: Group | null) => void;
+  changeGroupInBasket: (group: Group, courseId: number) => void;
+  restoreGroupInBasket: (restoreGroup: Group, courseId: number) => void;
   deleteFromBasket: (id: number) => void;
   saveBasket: () => void;
   selectSchedulerEvents: () => Array<SchedulerEvent>;
   selectBasketNames: () => Array<string>;
   selectBasketCourses: () => Array<Course>;
+  selectBasketCourseGroups: (courseId: number) => Array<Group | undefined>;
 }
 export const coursesContext = createContext<CourseContext | undefined>(undefined);
 
@@ -32,10 +36,14 @@ interface CoursesProviderProps {
 export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const { closeSnackbar } = useSnackbar();
+
   //fetch courses with groups
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [basket, setBasket] = useState<Array<Basket>>([]);
-
+  const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
+  useEffect(() => {
+    console.log('actually hovered group is: ', hoveredGroup);
+  }, [hoveredGroup]);
   const selectBasketIds = () => {
     const classesIds = basket.map((course) => course?.classes?.id).filter((course) => course !== undefined);
     const lecturesIds = basket.map((course) => course?.lecture?.id).filter((course) => course !== undefined);
@@ -66,6 +74,17 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       return res;
     }, [] as Array<SchedulerEvent>);
   };
+
+  const selectBasketCourseGroups = (courseId: number) => {
+    const course = basket.find(({ id }) => id === courseId);
+    if (course !== undefined) {
+      return [course.lecture, course.classes];
+    } else {
+      return [undefined, undefined];
+    }
+  };
+
+  const changeHoveredGroup = (group: Group | null) => setHoveredGroup(group);
 
   const addCourseToBasket = (course: Course) => {
     const courseToBasket: Basket = {
@@ -106,8 +125,8 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }
   };
 
-  const changeGroupInBasket = (choosenGroup: Group, id: number) => {
-    const basketCourse = basket.filter((course) => course.id === id)[0];
+  const changeGroupInBasket = (choosenGroup: Group, courseId: number) => {
+    const basketCourse = basket.filter((course) => course.id === courseId)[0];
     const { type } = choosenGroup;
     if (type === GroupType.CLASS) {
       setBasket(
@@ -116,6 +135,20 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     } else if (type === GroupType.LECTURE) {
       setBasket(
         basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, lecture: choosenGroup } : basket)),
+      );
+    }
+  };
+
+  const restoreGroupInBasket = (restoreGroup: Group, courseId: number) => {
+    const basketCourse = basket.filter((course) => course.id === courseId)[0];
+    const { type } = restoreGroup;
+    if (type === GroupType.CLASS) {
+      setBasket(
+        basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, classes: restoreGroup } : basket)),
+      );
+    } else if (type === GroupType.LECTURE) {
+      setBasket(
+        basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, lecture: restoreGroup } : basket)),
       );
     }
   };
@@ -157,13 +190,17 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       value={{
         courses,
         basket,
+        hoveredGroup,
         addCourseToBasket,
+        changeHoveredGroup,
         changeGroupInBasket,
         deleteFromBasket,
+        restoreGroupInBasket,
         saveBasket,
         selectSchedulerEvents,
         selectBasketNames,
         selectBasketCourses,
+        selectBasketCourseGroups,
       }}
     >
       {children}

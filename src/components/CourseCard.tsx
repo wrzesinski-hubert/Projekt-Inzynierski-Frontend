@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import { ReactComponent as Expand } from '../assets/expand.svg';
 import { Course, Group, GroupType } from '../types/index';
@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import { ReactComponent as Bin } from '../assets/bin.svg';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useMemo } from 'react';
 
 const CourseCardWrapper = styled.div`
   position: relative;
@@ -134,13 +135,19 @@ interface CourseCardProps {
 
 export const CourseCard = ({ course }: CourseCardProps) => {
   const classes = useStyles();
-  const { changeGroupInBasket, deleteFromBasket } = useContext(coursesContext)!;
-
+  const {
+    hoveredGroup,
+    changeGroupInBasket,
+    deleteFromBasket,
+    selectBasketCourseGroups,
+    changeHoveredGroup,
+  } = useContext(coursesContext)!;
   const [isSelected, setSelected] = useState(false);
-
   const groups = [...course.lectures!, ...course.classes!];
-
-  const onGroupClick = (group: Group, id: number) => changeGroupInBasket(group, id);
+  const [courseLecture, courseClasses] = selectBasketCourseGroups(course.id);
+  // console.log('lecture is: ', courseLecture);
+  // console.log('class is: ', courseClasses);
+  const onGroupClick = (group: Group, courseId: number) => changeGroupInBasket(group, courseId);
 
   return (
     <CourseCardWrapper>
@@ -156,8 +163,27 @@ export const CourseCard = ({ course }: CourseCardProps) => {
         <ExpandIcon onClick={() => setSelected(!isSelected)} selected={isSelected} />
       </TitleWrapper>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
-        {groups.map((group, index) => (
-          <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
+        {groups.map((group: Group, index) => (
+          <ClassGroupStyled
+            key={index}
+            onClick={() => onGroupClick(group, course.id)}
+            onMouseEnter={() => {
+              if (group.type === GroupType.CLASS && courseClasses !== undefined) {
+                changeHoveredGroup(courseClasses);
+                changeGroupInBasket(group, course.id);
+              }
+              if (group.type === GroupType.LECTURE && courseLecture !== undefined) {
+                changeHoveredGroup(courseLecture);
+                changeGroupInBasket(group, course.id);
+              }
+            }}
+            onMouseLeave={() => {
+              if (hoveredGroup) {
+                changeGroupInBasket(hoveredGroup, course.id);
+                changeHoveredGroup(null);
+              }
+            }}
+          >
             <StyledGroupType groupType={group.type}>{group.type === 'CLASS' ? 'ĆW' : 'WYK'}</StyledGroupType>
             <FlexboxWrapper>
               {group.lecturer.replace('UAM', '').length >= 32 ? (

@@ -1,9 +1,11 @@
-import React, { Fragment, MouseEvent, useState, useEffect, useRef } from 'react';
+import React, { Fragment, MouseEvent, useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { GroupType, SchedulerEvent } from '../types';
 import styled, { css } from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { MONDAY_TO_FRIDAY } from '../constants';
+import { coursesContext } from '../contexts/CoursesProvider';
+import { group } from 'console';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +48,7 @@ interface SchedulerEventProps {
   cellWidth: number;
   cellHeight: number;
   groupType: GroupType;
+  isHovered: boolean;
 }
 
 const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
@@ -62,15 +65,22 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   margin-right: 5px;
   padding: 5px 5px 0 5px;
   text-align: center;
-  background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
+  background-color: ${({ groupType, isHovered }) => {
+    if (isHovered) {
+      return groupType === 'CLASS' ? '#ffefb5' : '#d4ecff';
+    } else {
+      return groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff';
+    }
+  }};
   box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
 `;
 
 const threeStyles = () => {
   return css`
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  max-width: 70px;`;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 70px;
+  `;
 };
 
 type BoldParagraphProps = {
@@ -119,6 +129,12 @@ const getGroupsPerDay = (groups: Array<SchedulerEvent>) => {
 };
 
 export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }: SchedulerRowProps) => {
+  const { hoveredGroup, selectBasketNames } = useContext(coursesContext)!;
+  console.log('hovered group is: ', hoveredGroup);
+  console.log('groups: ', groups);
+  const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
+  console.log('basket names: ', basketNames);
+  console.log('groups: ', groups);
   const classes = useStyles();
   const groupsPerDay = getGroupsPerDay(groups);
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
@@ -152,6 +168,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
               group.day === eventIndex && (
                 <Fragment key={index}>
                   <StyledSchedulerEvent
+                    isHovered={group.id === hoveredGroup?.id}
                     groupType={group.type}
                     cellWidth={cellWidth}
                     cellHeight={cellHeight}

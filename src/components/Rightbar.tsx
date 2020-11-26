@@ -52,7 +52,6 @@ export const Rightbar = () => {
 
   const basketCourses = selectBasketCourses();
   const handleSave = debounce(() => saveBasket(), 500);
-
   return (
     <RightbarWrapper>
       <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>

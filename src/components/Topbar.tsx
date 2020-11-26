@@ -180,7 +180,6 @@ export default function ({ handleTransfer }: TopbarProps) {
               onChange={handleChange}
               value={input}
               onFocus={() => {
-                console.log('i am in on focus');
                 handleShowDropdown();
               }}
             />
