@@ -8,9 +8,8 @@ build:
   image: node
   script:
     - echo "Start building App"
-    - npm install typescript eslint
-    - npm install
-    - npm run build
+    - yarn 
+    - yarn run build
     - echo "Build successfully!"
   artifacts:
     expire_in: 1 hour
@@ -23,7 +22,7 @@ test:
   image: node
   script:
     - echo "Testing App"
-    - CI=true npm test --passWithNoTests
+    - CI=false yarn test --passWithNoTests
     - echo "Test successfully!"
 
 deploy_production:
