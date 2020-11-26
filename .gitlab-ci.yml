@@ -28,7 +28,7 @@ deploy_production:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - echo "Deploying to server"
-    - rsync --progress -r build/* --delete website@wmi-frontend.pl:/var/www/plannaplan.pl
+    - rsync --progress -r build/* --delete website@wmi-frontend.plannaplan.pl:/var/www/plannaplan.pl
     - echo "Deployed"
   only:
     - master
