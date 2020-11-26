@@ -4,10 +4,8 @@ import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
 import { debounce } from '../utils/index';
 
-const RightbarStyled = styled.div`
-  padding-top: 10px;
-  padding-left: 15px;
-  padding-right: 15px;
+const RightbarWrapper = styled.div`
+  padding: 15px;
   text-align: center;
   height: 100%;
   width: 350px;
@@ -32,15 +30,21 @@ const SaveButton = styled.div`
   justify-content: center;
   align-items: center;
   user-select: none;
-  background-color: #244a7c;
+  background-color: #43a047;
   border-radius: 10px;
   cursor: pointer;
   height: 40px;
   margin-bottom: 10px;
   &:hover {
-    color: white;
+    color: #ffffff;
+    box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.24);
   }
-  box-shadow: 6px 6px 6px -2px rgba(0, 0, 0, 0.59);
+
+  &:active {
+    background-color: #54c457;
+  }
+
+  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.24);
 `;
 
 export const Rightbar = () => {
@@ -50,11 +54,11 @@ export const Rightbar = () => {
   const handleSave = debounce(() => saveBasket(), 500);
 
   return (
-    <RightbarStyled>
+    <RightbarWrapper>
       <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>
-      {basketCourses.map((course, index) => (
-        <CourseCard course={course} key={index} />
+      {basketCourses.map((course) => (
+        <CourseCard course={course} key={course.id} />
       ))}
-    </RightbarStyled>
+    </RightbarWrapper>
   );
 };

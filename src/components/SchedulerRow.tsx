@@ -1,6 +1,6 @@
 import React, { Fragment, MouseEvent, useState, useEffect, useRef } from 'react';
 import { GroupType, SchedulerEvent } from '../types';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { MONDAY_TO_FRIDAY } from '../constants';
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const PopoverSpan = styled.span`
-  font-weight: 'bold';
+  font-weight: bold;
   margin-right: 2px;
 `;
 
@@ -67,7 +67,7 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
 `;
 
 const threeStyles = () => {
-  return `
+  return css`
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 70px;`;
@@ -121,7 +121,6 @@ const getGroupsPerDay = (groups: Array<SchedulerEvent>) => {
 export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }: SchedulerRowProps) => {
   const classes = useStyles();
   const groupsPerDay = getGroupsPerDay(groups);
-  console.log('groups: ', groups);
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const [popoverId, setPopoverId] = useState<string | null>(null);
   //looks weird
@@ -202,16 +201,16 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                         <PopoverSpan>Prowadzący:</PopoverSpan> {groups[index].lecturer}
                       </p>
                       <p style={{ margin: '2px 0 2px 0' }}>
-                        <span style={{ fontWeight: 'bold', marginRight: '2px' }}>Sala zajęć</span>: {groups[index].room}
+                        <PopoverSpan>Sala zajęć</PopoverSpan>: {groups[index].room}
                       </p>
                       <p style={{ margin: '2px 0 2px 0' }}>
-                        <span style={{ fontWeight: 'bold', marginRight: '2px' }}>Kod przedmiotu: </span>ACB129
+                        <PopoverSpan>Kod przedmiotu: </PopoverSpan>ACB129
                       </p>
                       <p style={{ margin: '2px 0 2px 0' }}>
-                        <span style={{ fontWeight: 'bold', marginRight: '2px' }}>Kod grupy: </span>FVJ753
+                        <PopoverSpan>Kod grupy: </PopoverSpan>FVJ753
                       </p>
                       <p style={{ margin: '2px 0 2px 0' }}>
-                        <span style={{ fontWeight: 'bold', marginRight: '2px' }}>Punkty ECTS:</span> 2
+                        <PopoverSpan>Punkty ECTS:</PopoverSpan> 2
                       </p>
                     </div>
                   </Popover>

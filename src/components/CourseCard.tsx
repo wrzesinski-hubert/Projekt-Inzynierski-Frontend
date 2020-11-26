@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import { ReactComponent as Expand } from '../assets/expand.svg';
-import { Course, Group } from '../types/index';
+import { Course, Group, GroupType } from '../types/index';
 import { coursesContext } from '../contexts/CoursesProvider';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import { ReactComponent as Bin } from '../assets/bin.svg';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -12,7 +12,7 @@ const CourseCardWrapper = styled.div`
   position: relative;
   display: flex;
   min-height: 40px;
-  background-color: rgb(166, 226, 208);
+  background-color: #b5d2e0;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -51,7 +51,7 @@ const CourseName = styled.div`
 const ClassGroupStyled = styled.div`
   position: relative;
   padding-top: 1px;
-  padding-bottom: 1px;
+  padding-bottom: 5px;
   :hover {
     cursor: pointer;
     background-color: #9ed3ff;
@@ -74,16 +74,40 @@ const ExpandIcon = styled(Expand)<ExpandIconProps>`
   transform: ${({ selected }) => (selected ? 'scaleY(-1);' : 'scaleY(1);')};
 `;
 
-const TypeClass = styled.div`
+type StyledGroupTypeProps = {
+  groupType: GroupType;
+};
+
+const StyledGroupType = styled.div<StyledGroupTypeProps>`
   font-size: 12px;
   position: absolute;
   border-radius: 15px;
-  background-color: #00506b;
+  background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
   border: 2px solid white;
   min-width: 45px;
   top: 5px;
   left: 5px;
-  color: white;
+  color: black;
+`;
+
+const FlexboxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+type FlexItemProps = {
+  justifyContent?: string;
+};
+
+const FlexItem = styled.div<FlexItemProps>`
+  display: flex;
+  font-size: 14px;
+  font-weight: 600;
+  ${({ justifyContent }) =>
+    justifyContent &&
+    css`
+      justify-content: ${justifyContent};
+    `}
 `;
 
 const useStyles = makeStyles({
@@ -120,18 +144,35 @@ export const CourseCard = ({ course }: CourseCardProps) => {
 
   return (
     <CourseCardWrapper>
-      <TitleWrapper>
-        <BinIcon onClick={() => deleteFromBasket(course.id)}></BinIcon>
+      <TitleWrapper onClick={() => setSelected(!isSelected)}>
+        <BinIcon
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteFromBasket(course.id);
+            setSelected(false);
+          }}
+        ></BinIcon>
         <CourseName onClick={() => setSelected(!isSelected)}>{course.name}</CourseName>
         <ExpandIcon onClick={() => setSelected(!isSelected)} selected={isSelected} />
       </TitleWrapper>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
         {groups.map((group, index) => (
           <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
-            <TypeClass>{group.type === 'CLASS' ? 'ĆW' : 'WYK'}</TypeClass>
-            <p>
-              {group.time} {group.room} <br></br> {group.lecturer}
-            </p>
+            <StyledGroupType groupType={group.type}>{group.type === 'CLASS' ? 'ĆW' : 'WYK'}</StyledGroupType>
+            <FlexboxWrapper>
+              {group.lecturer.replace('UAM', '').length >= 32 ? (
+                <FlexItem style={{ justifyContent: 'center', marginLeft: '40px' }}>
+                  {group.lecturer.replace('UAM', '')}
+                </FlexItem>
+              ) : (
+                <FlexItem style={{ justifyContent: 'center', marginLeft: '10px' }}>
+                  {group.lecturer.replace('UAM', '')}
+                </FlexItem>
+              )}
+              <FlexItem style={{ justifyContent: 'center', margin: '0 50px' }}>
+                <span>{/*group.time*/}</span> <span> Sala: {group.room}</span>
+              </FlexItem>
+            </FlexboxWrapper>
           </ClassGroupStyled>
         ))}
       </Collapse>
