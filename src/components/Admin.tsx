@@ -44,6 +44,45 @@ const LeftPanelElement = styled.div<LeftPanelElement>`
   box-shadow: ${({ isCurrentTab }) => (isCurrentTab === true ? `inset 0px 0px 26px 0px rgba(0,0,0,0.55)` : '')};
   border-bottom: 1px solid #979797;
 `;
+
+const HistoryDiv = styled.div`
+  flex: 1;
+  display: flex;
+  margin-left: 20px;
+  border-radius: 5px;
+  height: calc(100vh - 120px);
+  background-color: red;
+`;
+
+const StatsDiv = styled.div`
+  flex: 1;
+  display: flex;
+  margin-left: 20px;
+  border-radius: 5px;
+  height: calc(100vh - 120px);
+  background-color: blue;
+`;
+
+const LogoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 2;
+  margin-left: 10px;
+`;
+
+const Text = styled.div`
+  font-family: 'Roboto', sans-serif;
+  font-size: 5rem;
+  user-select: none;
+`;
+
+const Logo = styled.img`
+  width: 500px;
+  height: 500px;
+`;
+
 const Icon = styled.img`
   width: 40px;
   margin: 5px;
@@ -73,8 +112,21 @@ export const Admin = () => {
         </LeftPanelElement>
       </LeftSide>
       <Wrapper>
-        <Scheduler />
-        <Rightbar />
+        {currentTab === 1 ? (
+          <>
+            <Scheduler />
+            <Rightbar />
+          </>
+        ) : currentTab === 2 ? (
+          <HistoryDiv />
+        ) : currentTab === 3 ? (
+          <StatsDiv />
+        ) : (
+          <LogoWrapper>
+            <Logo alt="logo" src="https://plannaplan.pl/img/logo.svg" />
+            <Text> plan na plan </Text>
+          </LogoWrapper>
+        )}
       </Wrapper>
     </Wrap>
   );

@@ -140,6 +140,7 @@ export default function ({ handleTransfer }: TopbarProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
+  const [value, setValue] = useState('przedmiot');
 
   const onLangChange = () => setIsPolish(!isPolish);
 
@@ -154,6 +155,8 @@ export default function ({ handleTransfer }: TopbarProps) {
   const handleShowDropdown = () => setOpen(true);
 
   const handleCloseDropdown = () => setOpen(false);
+
+  const Change = (e: any) => setValue(e.target.value);
 
   useEffect(() => {
     if (clearInput) {
@@ -171,12 +174,12 @@ export default function ({ handleTransfer }: TopbarProps) {
       <FlexboxColumn>
         <ClickAwayListener onClickAway={handleCloseDropdown}>
           <InputWrapper>
-            <SelectSearch>
-              <SelectOption value="Student">Student</SelectOption>
-              <SelectOption value="Przedmiot">Przedmiot</SelectOption>
+            <SelectSearch value={value} onChange={Change}>
+              <SelectOption value="przedmiot">Przedmiot</SelectOption>
+              <SelectOption value="student">Student</SelectOption>
             </SelectSearch>
             <Input
-              placeholder="Wyszukaj przedmiot..."
+              placeholder={`Wyszukaj ${value}...`}
               onChange={handleChange}
               value={input}
               onFocus={() => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Topbar from './Topbar';
 import { Transfer } from './Transfer';
+import { Admin } from './Admin';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
 import styled from 'styled-components';
