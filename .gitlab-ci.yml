@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
   - deploy
 
 build:
@@ -17,19 +16,19 @@ build:
       - build
       - node_modules/
 
-test:
-  stage: test
-  image: node
-  script:
-    - echo "Testing App"
-    - CI= yarn test --passWithNoTests
-    - echo "Test successfully!"
-
 deploy_production:
   stage: deploy
+  before_script:
+    - apt-get update
+    - apt-get --yes --force-yes install rsync
   script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - echo "Deploying to server"
-    - rsync --progress -r build/* --delete root@35.207.132.68:/var/www/plannaplan.pl
+    - rsync --progress -r build/* --delete website@wmi-frontend.plannaplan.pl:/var/www/plannaplan.pl
     - echo "Deployed"
   only:
     - master
