@@ -110,7 +110,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     );
 
     try {
-      await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/v1/commisions/add?`, JSON.stringify(basketIds));
+      await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user`, JSON.stringify(basketIds));
       enqueueSnackbar('Plan został zapisany', {
         variant: 'success',
         action,
@@ -156,7 +156,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const getNewestTimetable = async () => {
     try {
       const { data } = await axiosInstance.get(
-        `${process.env.REACT_APP_API_URL}/api/v1/assignments/getCurrentAssignments`,
+        `${process.env.REACT_APP_API_URL}/api/v1/assignments/user`,
       );
       const basket = data === '' ? [] : data;
       setBasket(basket);
@@ -168,7 +168,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const fetchCourses = async () => {
     try {
       const { data: courses } = await axiosInstance.get<Array<Course>>(
-        `${process.env.REACT_APP_API_URL}/api/v1/courses/getCoursesWithGroups`,
+        `${process.env.REACT_APP_API_URL}/api/v1/courses/all?groups=true`,
       );
       const sortedCourses = courses.sort((a, b) => (a.name > b.name ? 1 : -1));
       setCourses(sortedCourses);
