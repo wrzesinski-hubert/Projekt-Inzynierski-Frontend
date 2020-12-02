@@ -7,7 +7,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import styled from 'styled-components';
 
 const StyledCloseIcon = styled(CloseIcon)`
+  color: #000000;
   &:hover {
+    color: white;
     cursor: pointer;
   }
 `;
@@ -25,7 +27,7 @@ interface CourseContext {
   selectSchedulerEvents: () => Array<SchedulerEvent>;
   selectBasketNames: () => Array<string>;
   selectBasketCourses: () => Array<Course>;
-  selectBasketCourseGroups: (courseId: number) => Array<Group | undefined>;
+  selectBasketCourseGroups: (courseId: number) => { lecture: Group | undefined; classes: Group | undefined };
 }
 export const coursesContext = createContext<CourseContext | undefined>(undefined);
 
@@ -41,9 +43,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [basket, setBasket] = useState<Array<Basket>>([]);
   const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
-  useEffect(() => {
-    console.log('actually hovered group is: ', hoveredGroup);
-  }, [hoveredGroup]);
   const selectBasketIds = () => {
     const classesIds = basket.map((course) => course?.classes?.id).filter((course) => course !== undefined);
     const lecturesIds = basket.map((course) => course?.lecture?.id).filter((course) => course !== undefined);
@@ -78,9 +77,9 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const selectBasketCourseGroups = (courseId: number) => {
     const course = basket.find(({ id }) => id === courseId);
     if (course !== undefined) {
-      return [course.lecture, course.classes];
+      return { lecture: course.lecture, classes: course.classes };
     } else {
-      return [undefined, undefined];
+      return { lecture: undefined, classes: undefined };
     }
   };
 
@@ -172,7 +171,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         `${process.env.REACT_APP_API_URL}/api/v1/courses/getCoursesWithGroups`,
       );
       const sortedCourses = courses.sort((a, b) => (a.name > b.name ? 1 : -1));
-      console.log('courses: ', courses);
       setCourses(sortedCourses);
     } catch (e) {
       console.log(e);

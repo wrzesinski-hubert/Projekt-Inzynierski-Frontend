@@ -7,6 +7,7 @@ import PolishIcon from '../assets/poland.svg';
 import EnglishIcon from '../assets/united-kingdom.svg';
 import styled from 'styled-components/macro';
 import ClickAwayListener from 'react-click-away-listener';
+import { SelectMenu } from './SelectMenu';
 
 const Topbar = styled.div`
   background-color: #e3e5ed;
@@ -51,11 +52,12 @@ const FlexboxColumn = styled.div`
 `;
 
 const InputWrapper = styled.div`
+  width: 95%;
   display: flex;
   margin-top: 15px;
+  max-height: 40px;
   background-color: #f2f4f7;
-  border-radius: 6px;
-  align-items: center;
+  border-radius: 0 6px 6px 0;
   &:hover {
     background-color: #ffffff;
   }
@@ -91,17 +93,17 @@ const Input = styled.input`
   font-size: 18px;
   background-color: #f1f2f5;
   height: 40px;
+  max-height: 40px;
   width: 100%;
   border: none;
   margin-left: 5px;
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
   &:focus {
     outline: none;
   }
 `;
 
 const CloseIcon = styled(Close)`
+  align-self: center;
   width: 30px;
   height: 30px;
   margin-right: 5px;
@@ -128,6 +130,10 @@ const Icon = styled.img`
   @media only screen and (max-width: 670px) {
     width: 35px;
   }
+`;
+
+export const Flexbox = styled.div`
+  display: flex;
 `;
 
 interface TopbarProps {
@@ -173,21 +179,25 @@ export default function ({ handleTransfer }: TopbarProps) {
       </LogoWrapper>
       <FlexboxColumn>
         <ClickAwayListener onClickAway={handleCloseDropdown}>
-          <InputWrapper>
-            <SelectSearch value={value} onChange={Change}>
-              <SelectOption value="przedmiot">Przedmiot</SelectOption>
-              <SelectOption value="student">Student</SelectOption>
-            </SelectSearch>
-            <Input
-              placeholder={`Wyszukaj ${value}...`}
-              onChange={handleChange}
-              value={input}
-              onFocus={() => {
-                handleShowDropdown();
-              }}
-            />
-            <CloseIcon onClick={handleClearInput} />
-          </InputWrapper>
+          <Flexbox>
+            <SelectMenu />
+
+            <InputWrapper>
+              {/* <SelectSearch value={value} onChange={Change}>
+    <SelectOption value="przedmiot">Przedmiot</SelectOption>
+    <SelectOption value="student">Student</SelectOption>
+  </SelectSearch> */}
+              <Input
+                placeholder={`Wyszukaj...`}
+                onChange={handleChange}
+                value={input}
+                onFocus={() => {
+                  handleShowDropdown();
+                }}
+              />
+              <CloseIcon onClick={handleClearInput} />
+            </InputWrapper>
+          </Flexbox>
           <Dropdown open={open} input={input} handleCloseDropdown={handleCloseDropdown} />
         </ClickAwayListener>
       </FlexboxColumn>

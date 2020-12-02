@@ -34,7 +34,7 @@ const CourseContainer = styled.div`
   background-color: #f2f4f7;
   font-size: 16px;
   font-weight: 500;
-  scroll-snap-align: end;
+  /* scroll-snap-align: end; */
   :hover {
     background-color: #eceef4;
     cursor: pointer;

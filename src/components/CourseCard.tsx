@@ -66,7 +66,7 @@ interface ExpandIconProps {
   selected: boolean;
 }
 
-const ExpandIcon = styled(Expand)<ExpandIconProps>`
+export const ExpandIcon = styled(Expand)<ExpandIconProps>`
   width: 20px;
   height: 20px;
   max-width: 20px;
@@ -144,10 +144,14 @@ export const CourseCard = ({ course }: CourseCardProps) => {
   } = useContext(coursesContext)!;
   const [isSelected, setSelected] = useState(false);
   const groups = [...course.lectures!, ...course.classes!];
-  const [courseLecture, courseClasses] = selectBasketCourseGroups(course.id);
+  const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.id), []);
+  const [previous, setPrevious] = useState(basketCourseGroups);
   // console.log('lecture is: ', courseLecture);
   // console.log('class is: ', courseClasses);
-  const onGroupClick = (group: Group, courseId: number) => changeGroupInBasket(group, courseId);
+  const onGroupClick = (group: Group, courseId: number) => {
+    setPrevious((prev) => (group.type === GroupType.CLASS ? { ...prev, classes: group } : { ...prev, lecture: group }));
+    changeGroupInBasket(group, courseId);
+  };
 
   return (
     <CourseCardWrapper>
@@ -168,20 +172,23 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             key={index}
             onClick={() => onGroupClick(group, course.id)}
             onMouseEnter={() => {
-              if (group.type === GroupType.CLASS && courseClasses !== undefined) {
+              if (group.type === GroupType.CLASS) {
                 changeGroupInBasket(group, course.id);
                 // setTimeout(()=> { changeHoveredGroup(courseClasses)},[500])
-
               }
-              if (group.type === GroupType.LECTURE && courseLecture !== undefined) {
+              if (group.type === GroupType.LECTURE) {
                 changeGroupInBasket(group, course.id);
                 // setTimeout(()=> { changeHoveredGroup(courseLecture)},[500])
               }
-
             }}
             onMouseLeave={() => {
               if (hoveredGroup) {
-                changeGroupInBasket(hoveredGroup, course.id);
+                if (hoveredGroup.type === GroupType.CLASS && previous.classes !== undefined) {
+                  changeGroupInBasket(previous.classes, course.id);
+                }
+                if (hoveredGroup.type === GroupType.LECTURE && previous.lecture !== undefined) {
+                  changeGroupInBasket(previous.lecture, course.id);
+                }
                 changeHoveredGroup(null);
               }
             }}

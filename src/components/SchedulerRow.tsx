@@ -5,12 +5,11 @@ import Popover from '@material-ui/core/Popover';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { MONDAY_TO_FRIDAY } from '../constants';
 import { coursesContext } from '../contexts/CoursesProvider';
-import { group } from 'console';
+import { ClickAwayListener, Popper } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     popover: {
-      pointerEvents: 'none',
       fontSize: '14px',
     },
     paper: {
@@ -56,7 +55,7 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 20000;
   font-size: 0.65vw;
   line-height: normal;
   border-radius: 10px;
@@ -129,28 +128,30 @@ const getGroupsPerDay = (groups: Array<SchedulerEvent>) => {
 };
 
 export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }: SchedulerRowProps) => {
-  const { hoveredGroup, selectBasketNames } = useContext(coursesContext)!;
-  console.log('hovered group is: ', hoveredGroup);
-  console.log('groups: ', groups);
-  const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
-  console.log('basket names: ', basketNames);
-  console.log('groups: ', groups);
+  const { hoveredGroup } = useContext(coursesContext)!;
   const classes = useStyles();
   const groupsPerDay = getGroupsPerDay(groups);
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const [popoverId, setPopoverId] = useState<string | null>(null);
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    console.log('I was clicked!!!!');
     setAnchorEl(event.currentTarget);
     setPopoverId(event.currentTarget.id);
   };
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
+  const handlePopoverClose = (e: MouseEvent<any>) => {
+    console.log('current target:', e.currentTarget);
+    console.log(' target:', e.target);
     setPopoverId(null);
+    setAnchorEl(null);
+    console.log('click awayyy');
   };
-
+  useEffect(() => {
+    console.log('anchorEl: ', anchorEl);
+  }, [anchorEl]);
   const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <div>
@@ -168,6 +169,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
               group.day === eventIndex && (
                 <Fragment key={index}>
                   <StyledSchedulerEvent
+                    aria-describedby={id}
                     isHovered={group.id === hoveredGroup?.id}
                     groupType={group.type}
                     cellWidth={cellWidth}
@@ -176,8 +178,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                     key={index}
                     aria-owns={open ? `mouse-over-popover` : undefined}
                     aria-haspopup="true"
-                    onMouseEnter={(e) => handlePopoverOpen(e)}
-                    onMouseLeave={handlePopoverClose}
+                    onClick={(e) => handlePopoverOpen(e)}
                   >
                     <ClassWrap>
                       <BoldParagraph isThree={groupsPerDay[group.day] >= 3}>{groups[index].name}</BoldParagraph>
@@ -194,7 +195,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                     </ClassWrap>
                   </StyledSchedulerEvent>
                   <Popover
-                    id={`mouse-over-popover`}
+                    id={id}
                     className={classes.popover}
                     classes={{
                       paper: classes.paper,
@@ -212,7 +213,12 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div
+                      style={{ display: 'flex', flexDirection: 'column', zIndex: 20000 }}
+                      onClick={() => {
+                        console.log('XDD');
+                      }}
+                    >
                       <p style={{ margin: '7px 0 7px 0', fontWeight: 'bold' }}>{groups[index].name}</p>
                       <p style={{ margin: '2px 0 2px 0' }}>
                         <PopoverSpan>Prowadzący:</PopoverSpan> {groups[index].lecturer}
