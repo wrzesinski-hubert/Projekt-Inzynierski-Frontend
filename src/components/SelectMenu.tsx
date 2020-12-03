@@ -8,8 +8,8 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  width: 10%;
   margin-top: 15px;
+  min-width:130px;
   font-family: 'Roboto', sans-serif;
   background-color: #f1f2f5;
   color: black;
@@ -26,7 +26,9 @@ const Wrapper = styled.div`
 `;
 const Header = styled.div`
   display: flex;
+  width:100%;
   align-items: center;
+  justify-content: space-between;
 `;
 const HeaderTitle = styled.div`
   font-family: 'Roboto', sans-serif;
@@ -34,18 +36,28 @@ const HeaderTitle = styled.div`
   font-weight: 400;
 `;
 const List = styled.ul`
+  position: absolute;
+  top: 50px;
   list-style-type: none;
   margin: 0;
   padding: 0;
+  margin-left: -15px;
   background-color: #f2f4f7;
 `;
 const ListItem = styled.li`
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
   user-select: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  padding-right: 37px;
   font-weight: 400;
   :hover {
     background-color: #eceef4;
+  }
+  :first-child{
+    margin-top:10px;
   }
 `;
 const ExpandIconSelect = styled(ExpandIcon)`
@@ -76,6 +88,7 @@ export const SelectMenu = () => {
             <ListItem
               onClick={() => {
                 setSelectedOption('przedmioty');
+                setIsOpen(false);
               }}
             >
               przedmioty
@@ -83,6 +96,7 @@ export const SelectMenu = () => {
             <ListItem
               onClick={() => {
                 setSelectedOption('studenci');
+                setIsOpen(false);
               }}
             >
               studenci
