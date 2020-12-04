@@ -1,11 +1,10 @@
-import React, { Fragment, MouseEvent, useState, useEffect, useRef, useContext, useMemo } from 'react';
+import React, { Fragment, MouseEvent, useState, useEffect,  useContext } from 'react';
 import { GroupType, SchedulerEvent } from '../types';
 import styled, { css } from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { MONDAY_TO_FRIDAY } from '../constants';
 import { coursesContext } from '../contexts/CoursesProvider';
-import { ClickAwayListener, Popper } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

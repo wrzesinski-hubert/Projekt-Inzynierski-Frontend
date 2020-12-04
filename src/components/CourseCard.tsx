@@ -1,11 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import { ReactComponent as Expand } from '../assets/expand.svg';
 import { Course, Group, GroupType } from '../types/index';
 import { coursesContext } from '../contexts/CoursesProvider';
 import styled, { css } from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
-import { ReactComponent as Bin } from '../assets/bin.svg';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useMemo } from 'react';
 

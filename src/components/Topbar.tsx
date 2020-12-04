@@ -30,9 +30,8 @@ const LogoWrapper = styled.div`
 const Logo = styled.img`
   width: 70px;
   height: 70px;
-  @media only screen and (max-width: 670px) {
-    width: 60px;
-    height: 60px;
+  @media only screen and (max-width: 1533px) {
+    flex: auto;
   }
 `;
 
@@ -40,8 +39,12 @@ const Text = styled.div`
   margin-left: 10px;
   font-size: 1.4rem;
   user-select: none;
-  @media only screen and (max-width: 670px) {
+  @media only screen and (max-width: 1533px) {
     display: none;
+  }
+  @media only screen and (max-width: 1828px) {
+    margin-right: 10px;
+    text-align: center;
   }
 `;
 
@@ -52,38 +55,17 @@ const FlexboxColumn = styled.div`
 `;
 
 const InputWrapper = styled.div`
-  width: 95%;
+  width: 100%;
   display: flex;
   margin-top: 15px;
   max-height: 40px;
   background-color: #f2f4f7;
-  border-radius: 0 6px 6px 0;
+  border-radius: 6px 6px 6px 6px;
+  padding-left: 6px;
   &:hover {
     background-color: #ffffff;
   }
   &:hover > input {
-    background-color: #ffffff;
-  }
-`;
-
-const SelectSearch = styled.select`
-  display: flex;
-  background-color: #f2f4f7;
-  margin-left: 5px;
-  outline: none;
-  border-style: none;
-  align-items: center;
-  &:hover ~ input {
-    background-color: #ffffff;
-  }
-`;
-
-const SelectOption = styled.option`
-  background-color: #f2f4f7;
-  outline: none;
-  border-style: none;
-  align-items: center;
-  &:hover ~ input {
     background-color: #ffffff;
   }
 `;
@@ -146,7 +128,6 @@ export default function ({ handleTransfer }: TopbarProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [value, setValue] = useState('przedmiot');
 
   const onLangChange = () => setIsPolish(!isPolish);
 
@@ -161,8 +142,6 @@ export default function ({ handleTransfer }: TopbarProps) {
   const handleShowDropdown = () => setOpen(true);
 
   const handleCloseDropdown = () => setOpen(false);
-
-  const Change = (e: any) => setValue(e.target.value);
 
   useEffect(() => {
     if (clearInput) {
@@ -180,7 +159,7 @@ export default function ({ handleTransfer }: TopbarProps) {
       <FlexboxColumn>
         <ClickAwayListener onClickAway={handleCloseDropdown}>
           <Flexbox>
-            <SelectMenu />
+            {/* <SelectMenu /> */}
 
             <InputWrapper>
               {/* <SelectSearch value={value} onChange={Change}>
