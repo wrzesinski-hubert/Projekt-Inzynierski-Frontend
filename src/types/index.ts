@@ -28,8 +28,10 @@ export interface Course {
 }
 
 export interface User {
-  name?: string;
-  surname?: string;
+  email: string;
+  id: number;
+  name: string;
+  surname: string;
 }
 
 export interface SchedulerEvent {

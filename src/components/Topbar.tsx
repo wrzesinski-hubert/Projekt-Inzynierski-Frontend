@@ -159,7 +159,7 @@ export default function ({ handleTransfer }: TopbarProps) {
       <FlexboxColumn>
         <ClickAwayListener onClickAway={handleCloseDropdown}>
           <Flexbox>
-            {/* <SelectMenu /> */}
+            <SelectMenu />
 
             <InputWrapper>
               {/* <SelectSearch value={value} onChange={Change}>
