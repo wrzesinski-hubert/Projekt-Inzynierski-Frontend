@@ -1,31 +1,30 @@
-import React, { useState, useContext, useEffect, MouseEvent, forwardRef } from 'react';
+import React, { useState, useContext, useEffect, MouseEvent, useMemo } from 'react';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { Course } from '../types';
 import styled from 'styled-components';
 
-
-
 const DropdownContainer = styled.div`
   position: relative;
   z-index: 99999999;
-  max-height: 420px;
+  max-height: 396px;
   border-radius: 3px;
   overflow-y: auto;
+  opacity: 0.97;
   box-shadow: 0.05em 0.2em 0.6em rgba(0, 0, 0, 0.2);
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   ::-webkit-scrollbar-track {
+    background-color: #f2f4f7;
     border-radius: 10px;
-    background-color: #f5f5f5;
   }
   ::-webkit-scrollbar {
-    width: 12px;
-    background-color: #f5f5f5;
+    background-color: #f2f4f7;
+    width: 5px;
+    border-style: none;
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: black;
-    border: 1px solid;
+    background-color: #4b4b4b;
   }
 `;
 
@@ -33,7 +32,7 @@ const CourseContainer = styled.div`
   padding: 5px;
   padding-left: 20px;
   background-color: #f2f4f7;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   scroll-snap-align: end;
   :hover {
@@ -48,27 +47,22 @@ interface DropdownProps {
   handleCloseDropdown: () => void;
 }
 
-export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: DropdownProps, ref: any) => {
-  //courses - choosenCourses
+export const Dropdown = ({ open, input, handleCloseDropdown }: DropdownProps) => {
+  const { courses, selectBasketNames, addCourseToBasket } = useContext(coursesContext)!;
+  const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
 
-  const { courses, basket, addToBasket } = useContext(coursesContext)!;
-
-  useEffect(() => {
-    console.log('wut');
-  }, [open, input, handleCloseDropdown]);
-
-  useEffect(() => {
-    console.log('input is: ', input);
-  }, [input]);
-
-  useEffect(() => {
-    console.log('is open: ', open);
-  }, [open]);
+  const onCourseClick = (event: MouseEvent) => {
+    const target = event.currentTarget;
+    if (target.id && target.textContent) {
+      const course = filteredCourses.find(({ id }) => id.toString() === target.id)!;
+      addCourseToBasket(course);
+      handleCloseDropdown();
+    }
+  };
 
   useEffect(() => {
     const filterCourses = (input: string) => {
-      const choosenCoursesNames = basket.map(({ name }) => name.trim());
       const filteredCourses = courses.filter(
         ({ name }) =>
           name
@@ -80,24 +74,12 @@ export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: Dropdo
                 .toLowerCase()
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, ''),
-            ) && !choosenCoursesNames.includes(name),
+            ) && !basketNames.includes(name),
       );
       setFilteredCourses(filteredCourses);
     };
-    console.log("filtering courses");
     filterCourses(input);
-  }, [open, input, basket]);
-
-  const onCourseClick = async (event: MouseEvent) => {
-    const target = event.currentTarget;
-    if (target.id && target.textContent) {
-      const course = filteredCourses.find(({ id }) => id.toString() === target.id)!;
-      console.log('added course is');
-      console.log(course);
-      addToBasket(course);
-      handleCloseDropdown();
-    }
-  };
+  }, [basketNames, courses, input]);
 
   return (
     <DropdownContainer>
@@ -112,4 +94,4 @@ export const Dropdown = forwardRef(({ open, input, handleCloseDropdown }: Dropdo
       )}
     </DropdownContainer>
   );
-});
+};

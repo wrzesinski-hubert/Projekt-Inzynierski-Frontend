@@ -1,92 +1,163 @@
-import React, { MouseEvent, useState } from 'react';
-import { Group, GroupType } from '../types';
-import styled from 'styled-components/macro';
+import React, { Fragment, MouseEvent, useState, useEffect,  useContext } from 'react';
+import { GroupType, SchedulerEvent } from '../types';
+import styled, { css } from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { MONDAY_TO_FRIDAY } from '../constants';
+import { coursesContext } from '../contexts/CoursesProvider';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     popover: {
-      pointerEvents: 'none',
+      fontSize: '14px',
     },
     paper: {
-      padding: theme.spacing(1),
-      marginLeft: 5,
-      textAlign: 'center',
+      padding: '15px 15px 15px 15px',
+      textAlign: 'left',
+      lineHeight: `1 !important`,
     },
   }),
 );
 
-interface ClassesWrapperProps {
+const PopoverSpan = styled.span`
+  font-weight: bold;
+  margin-right: 2px;
+`;
+
+interface SchedulerEventsWrapperProps {
   eventIndex: number;
-  cellTop: number;
+  rowTop: number;
   cellWidth: number;
   cellHeight: number;
 }
 
-const ClassesWrapper = styled.div<ClassesWrapperProps>`
+const SchedulerEventsWrapper = styled.div<SchedulerEventsWrapperProps>`
   position: absolute;
   display: flex;
-  top: ${({ cellTop }) => cellTop}px;
-  left: ${({ cellWidth, eventIndex }) => (cellWidth * 1) / 5 + 15 + cellWidth * eventIndex}px;
+  top: ${({ rowTop }) => rowTop}px;
+  left: ${({ cellWidth, eventIndex }) => (cellWidth * 1) / 5 + 4 + cellWidth * eventIndex}px;
   width: ${({ cellWidth }) => cellWidth - 10}px;
   height: ${({ cellHeight }) => cellHeight * 3}px;
   z-index: 2;
   padding-left: 10px;
 `;
 
-interface ClassesProps {
+interface SchedulerEventProps {
+  cellWidth: number;
   cellHeight: number;
   groupType: GroupType;
+  isHovered: boolean;
 }
 
-const Classes = styled.div<ClassesProps>`
+const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   display: flex;
-  flex: 1;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 20000;
+  font-size: 0.65vw;
+  line-height: normal;
   border-radius: 10px;
   height: ${({ cellHeight }) => cellHeight * 3}px;
+  width: ${({ cellWidth }) => (cellWidth * 3) / 4}px;
   margin-right: 5px;
-  text-align: left;
-  background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
-  box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
+  padding: 5px 5px 0 5px;
+  text-align: center;
+  background-color: ${({ groupType, isHovered }) => {
+    if (isHovered) {
+      return groupType === 'CLASS' ? '#ffefb5' : '#d4ecff';
+    } else {
+      return groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff';
+    }
+  }};
+  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
+`;
+
+const threeStyles = () => {
+  return css`
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 70px;
+  `;
+};
+
+type BoldParagraphProps = {
+  isThree?: boolean;
+};
+
+const BoldParagraph = styled.p<BoldParagraphProps>`
+  overflow: hidden;
+  flex: 3;
+  ${({ isThree }) => isThree && threeStyles}
+`;
+
+const ClassWrap = styled.div`
+  font-weight: 700;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  line-height: normal;
+`;
+
+const TextWrapper = styled.div`
+  flex: 1;
+  width: inherit;
+  padding: 0 3px 5px 3px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 interface SchedulerRowProps {
-  groups: Array<Group & { name: string }>;
+  groups: Array<SchedulerEvent>;
   indexRow: number;
-  cellTop: number;
+  rowTop: number;
   cellWidth: number;
   cellHeight: number;
 }
 
-export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight }: SchedulerRowProps) => {
+const getGroupsPerDay = (groups: Array<SchedulerEvent>) => {
+  const groupsPerDay: any = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
+  for (const group of groups) {
+    groupsPerDay[group.day]++;
+  }
+  return groupsPerDay;
+};
+
+export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }: SchedulerRowProps) => {
+  const { hoveredGroup } = useContext(coursesContext)!;
   const classes = useStyles();
+  const groupsPerDay = getGroupsPerDay(groups);
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
   const [popoverId, setPopoverId] = useState<string | null>(null);
-
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    console.log('I was clicked!!!!');
     setAnchorEl(event.currentTarget);
     setPopoverId(event.currentTarget.id);
   };
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
+  const handlePopoverClose = (e: MouseEvent<any>) => {
+    console.log('current target:', e.currentTarget);
+    console.log(' target:', e.target);
     setPopoverId(null);
+    setAnchorEl(null);
+    console.log('click awayyy');
   };
-
+  useEffect(() => {
+    console.log('anchorEl: ', anchorEl);
+  }, [anchorEl]);
   const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <div>
-      {[...Array(5)].map((_, eventIndex) => (
-        <ClassesWrapper
+      {[...Array(MONDAY_TO_FRIDAY)].map((_, eventIndex) => (
+        <SchedulerEventsWrapper
           eventIndex={eventIndex}
-          cellTop={cellTop}
+          rowTop={rowTop}
           cellWidth={cellWidth}
           cellHeight={cellHeight}
           key={eventIndex}
@@ -95,27 +166,35 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
           {groups.map(
             (group, index) =>
               group.day === eventIndex && (
-                <>
-                  <Classes
-                    onClick={() => {
-                      console.log('group: ', group);
-                    }}
+                <Fragment key={index}>
+                  <StyledSchedulerEvent
+                    aria-describedby={id}
+                    isHovered={group.id === hoveredGroup?.id}
                     groupType={group.type}
+                    cellWidth={cellWidth}
                     cellHeight={cellHeight}
                     id={`eventRow${indexRow}eventCol${eventIndex}${index}`}
                     key={index}
                     aria-owns={open ? `mouse-over-popover` : undefined}
                     aria-haspopup="true"
-                    onMouseEnter={(e) => handlePopoverOpen(e)}
-                    onMouseLeave={handlePopoverClose}
+                    onClick={(e) => handlePopoverOpen(e)}
                   >
-                    <div>
-                      <p style={{ fontWeight: 700 }}>{groups[index].name}</p>
-                      <p>{groups[index].room}</p>
-                    </div>
-                  </Classes>
+                    <ClassWrap>
+                      <BoldParagraph isThree={groupsPerDay[group.day] >= 3}>{groups[index].name}</BoldParagraph>
+                      {groupsPerDay[group.day] < 3 ? (
+                        <TextWrapper>
+                          <div>{`${groups[index].time[0]}-${groups[index].time[1]}`}</div>
+                          <div>3/{groups[index].capacity}</div>
+                        </TextWrapper>
+                      ) : (
+                        <TextWrapper style={{ flexDirection: 'column' }}>
+                          <div style={{ alignSelf: 'flex-end' }}>3/{groups[index].capacity}</div>
+                        </TextWrapper>
+                      )}
+                    </ClassWrap>
+                  </StyledSchedulerEvent>
                   <Popover
-                    id={`mouse-over-popover`}
+                    id={id}
                     className={classes.popover}
                     classes={{
                       paper: classes.paper,
@@ -133,16 +212,34 @@ export const SchedulerRow = ({ groups, indexRow, cellTop, cellWidth, cellHeight 
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
-                    <Typography>
-                      <p>{groups[index].name}</p>
-                      <p>{groups[index].lecturer}</p>
-                      <p>{groups[index].room}</p>
-                    </Typography>
+                    <div
+                      style={{ display: 'flex', flexDirection: 'column', zIndex: 20000 }}
+                      onClick={() => {
+                        console.log('XDD');
+                      }}
+                    >
+                      <p style={{ margin: '7px 0 7px 0', fontWeight: 'bold' }}>{groups[index].name}</p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <PopoverSpan>Prowadzący:</PopoverSpan> {groups[index].lecturer}
+                      </p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <PopoverSpan>Sala zajęć</PopoverSpan>: {groups[index].room}
+                      </p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <PopoverSpan>Kod przedmiotu: </PopoverSpan>ACB129
+                      </p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <PopoverSpan>Kod grupy: </PopoverSpan>FVJ753
+                      </p>
+                      <p style={{ margin: '2px 0 2px 0' }}>
+                        <PopoverSpan>Punkty ECTS:</PopoverSpan> 2
+                      </p>
+                    </div>
                   </Popover>
-                </>
+                </Fragment>
               ),
           )}
-        </ClassesWrapper>
+        </SchedulerEventsWrapper>
       ))}
     </div>
   );

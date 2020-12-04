@@ -1,16 +1,33 @@
-import React, { useState, createContext, useEffect, ReactNode, useContext } from 'react';
-import { Course, Group, Basket, GroupType } from '../types';
-import axios from 'axios';
-import { CASContext } from './CASProvider';
+import React, { useState, createContext, useEffect, ReactNode } from 'react';
+import { Course, Group, Basket, GroupType, SchedulerEvent } from '../types';
 import { useSnackbar } from 'notistack';
+import { createClassTime } from '../utils';
+import { axiosInstance } from '../utils/axiosInstance';
+import CloseIcon from '@material-ui/icons/Close';
+import styled from 'styled-components';
+
+const StyledCloseIcon = styled(CloseIcon)`
+  color: #000000;
+  &:hover {
+    color: white;
+    cursor: pointer;
+  }
+`;
 
 interface CourseContext {
   courses: Array<Course>;
   basket: Array<Basket>;
-  addToBasket: (courses: Course) => void;
-  addGroup: (group: Group, id: number) => void;
+  hoveredGroup: Group | undefined | null;
+  addCourseToBasket: (courses: Course) => void;
+  changeHoveredGroup: (group: Group | null) => void;
+  changeGroupInBasket: (group: Group, courseId: number) => void;
+  restoreGroupInBasket: (restoreGroup: Group, courseId: number) => void;
   deleteFromBasket: (id: number) => void;
   saveBasket: () => void;
+  selectSchedulerEvents: () => Array<SchedulerEvent>;
+  selectBasketNames: () => Array<string>;
+  selectBasketCourses: () => Array<Course>;
+  selectBasketCourseGroups: (courseId: number) => { lecture: Group | undefined; classes: Group | undefined };
 }
 export const coursesContext = createContext<CourseContext | undefined>(undefined);
 
@@ -19,28 +36,60 @@ interface CoursesProviderProps {
 }
 
 export const CoursesProvider = ({ children }: CoursesProviderProps) => {
-  //fetch courses with groups
-  const [courses, setCourses] = useState<Array<Course>>([]);
-  const [basket, setBasket] = useState<Array<Basket>>([]);
-
   const { enqueueSnackbar } = useSnackbar();
   const { closeSnackbar } = useSnackbar();
 
-  const CAS = useContext(CASContext)!;
-  const token = CAS?.user?.token;
-
-  const selectBasketIds = (basket: Array<Basket>) => {
-    const classesIds = basket.map((course) => course.classes.id);
-    const lecturesIds = basket.map((course) => course?.lecture?.id);
-
-    return lecturesIds[0] === undefined ? classesIds : [...classesIds, ...lecturesIds];
+  //fetch courses with groups
+  const [courses, setCourses] = useState<Array<Course>>([]);
+  const [basket, setBasket] = useState<Array<Basket>>([]);
+  const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
+  const selectBasketIds = () => {
+    const classesIds = basket.map((course) => course?.classes?.id).filter((course) => course !== undefined);
+    const lecturesIds = basket.map((course) => course?.lecture?.id).filter((course) => course !== undefined);
+    return [...classesIds, ...lecturesIds];
   };
 
-  const addToBasket = (course: Course) => {
+  const selectBasketNames = () => basket.map(({ name }) => name);
+
+  const selectBasketCourses = () => {
+    const basketNames = selectBasketNames();
+    return basketNames.reduce((sum, basketName) => {
+      const course = courses.find(({ name }) => basketName === name);
+      return course === undefined ? sum : [...sum, course];
+    }, [] as Array<Course>);
+  };
+
+  const selectSchedulerEvents = () => {
+    return basket.reduce((res, el) => {
+      const { name } = el;
+      if (el.classes) {
+        const { time } = el.classes;
+        res.push({ ...el.classes, name, time: createClassTime(time) });
+      }
+      if (el.lecture) {
+        const { time } = el.lecture;
+        res.push({ ...el.lecture, name, time: createClassTime(time) });
+      }
+      return res;
+    }, [] as Array<SchedulerEvent>);
+  };
+
+  const selectBasketCourseGroups = (courseId: number) => {
+    const course = basket.find(({ id }) => id === courseId);
+    if (course !== undefined) {
+      return { lecture: course.lecture, classes: course.classes };
+    } else {
+      return { lecture: undefined, classes: undefined };
+    }
+  };
+
+  const changeHoveredGroup = (group: Group | null) => setHoveredGroup(group);
+
+  const addCourseToBasket = (course: Course) => {
     const courseToBasket: Basket = {
       name: course.name,
       id: course.id,
-      classes: course.classes[0],
+      classes: course.classes !== undefined ? course.classes[0] : undefined,
       lecture: course.lectures !== undefined ? course.lectures[0] : undefined,
     };
     setBasket([...basket, courseToBasket]);
@@ -49,37 +98,25 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const deleteFromBasket = (id: number) => setBasket(basket.filter((course) => course.id !== id));
 
   const saveBasket = async () => {
-    const basketIds = selectBasketIds(basket);
-
-    const config = {
-      method: 'post' as const,
-      url: `${process.env.REACT_APP_API_URL}/api/v1/commisions/add?`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify(basketIds),
-    };
-
+    const basketIds = selectBasketIds();
     const action = (key: any) => (
       <>
-        <button
+        <StyledCloseIcon
           onClick={() => {
             closeSnackbar(key);
           }}
-        >
-          X
-        </button>
+        ></StyledCloseIcon>
       </>
     );
 
     try {
-      await axios.request(config);
+      await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user`, JSON.stringify(basketIds));
       enqueueSnackbar('Plan został zapisany', {
         variant: 'success',
         action,
       });
     } catch (e) {
+      console.log('error: ', e);
       enqueueSnackbar('Zapisywanie planu nie powiodło się', {
         variant: 'error',
         action,
@@ -87,8 +124,8 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }
   };
 
-  const addGroup = (choosenGroup: Group, id: number) => {
-    const basketCourse = basket.filter((course) => course.id === id)[0];
+  const changeGroupInBasket = (choosenGroup: Group, courseId: number) => {
+    const basketCourse = basket.filter((course) => course.id === courseId)[0];
     const { type } = choosenGroup;
     if (type === GroupType.CLASS) {
       setBasket(
@@ -99,48 +136,72 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, lecture: choosenGroup } : basket)),
       );
     }
+    changeHoveredGroup(choosenGroup);
+  };
+
+  const restoreGroupInBasket = (restoreGroup: Group, courseId: number) => {
+    const basketCourse = basket.filter((course) => course.id === courseId)[0];
+    const { type } = restoreGroup;
+    if (type === GroupType.CLASS) {
+      setBasket(
+        basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, classes: restoreGroup } : basket)),
+      );
+    } else if (type === GroupType.LECTURE) {
+      setBasket(
+        basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, lecture: restoreGroup } : basket)),
+      );
+    }
   };
 
   const getNewestTimetable = async () => {
-    const config = {
-      method: 'get' as const,
-      url: `${process.env.REACT_APP_API_URL}/api/v1/assignments/getCurrentAssignments`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
     try {
-      let { data: basket } = await axios.request(config);
-      if (basket === '') {
-        basket = [];
-      }
+      const { data } = await axiosInstance.get(
+        `${process.env.REACT_APP_API_URL}/api/v1/assignments/user`,
+      );
+      const basket = data === '' ? [] : data;
       setBasket(basket);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const fetchClasses = async () => {
+  const fetchCourses = async () => {
     try {
-      const { data: courses } = await axios.get<Array<Course>>(
-        `${process.env.REACT_APP_API_URL}/api/v1/courses/getCoursesWithGroups`,
+      const { data: courses } = await axiosInstance.get<Array<Course>>(
+        `${process.env.REACT_APP_API_URL}/api/v1/courses/all?groups=true`,
       );
-      courses.sort((a, b) => (a.name > b.name ? 1 : -1));
-      setCourses(courses);
+      const sortedCourses = courses.sort((a, b) => (a.name > b.name ? 1 : -1));
+      setCourses(sortedCourses);
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    fetchClasses();
-    if (token) {
+    setTimeout(() => {
+      fetchCourses();
       getNewestTimetable();
-    }
-  }, [token]);
+    }, 200);
+  }, []);
 
   return (
-    <coursesContext.Provider value={{ courses, basket, addToBasket, addGroup, deleteFromBasket, saveBasket }}>
+    <coursesContext.Provider
+      value={{
+        courses,
+        basket,
+        hoveredGroup,
+        addCourseToBasket,
+        changeHoveredGroup,
+        changeGroupInBasket,
+        deleteFromBasket,
+        restoreGroupInBasket,
+        saveBasket,
+        selectSchedulerEvents,
+        selectBasketNames,
+        selectBasketCourses,
+        selectBasketCourseGroups,
+      }}
+    >
       {children}
     </coursesContext.Provider>
   );

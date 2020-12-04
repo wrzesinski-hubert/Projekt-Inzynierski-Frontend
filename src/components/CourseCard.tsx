@@ -1,40 +1,40 @@
-import React, { useState, useContext, MouseEvent } from 'react';
+import React, { useState, useContext } from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import { ReactComponent as Expand } from '../assets/expand.svg';
-import { Course, Group } from '../types/index';
+import { Course, Group, GroupType } from '../types/index';
 import { coursesContext } from '../contexts/CoursesProvider';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
-import { ReactComponent as Bin } from '../assets/bin.svg';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { useMemo } from 'react';
 
 const CourseCardWrapper = styled.div`
   position: relative;
   display: flex;
   min-height: 40px;
-  background-color: rgb(100, 181, 246);
+  background-color: #b5d2e0;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   margin-top: 10px;
-  border-radius: 10px; 
+  border-radius: 10px;
   cursor: pointer;
   align-items: stretch;
   box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
 `;
 
-
 const TitleWrapper = styled.div`
+  font-size: 14px;
+  font-weight: 550;
   display: flex;
-  align-items: center; 
+  align-items: center;
   justify-content: space-between;
-  padding: 10px;
-`
+  padding: 10px 10px 10px 2px;
+`;
 
-const BinIcon = styled(Bin)`
-  width: 20px;
-  height: 20px;
-  max-width: 20px;
-  min-width: 20px;
+const BinIcon = styled(DeleteIcon)`
+  max-width: 30px;
+  min-width: 30px;
   cursor: pointer;
   &:hover {
     fill: white;
@@ -51,37 +51,63 @@ const CourseName = styled.div`
 const ClassGroupStyled = styled.div`
   position: relative;
   padding-top: 1px;
-  padding-bottom: 1px;
+  padding-bottom: 5px;
   :hover {
     cursor: pointer;
     background-color: #9ed3ff;
   }
+  :last-child {
+    border-radius: 0 0 10px 10px;
+  }
 `;
 
 interface ExpandIconProps {
-  isSelected: boolean;
+  selected: boolean;
 }
 
-const ExpandIcon = styled(Expand) <ExpandIconProps>`
+export const ExpandIcon = styled(Expand)<ExpandIconProps>`
   width: 20px;
   height: 20px;
   max-width: 20px;
   min-width: 20px;
   transition: 0.2s;
-  transform: ${({ isSelected }) => (isSelected ? 'scaleY(-1);' : 'scaleY(1);')};
+  transform: ${({ selected }) => (selected ? 'scaleY(-1);' : 'scaleY(1);')};
 `;
 
-const TypeClass = styled.div`
+type StyledGroupTypeProps = {
+  groupType: GroupType;
+};
+
+const StyledGroupType = styled.div<StyledGroupTypeProps>`
   font-size: 12px;
   position: absolute;
   border-radius: 15px;
-  background-color: #00506b;
-  border: 2px solid;
+  background-color: ${({ groupType }) => (groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff')};
+  border: 2px solid white;
   min-width: 45px;
   top: 5px;
   left: 5px;
-  color: white;
-  font-weight: bold;
+  color: black;
+`;
+
+const FlexboxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+type FlexItemProps = {
+  justifyContent?: string;
+};
+
+const FlexItem = styled.div<FlexItemProps>`
+  display: flex;
+  font-size: 14px;
+  font-weight: 600;
+  ${({ justifyContent }) =>
+    justifyContent &&
+    css`
+      justify-content: ${justifyContent};
+    `}
 `;
 
 const useStyles = makeStyles({
@@ -89,20 +115,18 @@ const useStyles = makeStyles({
     maxHeight: '244px',
     overflowY: 'auto',
     '&::-webkit-scrollbar': {
-      width: '0.4em',
+      width: '0.3em',
+      borderStyle: 'none',
     },
     '&::-webkit-scrollbar-track': {
-      '-webkit-box-shadow': 'inset 0 0 6px rgba(1,0,0,0.1)',
+      borderRadius: '10px',
     },
     '&::-webkit-scrollbar-thumb': {
       borderRadius: '10px',
-      backgroundColor: '#d4b851',
-      outline: '1px solid slategrey',
+      backgroundColor: '#4b4b4b',
     },
   },
 });
-
-
 
 interface CourseCardProps {
   course: Course;
@@ -110,30 +134,81 @@ interface CourseCardProps {
 
 export const CourseCard = ({ course }: CourseCardProps) => {
   const classes = useStyles();
-  const { addGroup, deleteFromBasket } = useContext(coursesContext)!;
+  const {
+    hoveredGroup,
+    changeGroupInBasket,
+    deleteFromBasket,
+    selectBasketCourseGroups,
+    changeHoveredGroup,
+  } = useContext(coursesContext)!;
   const [isSelected, setSelected] = useState(false);
-  const groups = course.lectures === undefined ? course.classes : [...course.lectures, ...course.classes];
-
-  const onGroupClick = (group: Group, id: number) => addGroup(group, id);
+  const groups = [...course.lectures!, ...course.classes!];
+  const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.id), []);
+  const [previous, setPrevious] = useState(basketCourseGroups);
+  // console.log('lecture is: ', courseLecture);
+  // console.log('class is: ', courseClasses);
+  const onGroupClick = (group: Group, courseId: number) => {
+    setPrevious((prev) => (group.type === GroupType.CLASS ? { ...prev, classes: group } : { ...prev, lecture: group }));
+    changeGroupInBasket(group, courseId);
+  };
 
   return (
     <CourseCardWrapper>
-      <TitleWrapper>
-        <BinIcon onClick={() => deleteFromBasket(course.id)}></BinIcon>
+      <TitleWrapper onClick={() => setSelected(!isSelected)}>
+        <BinIcon
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteFromBasket(course.id);
+            setSelected(false);
+          }}
+        ></BinIcon>
         <CourseName onClick={() => setSelected(!isSelected)}>{course.name}</CourseName>
-        <ExpandIcon onClick={() => setSelected(!isSelected)} isSelected={isSelected} />
+        <ExpandIcon onClick={() => setSelected(!isSelected)} selected={isSelected} />
       </TitleWrapper>
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
-        {groups
-          .sort((a, b) => b.type.localeCompare(a.type))
-          .map((group, index) => (
-            <ClassGroupStyled key={index} onClick={() => onGroupClick(group, course.id)}>
-              <TypeClass>{group.type === 'CLASS' ? 'Ćw.' : 'Wyk.'}</TypeClass>
-              <p>
-                {group.time} {group.room} <br></br> {group.lecturer}
-              </p>
-            </ClassGroupStyled>
-          ))}
+        {groups.map((group: Group, index) => (
+          <ClassGroupStyled
+            key={index}
+            onClick={() => onGroupClick(group, course.id)}
+            onMouseEnter={() => {
+              if (group.type === GroupType.CLASS) {
+                changeGroupInBasket(group, course.id);
+                // setTimeout(()=> { changeHoveredGroup(courseClasses)},[500])
+              }
+              if (group.type === GroupType.LECTURE) {
+                changeGroupInBasket(group, course.id);
+                // setTimeout(()=> { changeHoveredGroup(courseLecture)},[500])
+              }
+            }}
+            onMouseLeave={() => {
+              if (hoveredGroup) {
+                if (hoveredGroup.type === GroupType.CLASS && previous.classes !== undefined) {
+                  changeGroupInBasket(previous.classes, course.id);
+                }
+                if (hoveredGroup.type === GroupType.LECTURE && previous.lecture !== undefined) {
+                  changeGroupInBasket(previous.lecture, course.id);
+                }
+                changeHoveredGroup(null);
+              }
+            }}
+          >
+            <StyledGroupType groupType={group.type}>{group.type === 'CLASS' ? 'ĆW' : 'WYK'}</StyledGroupType>
+            <FlexboxWrapper>
+              {group.lecturer.replace('UAM', '').length >= 32 ? (
+                <FlexItem style={{ justifyContent: 'center', marginLeft: '40px' }}>
+                  {group.lecturer.replace('UAM', '')}
+                </FlexItem>
+              ) : (
+                <FlexItem style={{ justifyContent: 'center', marginLeft: '10px' }}>
+                  {group.lecturer.replace('UAM', '')}
+                </FlexItem>
+              )}
+              <FlexItem style={{ justifyContent: 'center', margin: '0 50px' }}>
+                <span>{/*group.time*/}</span> <span> Sala: {group.room}</span>
+              </FlexItem>
+            </FlexboxWrapper>
+          </ClassGroupStyled>
+        ))}
       </Collapse>
     </CourseCardWrapper>
   );

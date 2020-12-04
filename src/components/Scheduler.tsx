@@ -1,4 +1,4 @@
-import React, { useEffect, MouseEvent, useRef, useCallback, useLayoutEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { SchedulerEvents } from './SchedulerEvents';
 import { days, hours } from '../constants/index';
@@ -11,6 +11,7 @@ const SchedulerWrapper = styled.div`
   padding: 10px 40px 25px 10px;
   border-radius: 5px;
   margin-right: 20px;
+  margin-left: 20px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -42,9 +43,9 @@ interface TableCellProps {
 }
 
 const TableCell = styled.div<TableCellProps>`
-  border-width: ${({ isHourColumn }) => !isHourColumn && '2px'};
+  border-width: ${({ isHourColumn }) => !isHourColumn && '1px'};
   border-style: ${({ isHourColumn }) => !isHourColumn && 'none solid dotted none'};
-  border-color: rgb(242, 243, 245);
+  border-color: rgb(235, 235, 235);
   display: flex;
   align-items: center;
   justify-content: ${({ isHourColumn }) => (isHourColumn ? 'flex-end' : 'center')};
@@ -55,7 +56,7 @@ const TableCell = styled.div<TableCellProps>`
   user-select: none;
   border-collapse: collapse;
   :nth-child(2) {
-    border-left: 2px solid rgb(242, 243, 245);
+    border-left: 1px solid rgb(235, 235, 235);
   }
   font-weight: bold;
 `;
@@ -63,18 +64,13 @@ const TableCell = styled.div<TableCellProps>`
 export const Scheduler = () => {
   const cellRef = useRef<HTMLDivElement>(null);
   const [cellWidth, setCellWidth] = useState(0);
-  const [cellTop, setCellTop] = useState(0);
   const [cellHeight, setCellHeight] = useState(0);
-
-  console.log('cell height: ', cellHeight);
 
   useEffect(() => {
     const handleResize = () => {
       if (cellRef.current) {
         setCellWidth(cellRef.current.getBoundingClientRect().width);
-        setCellTop(cellRef.current.getBoundingClientRect().top);
         setCellHeight(cellRef.current.getBoundingClientRect().height);
-        cellRef.current.style.backgroundColor = 'blue';
       }
     };
     handleResize();
@@ -83,52 +79,52 @@ export const Scheduler = () => {
   }, []);
 
   return (
-    <>
-      <SchedulerWrapper>
-        <TableHead>
-          {days.map((day, indexCell) =>
-            indexCell === 0 ? (
-              <TableCell isHourColumn={true} key={indexCell}>
-                {day}
-              </TableCell>
-            ) : (
-              <TableCell style={{ borderStyle: 'none none solid none' }} key={indexCell}>
-                {day}
-              </TableCell>
-            ),
-          )}
-        </TableHead>
-        <TableBody>
-          {hours.map((hour, indexRow) => (
-            <TableRow key={indexRow}>
-              {[hour, '', '', '', '', ''].map((value, indexCell) =>
-                indexCell === 0 ? (
-                  <TableCell isHourColumn={true} cellHeight={cellHeight} key={`${indexRow}${indexCell}`}>
-                    {value}
-                  </TableCell>
-                ) : indexRow === 0 && indexCell === 1 ? (
-                  <TableCell ref={cellRef} key={`${indexRow}${indexCell}`}>
-                    {value}
-                  </TableCell>
-                ) : indexRow === 23 ? (
-                  <TableCell style={{ borderBottom: '2px solid rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
-                    {value}
-                  </TableCell>
-                ) : indexCell === 5 ? (
-                  <TableCell key={`${indexRow}${indexCell}`}>{value}</TableCell>
-                ) : indexRow % 2 !== 0 ? (
-                  <TableCell style={{ borderBottom: '2px solid rgb(242, 243, 245)' }} key={`${indexRow}${indexCell}`}>
-                    {value}
-                  </TableCell>
-                ) : (
-                  <TableCell key={`${indexRow}${indexCell}`}>{value}</TableCell>
-                ),
-              )}
-            </TableRow>
-          ))}
-          <SchedulerEvents cellTop={cellTop} cellWidth={cellWidth} cellHeight={cellHeight} />
-        </TableBody>
-      </SchedulerWrapper>
-    </>
+    <SchedulerWrapper>
+      <TableHead>
+        {days.map((day, indexCell) =>
+          indexCell === 0 ? (
+            <TableCell isHourColumn={true} key={indexCell}>
+              {day}
+            </TableCell>
+          ) : (
+            <TableCell style={{ borderStyle: 'none none solid none' }} key={indexCell}>
+              {day}
+            </TableCell>
+          ),
+        )}
+      </TableHead>
+      <TableBody>
+        {hours.map((hour, indexRow) => (
+          <TableRow key={indexRow}>
+            {[hour, '', '', '', '', ''].map((value, indexCell) =>
+              indexCell === 0 ? (
+                <TableCell isHourColumn={true} cellHeight={cellHeight} key={`${indexRow}${indexCell}`}>
+                  {value}
+                </TableCell>
+              ) : indexRow === 0 && indexCell === 1 ? (
+                <TableCell ref={cellRef} key={`${indexRow}${indexCell}`}>
+                  {value}
+                </TableCell>
+              ) : indexRow === 23 ? (
+                <TableCell style={{ borderBottom: '1px solid   rgb(235, 235, 235)' }} key={`${indexRow}${indexCell}`}>
+                  {value}
+                </TableCell>
+              ) : indexRow === 5 ? (
+                <TableCell style={{ borderBottom: '1px solid  rgb(235, 235, 235)' }} key={`${indexRow}${indexCell}`}>
+                  {value}
+                </TableCell>
+              ) : indexRow % 2 !== 0 ? (
+                <TableCell style={{ borderBottom: '1px solid  rgb(235, 235, 235)' }} key={`${indexRow}${indexCell}`}>
+                  {value}
+                </TableCell>
+              ) : (
+                <TableCell key={`${indexRow}${indexCell}`}>{value}</TableCell>
+              ),
+            )}
+          </TableRow>
+        ))}
+        <SchedulerEvents cellWidth={cellWidth} cellHeight={cellHeight} />
+      </TableBody>
+    </SchedulerWrapper>
   );
 };

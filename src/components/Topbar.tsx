@@ -1,6 +1,4 @@
-import React, { useState, MouseEvent, ChangeEvent, useEffect } from 'react';
-import Transfer from '../assets/transfer.png';
-import Search from '../assets/search.svg';
+import React, { useState, MouseEvent, ChangeEvent, useEffect, useCallback } from 'react';
 import { ReactComponent as Close } from '../assets/close.svg';
 import ProfileIcon from '../assets/account.svg';
 import { Profile } from './Profile';
@@ -9,9 +7,10 @@ import PolishIcon from '../assets/poland.svg';
 import EnglishIcon from '../assets/united-kingdom.svg';
 import styled from 'styled-components/macro';
 import ClickAwayListener from 'react-click-away-listener';
+import { SelectMenu } from './SelectMenu';
 
 const Topbar = styled.div`
-  background-color: #E3E5ED;
+  background-color: #e3e5ed;
   height: 80px;
   padding: 5px;
   font-size: 24px;
@@ -31,18 +30,21 @@ const LogoWrapper = styled.div`
 const Logo = styled.img`
   width: 70px;
   height: 70px;
-  @media only screen and (max-width: 670px) {
-    width: 60px;
-    height: 60px;
+  @media only screen and (max-width: 1533px) {
+    flex: auto;
   }
 `;
 
 const Text = styled.div`
- margin-left: 10px;
- font-size: 1.4rem;
- user-select: none;
-  @media only screen and (max-width: 670px) {
+  margin-left: 10px;
+  font-size: 1.4rem;
+  user-select: none;
+  @media only screen and (max-width: 1533px) {
     display: none;
+  }
+  @media only screen and (max-width: 1828px) {
+    margin-right: 10px;
+    text-align: center;
   }
 `;
 
@@ -53,28 +55,37 @@ const FlexboxColumn = styled.div`
 `;
 
 const InputWrapper = styled.div`
+  width: 100%;
   display: flex;
   margin-top: 15px;
+  max-height: 40px;
   background-color: #f2f4f7;
-  border-radius: 6px;
-  align-items: center;
+  border-radius: 6px 6px 6px 6px;
+  padding-left: 6px;
+  &:hover {
+    background-color: #ffffff;
+  }
+  &:hover > input {
+    background-color: #ffffff;
+  }
 `;
 
 const Input = styled.input`
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
   background-color: #f1f2f5;
-  font-size: 20px;
   height: 40px;
+  max-height: 40px;
   width: 100%;
   border: none;
   margin-left: 5px;
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
   &:focus {
     outline: none;
   }
 `;
 
 const CloseIcon = styled(Close)`
+  align-self: center;
   width: 30px;
   height: 30px;
   margin-right: 5px;
@@ -103,9 +114,9 @@ const Icon = styled.img`
   }
 `;
 
-
-
-
+export const Flexbox = styled.div`
+  display: flex;
+`;
 
 interface TopbarProps {
   handleTransfer: (e: MouseEvent) => void;
@@ -122,21 +133,22 @@ export default function ({ handleTransfer }: TopbarProps) {
 
   const handleProfile = (event: MouseEvent<HTMLImageElement>) => setAnchorEl(event.currentTarget);
 
-  const handleClose = () => setAnchorEl(null);
+  const handleCloseProfile = () => setAnchorEl(null);
 
-  const handleClearInput = () => setClearInput(!clearInput);
+  const handleClearInput = useCallback(() => setClearInput((clearInput) => !clearInput), []);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
 
-  const handleClick = () => setOpen(true);
+  const handleShowDropdown = () => setOpen(true);
 
   const handleCloseDropdown = () => setOpen(false);
 
-  const handleClickAway = () => setOpen(false);
-
   useEffect(() => {
-    clearInput && (setInput(''), handleClearInput());
-  }, [clearInput]);
+    if (clearInput) {
+      setInput('');
+      handleClearInput();
+    }
+  }, [clearInput, handleClearInput]);
 
   return (
     <Topbar>
@@ -145,11 +157,26 @@ export default function ({ handleTransfer }: TopbarProps) {
         <Text> plan na plan </Text>
       </LogoWrapper>
       <FlexboxColumn>
-        <ClickAwayListener onClickAway={handleClickAway}>
-          <InputWrapper>
-            <Input placeholder="Wyszukaj przedmiot..." onChange={handleChange} onClick={handleClick} value={input} />
-            <CloseIcon onClick={handleClearInput} />
-          </InputWrapper>
+        <ClickAwayListener onClickAway={handleCloseDropdown}>
+          <Flexbox>
+            {/* <SelectMenu /> */}
+
+            <InputWrapper>
+              {/* <SelectSearch value={value} onChange={Change}>
+    <SelectOption value="przedmiot">Przedmiot</SelectOption>
+    <SelectOption value="student">Student</SelectOption>
+  </SelectSearch> */}
+              <Input
+                placeholder={`Wyszukaj...`}
+                onChange={handleChange}
+                value={input}
+                onFocus={() => {
+                  handleShowDropdown();
+                }}
+              />
+              <CloseIcon onClick={handleClearInput} />
+            </InputWrapper>
+          </Flexbox>
           <Dropdown open={open} input={input} handleCloseDropdown={handleCloseDropdown} />
         </ClickAwayListener>
       </FlexboxColumn>
@@ -159,7 +186,7 @@ export default function ({ handleTransfer }: TopbarProps) {
         {/* <Icon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
         <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} />
         <Icon alt="profile" src={ProfileIcon} onClick={handleProfile} />
-        <Profile anchorEl={anchorEl} handleClose={handleClose} />
+        <Profile anchorEl={anchorEl} handleClose={handleCloseProfile} />
       </IconWrapper>
     </Topbar>
   );
