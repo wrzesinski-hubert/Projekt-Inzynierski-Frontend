@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, MouseEvent, useMemo } from 'react';
 import { coursesContext } from '../contexts/CoursesProvider';
+import { usersContext } from '../contexts/UsersProvider';
 import { Course, User } from '../types';
 import styled from 'styled-components';
 
@@ -45,10 +46,12 @@ interface DropdownProps {
   open: boolean;
   input: string;
   handleCloseDropdown: () => void;
+  selectedOption: string;
 }
 
-export const Dropdown = ({ open, input, handleCloseDropdown }: DropdownProps) => {
-  const { courses, users, selectBasketNames, addCourseToBasket } = useContext(coursesContext)!;
+export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: DropdownProps) => {
+  const { courses, selectBasketNames, addCourseToBasket } = useContext(coursesContext)!;
+  const { users } = useContext(usersContext)!;
   const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
   const [filteredUsers, setFilteredUsers] = useState<Array<User>>([]);
@@ -84,18 +87,17 @@ export const Dropdown = ({ open, input, handleCloseDropdown }: DropdownProps) =>
 
   useEffect(() => {
     const filterUsers = (input: string) => {
-      const filteredUsers = users.filter(
-        ({ name,surname }) =>
-          (name+surname)
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .includes(
-              input
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, ''),
-            ),
+      const filteredUsers = users.filter(({ name, surname }) =>
+        (name + surname)
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .includes(
+            input
+              .toLowerCase()
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, ''),
+          ),
       );
       setFilteredUsers(filteredUsers);
     };
@@ -106,17 +108,25 @@ export const Dropdown = ({ open, input, handleCloseDropdown }: DropdownProps) =>
     <DropdownContainer>
       {open && (
         <>
-          {filteredUsers.map(({ name,surname, id }, index) => (
-            <CourseContainer key={index} id={id.toString()}>
-              <p>{name} {surname} </p>
-            </CourseContainer>
-          ))}
-{/* 
-          {filteredCourses.map(({ name, id }, index) => (
-            <CourseContainer key={index} id={id.toString()} onClick={onCourseClick}>
-              <p>{name} </p>
-            </CourseContainer>
-          ))} */}
+          {selectedOption === 'studenci' ? (
+            <div>
+              {filteredUsers.map(({ name, surname, id }, index) => (
+                <CourseContainer key={index} id={id.toString()}>
+                  <p>
+                    {name} {surname}{' '}
+                  </p>
+                </CourseContainer>
+              ))}
+            </div>
+          ) : (
+            <div>
+              {filteredCourses.map(({ name, id }, index) => (
+                <CourseContainer key={index} id={id.toString()} onClick={onCourseClick}>
+                  <p>{name} </p>
+                </CourseContainer>
+              ))}
+            </div>
+          )}
         </>
       )}
     </DropdownContainer>

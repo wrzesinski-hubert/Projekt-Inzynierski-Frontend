@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect, ReactNode } from 'react';
-import { Course, Group, Basket, GroupType, SchedulerEvent,User } from '../types';
+import { Course, Group, Basket, GroupType, SchedulerEvent } from '../types';
 import { useSnackbar } from 'notistack';
 import { createClassTime } from '../utils';
 import { axiosInstance } from '../utils/axiosInstance';
@@ -15,7 +15,6 @@ const StyledCloseIcon = styled(CloseIcon)`
 `;
 
 interface CourseContext {
-  users: Array<User>;
   courses: Array<Course>;
   basket: Array<Basket>;
   hoveredGroup: Group | undefined | null;
@@ -42,7 +41,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   //fetch courses with groups
   const [courses, setCourses] = useState<Array<Course>>([]);
-  const [users, setUsers] = useState<Array<User>>([]);
   const [basket, setBasket] = useState<Array<Basket>>([]);
   const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
   const selectBasketIds = () => {
@@ -179,28 +177,16 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }
   };
 
-  const getUsers = async () => {
-    try {
-      const {data}= await axiosInstance.get<Array<User>>(`${process.env.REACT_APP_API_URL}/api/v1/users/student/search?query=a`);
-      console.log(data);
-      setUsers(data);
-    } catch(e){
-      console.log(e);
-    }
-  };
-
   useEffect(() => {
     setTimeout(() => {
       fetchCourses();
       getNewestTimetable();
-      getUsers();
     }, 200);
   }, []);
 
   return (
     <coursesContext.Provider
       value={{
-        users,
         courses,
         basket,
         hoveredGroup,

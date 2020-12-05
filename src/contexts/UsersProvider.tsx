@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect, ReactNode } from 'react';
+import React, { useState, createContext, useEffect, ReactNode, useRef } from 'react';
 import { User } from '../types';
 import { axiosInstance } from '../utils/axiosInstance';
 
@@ -14,23 +14,19 @@ interface UsersProviderProps {
 
 export const UsersProvider = ({ children }: UsersProviderProps) => {
   const [users, setUsers] = useState<Array<User>>([]);
-
+  
   const getUsers = async () => {
     try {
-      const { data } = await axiosInstance.get<Array<User>>(
-        `${process.env.REACT_APP_API_URL}/api/v1/Users/student/search?query=`,
-      );
-      console.log(data);
+      const {data}= await axiosInstance.get<Array<User>>(`${process.env.REACT_APP_API_URL}/api/v1/users/student/search?query=`);
       setUsers(data);
-    } catch (e) {
+      console.log(data);
+    } catch(e){
       console.log(e);
     }
   };
 
   useEffect(() => {
-    setTimeout(() => {
       getUsers();
-    }, 200);
   }, []);
 
   return (

@@ -60,7 +60,7 @@ const InputWrapper = styled.div`
   margin-top: 15px;
   max-height: 40px;
   background-color: #f2f4f7;
-  border-radius: 6px 6px 6px 6px;
+  border-radius: 0px 6px 6px 0px;
   padding-left: 6px;
   &:hover {
     background-color: #ffffff;
@@ -128,6 +128,9 @@ export default function ({ handleTransfer }: TopbarProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
+  const [selectedOption, setSelectedOption] = useState('przedmioty');
+
+  const changeSelectedOption = (option:string) => setSelectedOption(option);
 
   const onLangChange = () => setIsPolish(!isPolish);
 
@@ -159,15 +162,10 @@ export default function ({ handleTransfer }: TopbarProps) {
       <FlexboxColumn>
         <ClickAwayListener onClickAway={handleCloseDropdown}>
           <Flexbox>
-            <SelectMenu />
-
+          <SelectMenu changeSelectedOption={changeSelectedOption} selectedOption={selectedOption} changeDropdownOpen={setOpen}/>
             <InputWrapper>
-              {/* <SelectSearch value={value} onChange={Change}>
-    <SelectOption value="przedmiot">Przedmiot</SelectOption>
-    <SelectOption value="student">Student</SelectOption>
-  </SelectSearch> */}
               <Input
-                placeholder={`Wyszukaj...`}
+                placeholder={`Wyszukaj ${selectedOption === "studenci" ? "studentów..." : "przedmioty..."}`}
                 onChange={handleChange}
                 value={input}
                 onFocus={() => {
@@ -177,7 +175,7 @@ export default function ({ handleTransfer }: TopbarProps) {
               <CloseIcon onClick={handleClearInput} />
             </InputWrapper>
           </Flexbox>
-          <Dropdown open={open} input={input} handleCloseDropdown={handleCloseDropdown} />
+          <Dropdown open={open} input={input} handleCloseDropdown={handleCloseDropdown} selectedOption={selectedOption}/>
         </ClickAwayListener>
       </FlexboxColumn>
 
