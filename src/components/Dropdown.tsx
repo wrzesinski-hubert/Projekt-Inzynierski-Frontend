@@ -50,7 +50,7 @@ interface DropdownProps {
 }
 
 export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: DropdownProps) => {
-  const { courses, selectBasketNames, addCourseToBasket } = useContext(coursesContext)!;
+  const { courses, selectBasketNames, addCourseToBasket,getUserTimetable } = useContext(coursesContext)!;
   const { users } = useContext(usersContext)!;
   const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
@@ -61,6 +61,15 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
     if (target.id && target.textContent) {
       const course = filteredCourses.find(({ id }) => id.toString() === target.id)!;
       addCourseToBasket(course);
+      handleCloseDropdown();
+    }
+  };
+
+  const onUserClick = (event: MouseEvent) => {
+    const target = event.currentTarget;
+    if (target.id && target.textContent) {
+      console.log(target.id,target.textContent);
+      getUserTimetable(target.id);
       handleCloseDropdown();
     }
   };
@@ -111,7 +120,7 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
           {selectedOption === 'studenci' ? (
             <div>
               {filteredUsers.map(({ name, surname, id }, index) => (
-                <CourseContainer key={index} id={id.toString()}>
+                <CourseContainer key={index} id={id.toString()} onClick={onUserClick}>
                   <p>
                     {name} {surname}{' '}
                   </p>

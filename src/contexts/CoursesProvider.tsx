@@ -28,6 +28,7 @@ interface CourseContext {
   selectBasketNames: () => Array<string>;
   selectBasketCourses: () => Array<Course>;
   selectBasketCourseGroups: (courseId: number) => { lecture: Group | undefined; classes: Group | undefined };
+  getUserTimetable: (userID: string) => Promise<void>;
 }
 export const coursesContext = createContext<CourseContext | undefined>(undefined);
 
@@ -165,6 +166,17 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }
   };
 
+  const getUserTimetable = async (userID:string) => {
+    try {
+      const {data} = await axiosInstance.get(
+        `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`,
+      );
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   const fetchCourses = async () => {
     try {
       const { data: courses } = await axiosInstance.get<Array<Course>>(
@@ -200,6 +212,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         selectBasketNames,
         selectBasketCourses,
         selectBasketCourseGroups,
+        getUserTimetable,
       }}
     >
       {children}
