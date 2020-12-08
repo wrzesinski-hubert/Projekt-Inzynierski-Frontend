@@ -27,6 +27,13 @@ export interface Course {
   classes?: Array<Group>;
 }
 
+export interface Token {
+  authorityRole: string,
+  email: string,
+  id: number,
+  token: string,
+}
+
 export interface User {
   email: string;
   id: number;

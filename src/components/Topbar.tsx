@@ -162,7 +162,7 @@ export default function ({ handleTransfer }: TopbarProps) {
       <FlexboxColumn>
         <ClickAwayListener onClickAway={handleCloseDropdown}>
           <Flexbox>
-          <SelectMenu changeSelectedOption={changeSelectedOption} selectedOption={selectedOption} changeDropdownOpen={setOpen}/>
+          {/* <SelectMenu changeSelectedOption={changeSelectedOption} selectedOption={selectedOption} changeDropdownOpen={setOpen}/> */}
             <InputWrapper>
               <Input
                 placeholder={`Wyszukaj ${selectedOption === "studenci" ? "studentów..." : "przedmioty..."}`}

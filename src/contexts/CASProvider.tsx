@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, ReactNode } from 'react';
-import { User } from '../types';
+import { User, Token } from '../types';
 import { axiosInstance } from '../utils/axiosInstance';
 
 export interface CASContext {
@@ -27,10 +27,16 @@ export const CASProvider = ({ children }: CASProviderProps) => {
       try {
         if (!sessionStorage.getItem('userToken')) {
           const { data: token } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
-          sessionStorage.setItem('userToken', token);
+          sessionStorage.setItem('userToken', token.token);
         }
-        const token = sessionStorage.getItem('userToken');
-        setToken(token);
+        const tokenik:any = JSON.parse(sessionStorage.getItem('userToken')as string);
+        const token: Token = {
+          authorityRole: tokenik.authorityRole,
+          email: tokenik.email,
+          id: tokenik.id,
+          token: tokenik.token,
+        };
+        setToken(token.token);
       } catch (e) {
         console.log(e);
       }

@@ -17,7 +17,7 @@ export const UsersProvider = ({ children }: UsersProviderProps) => {
   
   const getUsers = async () => {
     try {
-      const {data}= await axiosInstance.get<Array<User>>(`${process.env.REACT_APP_API_URL}/api/v1/users/student/search?query=`);
+      const {data}= await axiosInstance.get<Array<User>>(`${process.env.REACT_APP_API_URL}/api/v1/users/students`);
       setUsers(data);
       console.log(data);
     } catch(e){
