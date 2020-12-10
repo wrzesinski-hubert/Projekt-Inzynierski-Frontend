@@ -18,12 +18,14 @@ interface CourseContext {
   courses: Array<Course>;
   basket: Array<Basket>;
   hoveredGroup: Group | undefined | null;
+  userekID:string;
   addCourseToBasket: (courses: Course) => void;
   changeHoveredGroup: (group: Group | null) => void;
   changeGroupInBasket: (group: Group, courseId: number) => void;
   restoreGroupInBasket: (restoreGroup: Group, courseId: number) => void;
   deleteFromBasket: (id: number) => void;
-  saveBasket: () => void;
+  saveBasket: (userID: string) => Promise<void>
+  getUserID: (userID: string) => Promise<void>
   selectSchedulerEvents: () => Array<SchedulerEvent>;
   selectBasketNames: () => Array<string>;
   selectBasketCourses: () => Array<Course>;
@@ -43,6 +45,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   //fetch courses with groups
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [basket, setBasket] = useState<Array<Basket>>([]);
+  const [userekID, setUserID] = useState("");
   const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
   const selectBasketIds = () => {
     const classesIds = basket.map((course) => course?.classes?.id).filter((course) => course !== undefined);
@@ -98,7 +101,12 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const deleteFromBasket = (id: number) => setBasket(basket.filter((course) => course.id !== id));
 
-  const saveBasket = async () => {
+  const getUserID = async (userID:string) => {
+    setUserID(userID);
+    console.log("bjhkfbkjakbhjlfasbjkhlfabjklasfbjkbjkasfbjkasfl",userekID)
+  }
+
+  const saveBasket = async (userID:string) => {
     const basketIds = selectBasketIds();
     const action = (key: any) => (
       <>
@@ -111,7 +119,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     );
 
     try {
-      await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user`, JSON.stringify(basketIds));
+      await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`, JSON.stringify(basketIds));
       enqueueSnackbar('Plan został zapisany', {
         variant: 'success',
         action,
@@ -193,12 +201,13 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     setTimeout(() => {
       fetchCourses();
       getNewestTimetable();
-    }, 200);
+    }, 10);
   }, []);
 
   return (
     <coursesContext.Provider
       value={{
+        userekID,
         courses,
         basket,
         hoveredGroup,
@@ -213,6 +222,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         selectBasketCourses,
         selectBasketCourseGroups,
         getUserTimetable,
+        getUserID,
       }}
     >
       {children}

@@ -28,6 +28,7 @@ export const CASProvider = ({ children }: CASProviderProps) => {
         if (!sessionStorage.getItem('userToken')) {
           const { data: token } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
           sessionStorage.setItem('userToken', token.token);
+          sessionStorage.setItem('userPrivilage', token.authorityRole)
         }
         const tokenik:any = JSON.parse(sessionStorage.getItem('userToken')as string);
         const token: Token = {

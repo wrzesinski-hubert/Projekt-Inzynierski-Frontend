@@ -12,6 +12,7 @@ const LeftSide = styled.div`
   flex: 1;
   flex-direction: column;
   background-color: white;
+  text-align:center;
 `;
 
 const Wrap = styled.div`

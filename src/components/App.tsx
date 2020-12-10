@@ -27,9 +27,9 @@ export const App = () => {
       <Topbar handleTransfer={handleTransfer} />
       <Transfer isOpen={isOpenTransfer} handleClose={handleTransfer} />
       <Wrapper>
-        {/* <Admin/> */}
-        <Scheduler />
-        <Rightbar />
+        
+        {sessionStorage.getItem('userPrivilage')=== "STUDENT" ? <><Scheduler />
+        <Rightbar /></>: <Admin/>}
       </Wrapper>
     </>
   );

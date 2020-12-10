@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useMemo } from 'react';
+import { createClassTime } from '../utils';
 
 const CourseCardWrapper = styled.div`
   position: relative;
@@ -20,7 +21,7 @@ const CourseCardWrapper = styled.div`
   border-radius: 10px;
   cursor: pointer;
   align-items: stretch;
-  box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
+  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
 `;
 
 const TitleWrapper = styled.div`
@@ -52,6 +53,7 @@ const ClassGroupStyled = styled.div`
   position: relative;
   padding-top: 1px;
   padding-bottom: 5px;
+  transition: background-color 0.4s ease;
   :hover {
     cursor: pointer;
     background-color: #9ed3ff;
@@ -102,7 +104,7 @@ type FlexItemProps = {
 const FlexItem = styled.div<FlexItemProps>`
   display: flex;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   ${({ justifyContent }) =>
     justifyContent &&
     css`
@@ -141,7 +143,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
     selectBasketCourseGroups,
     changeHoveredGroup,
   } = useContext(coursesContext)!;
-  const [isSelected, setSelected] = useState(false);
+  const [isSelected, setSelected] = useState(true);
   const groups = [...course.lectures!, ...course.classes!];
   const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.id), []);
   const [previous, setPrevious] = useState(basketCourseGroups);
@@ -203,8 +205,9 @@ export const CourseCard = ({ course }: CourseCardProps) => {
                   {group.lecturer.replace('UAM', '')}
                 </FlexItem>
               )}
+              {console.log("abisfdibuafsbuiafsbuifasbuibuiafsbuifasbuifsabuiasf",group)}
               <FlexItem style={{ justifyContent: 'center', margin: '0 50px' }}>
-                <span>{/*group.time*/}</span> <span> Sala: {group.room}</span>
+                <span> {createClassTime(group.time)[0] + " - " + createClassTime(group.time)[1]} {/* Sala: {group.room} */}</span>
               </FlexItem>
             </FlexboxWrapper>
           </ClassGroupStyled>
