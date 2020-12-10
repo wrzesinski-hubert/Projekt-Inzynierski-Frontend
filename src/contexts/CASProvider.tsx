@@ -30,12 +30,12 @@ export const CASProvider = ({ children }: CASProviderProps) => {
           sessionStorage.setItem('userToken', token.token);
           sessionStorage.setItem('userPrivilage', token.authorityRole)
         }
-        const tokenik:any = JSON.parse(sessionStorage.getItem('userToken')as string);
+        const tokenTMP:any = JSON.parse(sessionStorage.getItem('userToken')as string);
         const token: Token = {
-          authorityRole: tokenik.authorityRole,
-          email: tokenik.email,
-          id: tokenik.id,
-          token: tokenik.token,
+          authorityRole: tokenTMP.authorityRole,
+          email: tokenTMP.email,
+          id: tokenTMP.id,
+          token: tokenTMP.token,
         };
         setToken(token.token);
       } catch (e) {

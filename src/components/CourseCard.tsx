@@ -205,7 +205,6 @@ export const CourseCard = ({ course }: CourseCardProps) => {
                   {group.lecturer.replace('UAM', '')}
                 </FlexItem>
               )}
-              {console.log("abisfdibuafsbuiafsbuifasbuibuiafsbuifasbuifsabuiasf",group)}
               <FlexItem style={{ justifyContent: 'center', margin: '0 50px' }}>
                 <span> {createClassTime(group.time)[0] + " - " + createClassTime(group.time)[1]} {/* Sala: {group.room} */}</span>
               </FlexItem>

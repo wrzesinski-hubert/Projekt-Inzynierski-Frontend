@@ -18,7 +18,7 @@ interface CourseContext {
   courses: Array<Course>;
   basket: Array<Basket>;
   hoveredGroup: Group | undefined | null;
-  userekID:string;
+  userID:string;
   addCourseToBasket: (courses: Course) => void;
   changeHoveredGroup: (group: Group | null) => void;
   changeGroupInBasket: (group: Group, courseId: number) => void;
@@ -45,7 +45,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   //fetch courses with groups
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [basket, setBasket] = useState<Array<Basket>>([]);
-  const [userekID, setUserID] = useState("");
+  const [userID, setUserID] = useState("");
   const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
   const selectBasketIds = () => {
     const classesIds = basket.map((course) => course?.classes?.id).filter((course) => course !== undefined);
@@ -103,7 +103,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const getUserID = async (userID:string) => {
     setUserID(userID);
-    console.log("bjhkfbkjakbhjlfasbjkhlfabjklasfbjkbjkasfbjkasfl",userekID)
   }
 
   const saveBasket = async (userID:string) => {
@@ -207,7 +206,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   return (
     <coursesContext.Provider
       value={{
-        userekID,
+        userID,
         courses,
         basket,
         hoveredGroup,
