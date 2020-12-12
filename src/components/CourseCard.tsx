@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useMemo } from 'react';
 import { createClassTime } from '../utils';
+import { dayMapping } from '../constants';
 
 const CourseCardWrapper = styled.div`
   position: relative;
@@ -51,9 +52,9 @@ const CourseName = styled.div`
 
 const ClassGroupStyled = styled.div`
   position: relative;
-  padding-top: 1px;
-  padding-bottom: 5px;
-  transition: background-color 0.4s ease;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  transition: color 0.3s, background-color 0.3s;
   :hover {
     cursor: pointer;
     background-color: #9ed3ff;
@@ -147,8 +148,8 @@ export const CourseCard = ({ course }: CourseCardProps) => {
   const groups = [...course.lectures!, ...course.classes!];
   const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.id), []);
   const [previous, setPrevious] = useState(basketCourseGroups);
-  // console.log('lecture is: ', courseLecture);
-  // console.log('class is: ', courseClasses);
+
+  console.log('course is: ', course);
   const onGroupClick = (group: Group, courseId: number) => {
     setPrevious((prev) => (group.type === GroupType.CLASS ? { ...prev, classes: group } : { ...prev, lecture: group }));
     changeGroupInBasket(group, courseId);
@@ -175,11 +176,9 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             onMouseEnter={() => {
               if (group.type === GroupType.CLASS) {
                 changeGroupInBasket(group, course.id);
-                // setTimeout(()=> { changeHoveredGroup(courseClasses)},[500])
               }
               if (group.type === GroupType.LECTURE) {
                 changeGroupInBasket(group, course.id);
-                // setTimeout(()=> { changeHoveredGroup(courseLecture)},[500])
               }
             }}
             onMouseLeave={() => {
@@ -205,8 +204,14 @@ export const CourseCard = ({ course }: CourseCardProps) => {
                   {group.lecturer.replace('UAM', '')}
                 </FlexItem>
               )}
-              <FlexItem style={{ justifyContent: 'center', margin: '0 50px' }}>
-                <span> {createClassTime(group.time)[0] + " - " + createClassTime(group.time)[1]} {/* Sala: {group.room} */}</span>
+              <FlexItem style={{ justifyContent: 'center', flexDirection: 'column' }}>
+                {/* <span>
+                  {dayMapping[group.day]} {createClassTime(group.time)[0]} - {createClassTime(group.time)[1]}
+                </span> */}
+                <div>{dayMapping[group.day]}</div>
+                <div>
+                  {createClassTime(group.time)[0]} - {createClassTime(group.time)[1]}
+                </div>
               </FlexItem>
             </FlexboxWrapper>
           </ClassGroupStyled>

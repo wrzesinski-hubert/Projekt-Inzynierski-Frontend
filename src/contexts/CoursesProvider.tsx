@@ -18,14 +18,15 @@ interface CourseContext {
   courses: Array<Course>;
   basket: Array<Basket>;
   hoveredGroup: Group | undefined | null;
-  userID:string;
+  userID: string;
+  isDataLoading: boolean;
   addCourseToBasket: (courses: Course) => void;
   changeHoveredGroup: (group: Group | null) => void;
   changeGroupInBasket: (group: Group, courseId: number) => void;
   restoreGroupInBasket: (restoreGroup: Group, courseId: number) => void;
   deleteFromBasket: (id: number) => void;
-  saveBasket: (userID: string) => Promise<void>
-  getUserID: (userID: string) => Promise<void>
+  saveBasket: (userID: string) => Promise<void>;
+  getUserID: (userID: string) => Promise<void>;
   selectSchedulerEvents: () => Array<SchedulerEvent>;
   selectBasketNames: () => Array<string>;
   selectBasketCourses: () => Array<Course>;
@@ -45,8 +46,10 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   //fetch courses with groups
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [basket, setBasket] = useState<Array<Basket>>([]);
-  const [userID, setUserID] = useState("");
+  const [userID, setUserID] = useState('');
   const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
+  const [isDataLoading, setIsDataLoading] = useState(false);
+
   const selectBasketIds = () => {
     const classesIds = basket.map((course) => course?.classes?.id).filter((course) => course !== undefined);
     const lecturesIds = basket.map((course) => course?.lecture?.id).filter((course) => course !== undefined);
@@ -101,11 +104,11 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const deleteFromBasket = (id: number) => setBasket(basket.filter((course) => course.id !== id));
 
-  const getUserID = async (userID:string) => {
+  const getUserID = async (userID: string) => {
     setUserID(userID);
-  }
+  };
 
-  const saveBasket = async (userID:string) => {
+  const saveBasket = async (userID: string) => {
     const basketIds = selectBasketIds();
     const action = (key: any) => (
       <>
@@ -118,7 +121,10 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     );
 
     try {
-      await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`, JSON.stringify(basketIds));
+      await axiosInstance.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`,
+        JSON.stringify(basketIds),
+      );
       enqueueSnackbar('Plan został zapisany', {
         variant: 'success',
         action,
@@ -163,9 +169,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const getNewestTimetable = async () => {
     try {
-      const { data } = await axiosInstance.get(
-        `${process.env.REACT_APP_API_URL}/api/v1/assignments/user`,
-      );
+      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/assignments/user`);
       const basket = data === '' ? [] : data;
       setBasket(basket);
     } catch (e) {
@@ -173,16 +177,14 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }
   };
 
-  const getUserTimetable = async (userID:string) => {
+  const getUserTimetable = async (userID: string) => {
     try {
-      const {data} = await axiosInstance.get(
-        `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`,
-      );
+      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`);
       console.log(data);
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const fetchCourses = async () => {
     try {
@@ -197,10 +199,12 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   };
 
   useEffect(() => {
+    setIsDataLoading(true);
     setTimeout(() => {
       fetchCourses();
       getNewestTimetable();
-    }, 10);
+      setIsDataLoading(false);
+    }, 500);
   }, []);
 
   return (
@@ -210,6 +214,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         courses,
         basket,
         hoveredGroup,
+        isDataLoading,
         addCourseToBasket,
         changeHoveredGroup,
         changeGroupInBasket,

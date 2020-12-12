@@ -14,19 +14,21 @@ interface UsersProviderProps {
 
 export const UsersProvider = ({ children }: UsersProviderProps) => {
   const [users, setUsers] = useState<Array<User>>([]);
-  
+
   const getUsers = async () => {
     try {
-      const {data}= await axiosInstance.get<Array<User>>(`${process.env.REACT_APP_API_URL}/api/v1/users/students`);
+      const { data } = await axiosInstance.get<Array<User>>(`${process.env.REACT_APP_API_URL}/api/v1/users/students`);
       setUsers(data);
       console.log(data);
-    } catch(e){
+    } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
+    setTimeout(() => {
       getUsers();
+    }, 500);
   }, []);
 
   return (

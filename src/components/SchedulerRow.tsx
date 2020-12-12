@@ -1,4 +1,4 @@
-import React, { Fragment, MouseEvent, useState, useEffect,  useContext } from 'react';
+import React, { Fragment, MouseEvent, useState, useEffect, useContext } from 'react';
 import { GroupType, SchedulerEvent } from '../types';
 import styled, { css } from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
@@ -70,6 +70,12 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
       return groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff';
     }
   }};
+  ${({ isHovered }) =>
+    isHovered &&
+    css`
+      transition: background-color 0.4s ease;
+    `}
+
   box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
 `;
 

@@ -25,12 +25,12 @@ export const CASProvider = ({ children }: CASProviderProps) => {
         redirectToCASLoginService();
       }
       try {
-        if (!sessionStorage.getItem('userToken')) {
+        if (!localStorage.getItem('userToken')) {
           const { data: token } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
-          sessionStorage.setItem('userToken', token.token);
-          sessionStorage.setItem('userPrivilage', token.authorityRole)
+          localStorage.setItem('userToken', token.token);
+          localStorage.setItem('userPrivilige', token.authorityRole);
         }
-        const tokenTMP:any = JSON.parse(sessionStorage.getItem('userToken')as string);
+        const tokenTMP: any = JSON.parse(localStorage.getItem('userToken') as string);
         const token: Token = {
           authorityRole: tokenTMP.authorityRole,
           email: tokenTMP.email,
