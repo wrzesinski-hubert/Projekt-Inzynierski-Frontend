@@ -26,12 +26,13 @@ interface CourseContext {
   restoreGroupInBasket: (restoreGroup: Group, courseId: number) => void;
   deleteFromBasket: (id: number) => void;
   saveBasket: (userID: string) => Promise<void>;
-  getUserID: (userID: string) => Promise<void>;
+  changeStudent: (studentId: string) => void;
   selectSchedulerEvents: () => Array<SchedulerEvent>;
   selectBasketNames: () => Array<string>;
   selectBasketCourses: () => Array<Course>;
   selectBasketCourseGroups: (courseId: number) => { lecture: Group | undefined; classes: Group | undefined };
-  getUserTimetable: (userID: string) => Promise<void>;
+  getNewestStudentTimetable: (studentId: string) => void;
+  changeDataLoading: (isLoading: boolean) => void;
 }
 export const coursesContext = createContext<CourseContext | undefined>(undefined);
 
@@ -92,6 +93,8 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const changeHoveredGroup = (group: Group | null) => setHoveredGroup(group);
 
+  const changeDataLoading = (isLoading: boolean) => setIsDataLoading(isLoading);
+
   const addCourseToBasket = (course: Course) => {
     const courseToBasket: Basket = {
       name: course.name,
@@ -104,8 +107,11 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const deleteFromBasket = (id: number) => setBasket(basket.filter((course) => course.id !== id));
 
-  const getUserID = async (userID: string) => {
-    setUserID(userID);
+  const changeStudent = async (studentId: string) => {
+    setUserID(studentId);
+    setTimeout(() => {
+      getNewestStudentTimetable(studentId);
+    }, 100);
   };
 
   const saveBasket = async (userID: string) => {
@@ -177,10 +183,13 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }
   };
 
-  const getUserTimetable = async (userID: string) => {
+  const getNewestStudentTimetable = async (studentId: string) => {
     try {
-      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`);
-      console.log(data);
+      const { data } = await axiosInstance.get(
+        `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${studentId}/schedule`,
+      );
+      const basket = data === '' ? [] : data;
+      setBasket(basket);
     } catch (e) {
       console.log(e);
     }
@@ -225,8 +234,9 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         selectBasketNames,
         selectBasketCourses,
         selectBasketCourseGroups,
-        getUserTimetable,
-        getUserID,
+        getNewestStudentTimetable,
+        changeStudent,
+        changeDataLoading,
       }}
     >
       {children}

@@ -12,7 +12,7 @@ const LeftSide = styled.div`
   flex: 1;
   flex-direction: column;
   background-color: white;
-  text-align:center;
+  text-align: center;
 `;
 
 const Wrap = styled.div`
@@ -90,7 +90,7 @@ const Icon = styled.img`
 `;
 
 export const Admin = () => {
-  const [currentTab, setCurrentTab] = useState<null | number>(null);
+  const [currentTab, setCurrentTab] = useState<null | number>(1);
 
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     setCurrentTab(Number(e.currentTarget.id));

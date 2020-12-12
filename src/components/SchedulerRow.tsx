@@ -140,7 +140,6 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
   const [popoverId, setPopoverId] = useState<string | null>(null);
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
-    console.log('I was clicked!!!!');
     setAnchorEl(event.currentTarget);
     setPopoverId(event.currentTarget.id);
   };

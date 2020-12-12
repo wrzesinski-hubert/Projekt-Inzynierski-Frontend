@@ -1,6 +1,7 @@
-import React, { useState, createContext, useEffect, ReactNode, useRef } from 'react';
+import React, { useState, createContext, useEffect, ReactNode, useRef, useContext } from 'react';
 import { Student } from '../types';
 import { axiosInstance } from '../utils/axiosInstance';
+import { CASContext } from './CASProvider';
 
 interface StudentContext {
   students: Array<Student>;
@@ -15,7 +16,9 @@ interface StudentsProviderProps {
 export const StudentsProvider = ({ children }: StudentsProviderProps) => {
   const [students, setStudents] = useState<Array<Student>>([]);
 
+  //not working currently
   const userPrivilige = localStorage.getItem('userPrivilige');
+  const { user } = useContext(CASContext)!;
 
   const getStudents = async () => {
     try {
@@ -31,7 +34,8 @@ export const StudentsProvider = ({ children }: StudentsProviderProps) => {
 
   useEffect(() => {
     setTimeout(() => {
-      userPrivilige === 'DEANERY' && getStudents();
+      // user?.authorityRole === 'DEANERY' &&
+      getStudents();
     }, 500);
   }, []);
 

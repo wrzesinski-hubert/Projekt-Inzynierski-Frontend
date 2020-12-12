@@ -50,7 +50,9 @@ interface DropdownProps {
 }
 
 export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: DropdownProps) => {
-  const { courses, selectBasketNames, addCourseToBasket, getUserID } = useContext(coursesContext)!;
+  const { courses, selectBasketNames, addCourseToBasket, changeStudent } = useContext(
+    coursesContext,
+  )!;
   const { students } = useContext(studentsContext)!;
   const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
@@ -67,7 +69,7 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
 
   const onUserClick = (event: MouseEvent) => {
     const target = event.currentTarget;
-    getUserID(target.id);
+    changeStudent(target.id);
     handleCloseDropdown();
   };
 
@@ -119,7 +121,7 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
               {filteredStudents.map(({ name, surname, id }, index) => (
                 <CourseContainer key={index} id={id.toString()} onClick={onUserClick}>
                   <p>
-                    {name} {surname}{' '}
+                    {name} {surname}
                   </p>
                 </CourseContainer>
               ))}
