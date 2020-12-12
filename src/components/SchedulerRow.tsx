@@ -65,7 +65,7 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   text-align: center;
   background-color: ${({ groupType, isHovered }) => {
     if (isHovered) {
-      return groupType === 'CLASS' ? '#ffefb5' : '#d4ecff';
+      return groupType === 'CLASS' ? '#FFE485' : '#D2EBFF';
     } else {
       return groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff';
     }
@@ -73,9 +73,9 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   ${({ isHovered }) =>
     isHovered &&
     css`
-      transition: background-color 0.4s ease;
+      transition: background-color ease-in 0.4s;
     `}
-
+  transition: background-color ease-out 0.4s;
   box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
 `;
 
@@ -218,12 +218,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
-                    <div
-                      style={{ display: 'flex', flexDirection: 'column', zIndex: 20000 }}
-                      onClick={() => {
-                        console.log('XDD');
-                      }}
-                    >
+                    <div style={{ display: 'flex', flexDirection: 'column', zIndex: 20000 }} onClick={() => {}}>
                       <p style={{ margin: '7px 0 7px 0', fontWeight: 'bold' }}>{groups[index].name}</p>
                       <p style={{ margin: '2px 0 2px 0' }}>
                         <PopoverSpan>Prowadzący:</PopoverSpan> {groups[index].lecturer}

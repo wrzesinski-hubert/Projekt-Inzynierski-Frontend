@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, MouseEvent, useMemo } from 'react';
 import { coursesContext } from '../contexts/CoursesProvider';
-import { usersContext } from '../contexts/UsersProvider';
-import { Course, User } from '../types';
+import { studentsContext } from '../contexts/StudentsProvider';
+import { Course, Student } from '../types';
 import styled from 'styled-components';
 
 const DropdownContainer = styled.div`
@@ -51,11 +51,10 @@ interface DropdownProps {
 
 export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: DropdownProps) => {
   const { courses, selectBasketNames, addCourseToBasket, getUserID } = useContext(coursesContext)!;
-  const { users } = useContext(usersContext)!;
+  const { students } = useContext(studentsContext)!;
   const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
-  const [filteredUsers, setFilteredUsers] = useState<Array<User>>([]);
-
+  const [filteredStudents, setFilteredStudents] = useState<Array<Student>>([]);
 
   const onCourseClick = (event: MouseEvent) => {
     const target = event.currentTarget;
@@ -94,7 +93,7 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
 
   useEffect(() => {
     const filterUsers = (input: string) => {
-      const filteredUsers = users.filter(({ name, surname }) =>
+      const filteredUsers = students.filter(({ name, surname }) =>
         (name + surname)
           .toLowerCase()
           .normalize('NFD')
@@ -106,10 +105,10 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
               .replace(/[\u0300-\u036f]/g, ''),
           ),
       );
-      setFilteredUsers(filteredUsers);
+      setFilteredStudents(filteredUsers);
     };
     filterUsers(input);
-  }, [users, input]);
+  }, [students, input]);
 
   return (
     <DropdownContainer>
@@ -117,7 +116,7 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
         <>
           {selectedOption === 'studenci' ? (
             <div>
-              {filteredUsers.map(({ name, surname, id }, index) => (
+              {filteredStudents.map(({ name, surname, id }, index) => (
                 <CourseContainer key={index} id={id.toString()} onClick={onUserClick}>
                   <p>
                     {name} {surname}{' '}

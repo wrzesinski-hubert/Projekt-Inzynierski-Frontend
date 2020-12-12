@@ -50,18 +50,31 @@ const CourseName = styled.div`
   user-select: none;
 `;
 
-const ClassGroupStyled = styled.div`
+type ClassGroupProps = {
+  isSelected: boolean;
+};
+
+const ClassGroupStyled = styled.div<ClassGroupProps>`
   position: relative;
   padding-top: 10px;
   padding-bottom: 10px;
   transition: color 0.3s, background-color 0.3s;
   :hover {
     cursor: pointer;
-    background-color: #9ed3ff;
+    ${({ isSelected }) =>
+      !isSelected &&
+      css`
+        background-color: rgba(223, 238, 245, 0.308);
+      `}
   }
   :last-child {
     border-radius: 0 0 10px 10px;
   }
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      background-color: #85aec2;
+    `}
 `;
 
 interface ExpandIconProps {
@@ -171,6 +184,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
         {groups.map((group: Group, index) => (
           <ClassGroupStyled
+            isSelected={group.id === previous?.classes?.id || group.id === previous?.lecture?.id ? true : false}
             key={index}
             onClick={() => onGroupClick(group, course.id)}
             onMouseEnter={() => {

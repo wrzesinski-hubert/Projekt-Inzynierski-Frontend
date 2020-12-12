@@ -169,7 +169,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const getNewestTimetable = async () => {
     try {
-      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/assignments/user`);
+      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/schedule`);
       const basket = data === '' ? [] : data;
       setBasket(basket);
     } catch (e) {

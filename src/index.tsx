@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { App } from './components/App';
 import { CASProvider } from './contexts/CASProvider';
 import { CoursesProvider } from './contexts/CoursesProvider';
-import { UsersProvider } from './contexts/UsersProvider';
+import { StudentsProvider } from './contexts/StudentsProvider';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { SnackbarProvider } from 'notistack';
 
@@ -17,12 +17,12 @@ ReactDOM.render(
       }}
     >
       <CASProvider>
-        <UsersProvider>
+        <StudentsProvider>
           <CoursesProvider>
             <GlobalStyles />
             <App />
           </CoursesProvider>
-        </UsersProvider>
+        </StudentsProvider>
       </CASProvider>
     </SnackbarProvider>
   </>,
