@@ -44,14 +44,14 @@ const SaveButton = styled.div`
     background-color: #54c457;
   }
 
-  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.24);
+  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
 `;
 
 export const Rightbar = () => {
-  const { selectBasketCourses, saveBasket } = useContext(coursesContext)!;
+  const { selectBasketCourses, saveBasket, userID } = useContext(coursesContext)!;
 
   const basketCourses = selectBasketCourses();
-  const handleSave = debounce(() => saveBasket(), 500);
+  const handleSave = debounce(() => saveBasket(userID), 500);
   return (
     <RightbarWrapper>
       <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>

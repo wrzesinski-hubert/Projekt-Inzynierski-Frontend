@@ -7,6 +7,8 @@ import styled, { css } from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useMemo } from 'react';
+import { createClassTime } from '../utils';
+import { dayMapping } from '../constants';
 
 const CourseCardWrapper = styled.div`
   position: relative;
@@ -20,7 +22,7 @@ const CourseCardWrapper = styled.div`
   border-radius: 10px;
   cursor: pointer;
   align-items: stretch;
-  box-shadow: 9px 9px 8px -2px rgba(0, 0, 0, 0.59);
+  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
 `;
 
 const TitleWrapper = styled.div`
@@ -48,17 +50,31 @@ const CourseName = styled.div`
   user-select: none;
 `;
 
-const ClassGroupStyled = styled.div`
+type ClassGroupProps = {
+  isSelected: boolean;
+};
+
+const ClassGroupStyled = styled.div<ClassGroupProps>`
   position: relative;
-  padding-top: 1px;
-  padding-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  transition: color 0.3s, background-color 0.3s;
   :hover {
     cursor: pointer;
-    background-color: #9ed3ff;
+    ${({ isSelected }) =>
+      !isSelected &&
+      css`
+        background-color: rgba(223, 238, 245, 0.308);
+      `}
   }
   :last-child {
     border-radius: 0 0 10px 10px;
   }
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      background-color: #85aec2;
+    `}
 `;
 
 interface ExpandIconProps {
@@ -102,7 +118,7 @@ type FlexItemProps = {
 const FlexItem = styled.div<FlexItemProps>`
   display: flex;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   ${({ justifyContent }) =>
     justifyContent &&
     css`
@@ -141,12 +157,12 @@ export const CourseCard = ({ course }: CourseCardProps) => {
     selectBasketCourseGroups,
     changeHoveredGroup,
   } = useContext(coursesContext)!;
-  const [isSelected, setSelected] = useState(false);
+  const [isSelected, setSelected] = useState(true);
   const groups = [...course.lectures!, ...course.classes!];
   const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.id), []);
   const [previous, setPrevious] = useState(basketCourseGroups);
-  // console.log('lecture is: ', courseLecture);
-  // console.log('class is: ', courseClasses);
+
+  console.log('course is: ', course);
   const onGroupClick = (group: Group, courseId: number) => {
     setPrevious((prev) => (group.type === GroupType.CLASS ? { ...prev, classes: group } : { ...prev, lecture: group }));
     changeGroupInBasket(group, courseId);
@@ -168,16 +184,15 @@ export const CourseCard = ({ course }: CourseCardProps) => {
       <Collapse className={classes.expanded} in={isSelected} timeout="auto" unmountOnExit>
         {groups.map((group: Group, index) => (
           <ClassGroupStyled
+            isSelected={group.id === previous?.classes?.id || group.id === previous?.lecture?.id ? true : false}
             key={index}
             onClick={() => onGroupClick(group, course.id)}
             onMouseEnter={() => {
               if (group.type === GroupType.CLASS) {
                 changeGroupInBasket(group, course.id);
-                // setTimeout(()=> { changeHoveredGroup(courseClasses)},[500])
               }
               if (group.type === GroupType.LECTURE) {
                 changeGroupInBasket(group, course.id);
-                // setTimeout(()=> { changeHoveredGroup(courseLecture)},[500])
               }
             }}
             onMouseLeave={() => {
@@ -203,8 +218,14 @@ export const CourseCard = ({ course }: CourseCardProps) => {
                   {group.lecturer.replace('UAM', '')}
                 </FlexItem>
               )}
-              <FlexItem style={{ justifyContent: 'center', margin: '0 50px' }}>
-                <span>{/*group.time*/}</span> <span> Sala: {group.room}</span>
+              <FlexItem style={{ justifyContent: 'center', flexDirection: 'column' }}>
+                {/* <span>
+                  {dayMapping[group.day]} {createClassTime(group.time)[0]} - {createClassTime(group.time)[1]}
+                </span> */}
+                <div>{dayMapping[group.day]}</div>
+                <div>
+                  {createClassTime(group.time)[0]} - {createClassTime(group.time)[1]}
+                </div>
               </FlexItem>
             </FlexboxWrapper>
           </ClassGroupStyled>

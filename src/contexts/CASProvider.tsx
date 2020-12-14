@@ -1,11 +1,11 @@
 import React, { useState, useEffect, createContext, ReactNode } from 'react';
-import { User } from '../types';
+import { LoggedUser } from '../types';
 import { axiosInstance } from '../utils/axiosInstance';
 
 export interface CASContext {
-  user?: User;
+  user: LoggedUser | undefined;
   logout: () => void;
-  token?: string | null;
+  token: string | undefined;
 }
 
 export const CASContext = createContext<CASContext | undefined>(undefined);
@@ -15,8 +15,8 @@ export interface CASProviderProps {
 }
 
 export const CASProvider = ({ children }: CASProviderProps) => {
-  const [user, setUser] = useState<User | undefined>(undefined);
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<LoggedUser>();
+  const [token, setToken] = useState<string | undefined>();
   useEffect(() => {
     const login = async () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -25,12 +25,16 @@ export const CASProvider = ({ children }: CASProviderProps) => {
         redirectToCASLoginService();
       }
       try {
-        if (!sessionStorage.getItem('userToken')) {
-          const { data: token } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`);
-          sessionStorage.setItem('userToken', token);
+        if (!localStorage.getItem('userToken')) {
+          const { data: user } = await axiosInstance.get<LoggedUser & { token: string }>(
+            `${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`,
+          );
+          setUser({ authorityRole: user.authorityRole, email: user.email, id: user.id });
+          localStorage.setItem('userToken', user.token);
+          localStorage.setItem('userPrivilige', user.authorityRole);
         }
-        const token = sessionStorage.getItem('userToken');
-        setToken(token);
+        const token = localStorage.getItem('userToken');
+        token && setToken(token);
       } catch (e) {
         console.log(e);
       }
@@ -39,6 +43,7 @@ export const CASProvider = ({ children }: CASProviderProps) => {
   }, []);
 
   function logout() {
+    localStorage.removeItem('userToken');
     redirectToCASLogoutService();
   }
 

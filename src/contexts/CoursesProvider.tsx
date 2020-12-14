@@ -18,16 +18,21 @@ interface CourseContext {
   courses: Array<Course>;
   basket: Array<Basket>;
   hoveredGroup: Group | undefined | null;
+  userID: string;
+  isDataLoading: boolean;
   addCourseToBasket: (courses: Course) => void;
   changeHoveredGroup: (group: Group | null) => void;
   changeGroupInBasket: (group: Group, courseId: number) => void;
   restoreGroupInBasket: (restoreGroup: Group, courseId: number) => void;
   deleteFromBasket: (id: number) => void;
-  saveBasket: () => void;
+  saveBasket: (userID: string) => Promise<void>;
+  changeStudent: (studentId: string) => void;
   selectSchedulerEvents: () => Array<SchedulerEvent>;
   selectBasketNames: () => Array<string>;
   selectBasketCourses: () => Array<Course>;
   selectBasketCourseGroups: (courseId: number) => { lecture: Group | undefined; classes: Group | undefined };
+  getNewestStudentTimetable: (studentId: string) => void;
+  changeDataLoading: (isLoading: boolean) => void;
 }
 export const coursesContext = createContext<CourseContext | undefined>(undefined);
 
@@ -42,7 +47,10 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   //fetch courses with groups
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [basket, setBasket] = useState<Array<Basket>>([]);
+  const [userID, setUserID] = useState('');
   const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
+  const [isDataLoading, setIsDataLoading] = useState(false);
+
   const selectBasketIds = () => {
     const classesIds = basket.map((course) => course?.classes?.id).filter((course) => course !== undefined);
     const lecturesIds = basket.map((course) => course?.lecture?.id).filter((course) => course !== undefined);
@@ -85,6 +93,8 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const changeHoveredGroup = (group: Group | null) => setHoveredGroup(group);
 
+  const changeDataLoading = (isLoading: boolean) => setIsDataLoading(isLoading);
+
   const addCourseToBasket = (course: Course) => {
     const courseToBasket: Basket = {
       name: course.name,
@@ -97,7 +107,14 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const deleteFromBasket = (id: number) => setBasket(basket.filter((course) => course.id !== id));
 
-  const saveBasket = async () => {
+  const changeStudent = async (studentId: string) => {
+    setUserID(studentId);
+    setTimeout(() => {
+      getNewestStudentTimetable(studentId);
+    }, 100);
+  };
+
+  const saveBasket = async (userID: string) => {
     const basketIds = selectBasketIds();
     const action = (key: any) => (
       <>
@@ -110,7 +127,10 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     );
 
     try {
-      await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user`, JSON.stringify(basketIds));
+      await axiosInstance.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`,
+        JSON.stringify(basketIds),
+      );
       enqueueSnackbar('Plan został zapisany', {
         variant: 'success',
         action,
@@ -155,8 +175,18 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const getNewestTimetable = async () => {
     try {
+      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/schedule`);
+      const basket = data === '' ? [] : data;
+      setBasket(basket);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getNewestStudentTimetable = async (studentId: string) => {
+    try {
       const { data } = await axiosInstance.get(
-        `${process.env.REACT_APP_API_URL}/api/v1/assignments/user`,
+        `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${studentId}/schedule`,
       );
       const basket = data === '' ? [] : data;
       setBasket(basket);
@@ -178,18 +208,22 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   };
 
   useEffect(() => {
+    setIsDataLoading(true);
     setTimeout(() => {
       fetchCourses();
       getNewestTimetable();
-    }, 200);
+      setIsDataLoading(false);
+    }, 500);
   }, []);
 
   return (
     <coursesContext.Provider
       value={{
+        userID,
         courses,
         basket,
         hoveredGroup,
+        isDataLoading,
         addCourseToBasket,
         changeHoveredGroup,
         changeGroupInBasket,
@@ -200,6 +234,9 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         selectBasketNames,
         selectBasketCourses,
         selectBasketCourseGroups,
+        getNewestStudentTimetable,
+        changeStudent,
+        changeDataLoading,
       }}
     >
       {children}

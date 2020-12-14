@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   color: black;
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
+
   &:focus {
     outline: none;
   }
@@ -64,16 +65,23 @@ const ExpandIconSelect = styled(ExpandIcon)`
   width: 10px;
   height: 10px;
 `;
-export const SelectMenu = () => {
+
+interface SelectMenuProps {
+  changeSelectedOption: (option: string) => void;
+  changeDropdownOpen: (dropdownState: boolean) => void;
+  selectedOption:string;
+}
+
+export const SelectMenu = ({changeSelectedOption,changeDropdownOpen, selectedOption}:SelectMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('przedmioty');
+  
   return (
     <ClickAwayListener
       onClickAway={() => {
         setIsOpen(false);
       }}
     >
-      <Wrapper>
+      <Wrapper onClick={() => {changeDropdownOpen(false)}}>
         <Header
           onClick={() => {
             console.log('clicked');
@@ -87,7 +95,7 @@ export const SelectMenu = () => {
           <List>
             <ListItem
               onClick={() => {
-                setSelectedOption('przedmioty');
+                changeSelectedOption('przedmioty');
                 setIsOpen(false);
               }}
             >
@@ -95,7 +103,7 @@ export const SelectMenu = () => {
             </ListItem>
             <ListItem
               onClick={() => {
-                setSelectedOption('studenci');
+                changeSelectedOption('studenci');
                 setIsOpen(false);
               }}
             >

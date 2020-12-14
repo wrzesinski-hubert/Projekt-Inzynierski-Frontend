@@ -54,13 +54,17 @@ const FlexboxColumn = styled.div`
   flex: 12;
 `;
 
-const InputWrapper = styled.div`
+type InputWrapperProps = {
+  isStudent: boolean;
+};
+
+const InputWrapper = styled.div<InputWrapperProps>`
   width: 100%;
   display: flex;
   margin-top: 15px;
   max-height: 40px;
   background-color: #f2f4f7;
-  border-radius: 6px 6px 6px 6px;
+  border-radius: ${({ isStudent }) => (isStudent ? ` 6px 6px 6px 6px` : ` 0px 6px 6px 0px`)};
   padding-left: 6px;
   &:hover {
     background-color: #ffffff;
@@ -123,11 +127,16 @@ interface TopbarProps {
 }
 
 export default function ({ handleTransfer }: TopbarProps) {
+  const userPrivilige = localStorage.getItem('userPrivilige');
+
   const [clearInput, setClearInput] = useState(false);
   const [isPolish, setIsPolish] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
+  const [selectedOption, setSelectedOption] = useState('przedmioty');
+
+  const changeSelectedOption = (option: string) => setSelectedOption(option);
 
   const onLangChange = () => setIsPolish(!isPolish);
 
@@ -159,15 +168,16 @@ export default function ({ handleTransfer }: TopbarProps) {
       <FlexboxColumn>
         <ClickAwayListener onClickAway={handleCloseDropdown}>
           <Flexbox>
-            {/* <SelectMenu /> */}
-
-            <InputWrapper>
-              {/* <SelectSearch value={value} onChange={Change}>
-    <SelectOption value="przedmiot">Przedmiot</SelectOption>
-    <SelectOption value="student">Student</SelectOption>
-  </SelectSearch> */}
+            {userPrivilige !== 'STUDENT' && (
+              <SelectMenu
+                changeSelectedOption={changeSelectedOption}
+                selectedOption={selectedOption}
+                changeDropdownOpen={setOpen}
+              />
+            )}
+            <InputWrapper isStudent={userPrivilige === 'STUDENT'}>
               <Input
-                placeholder={`Wyszukaj...`}
+                placeholder={`Wyszukaj ${selectedOption === 'studenci' ? 'studentów...' : 'przedmioty...'}`}
                 onChange={handleChange}
                 value={input}
                 onFocus={() => {
@@ -177,14 +187,19 @@ export default function ({ handleTransfer }: TopbarProps) {
               <CloseIcon onClick={handleClearInput} />
             </InputWrapper>
           </Flexbox>
-          <Dropdown open={open} input={input} handleCloseDropdown={handleCloseDropdown} />
+          <Dropdown
+            open={open}
+            input={input}
+            handleCloseDropdown={handleCloseDropdown}
+            selectedOption={selectedOption}
+          />
         </ClickAwayListener>
       </FlexboxColumn>
 
       <IconWrapper>
         {/* <Text>Maciej Głowacki</Text> */}
         {/* <Icon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
-        <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} />
+        {/* <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} /> */}
         <Icon alt="profile" src={ProfileIcon} onClick={handleProfile} />
         <Profile anchorEl={anchorEl} handleClose={handleCloseProfile} />
       </IconWrapper>

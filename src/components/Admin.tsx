@@ -12,6 +12,8 @@ const LeftSide = styled.div`
   flex: 1;
   flex-direction: column;
   background-color: white;
+  text-align: center;
+  border-radius:5px;
 `;
 
 const Wrap = styled.div`
@@ -41,8 +43,14 @@ const LeftPanelElement = styled.div<LeftPanelElement>`
   //box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.75);
   padding: 20px;
   cursor: pointer;
-  box-shadow: ${({ isCurrentTab }) => (isCurrentTab === true ? `inset 0px 0px 26px 0px rgba(0,0,0,0.55)` : '')};
+  box-shadow: ${({ isCurrentTab }) => (isCurrentTab === true ? `inset 0px 0px 11px 0px rgba(0,0,0,0.30)` : '')};
   border-bottom: 1px solid #979797;
+  :first-child{
+    border-radius:0px 5px 0px 0px;
+  }
+  :last-child{
+    border-radius:0px 0px 5px 0px;
+  }
 `;
 
 const HistoryDiv = styled.div`
@@ -89,7 +97,7 @@ const Icon = styled.img`
 `;
 
 export const Admin = () => {
-  const [currentTab, setCurrentTab] = useState<null | number>(null);
+  const [currentTab, setCurrentTab] = useState<null | number>(1);
 
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     setCurrentTab(Number(e.currentTarget.id));

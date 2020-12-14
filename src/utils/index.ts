@@ -13,6 +13,10 @@ export const selectGroupsToShow = (schedulerEvents: Array<SchedulerEvent>, index
   return schedulerEvents.filter(({ time }: { time: [string, string] }) => courseStartTimeToEventRow[time[0]] === index);
 };
 
+
+
+
+//debounce declaration and implementation
 type Procedure = (...args: any[]) => any;
 
 interface Debounce {

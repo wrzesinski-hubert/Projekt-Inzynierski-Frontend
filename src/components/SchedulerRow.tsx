@@ -1,4 +1,4 @@
-import React, { Fragment, MouseEvent, useState, useEffect,  useContext } from 'react';
+import React, { Fragment, MouseEvent, useState, useEffect, useContext } from 'react';
 import { GroupType, SchedulerEvent } from '../types';
 import styled, { css } from 'styled-components/macro';
 import Popover from '@material-ui/core/Popover';
@@ -65,12 +65,19 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   text-align: center;
   background-color: ${({ groupType, isHovered }) => {
     if (isHovered) {
-      return groupType === 'CLASS' ? '#ffefb5' : '#d4ecff';
+      return groupType === 'CLASS' ? '#FFE485' : '#D2EBFF';
     } else {
       return groupType === 'CLASS' ? '#FFDC61' : '#9ed3ff';
     }
   }};
+  ${({ isHovered }) =>
+    isHovered &&
+    css`
+      transition: background-color ease-in 0.4s;
+    `}
+  transition: background-color ease-out 0.4s;
   box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
+  cursor:pointer;
 `;
 
 const threeStyles = () => {
@@ -134,7 +141,6 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
   const [popoverId, setPopoverId] = useState<string | null>(null);
   //looks weird
   const handlePopoverOpen = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
-    console.log('I was clicked!!!!');
     setAnchorEl(event.currentTarget);
     setPopoverId(event.currentTarget.id);
   };
@@ -212,12 +218,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
-                    <div
-                      style={{ display: 'flex', flexDirection: 'column', zIndex: 20000 }}
-                      onClick={() => {
-                        console.log('XDD');
-                      }}
-                    >
+                    <div style={{ display: 'flex', flexDirection: 'column', zIndex: 20000 }} onClick={() => {}}>
                       <p style={{ margin: '7px 0 7px 0', fontWeight: 'bold' }}>{groups[index].name}</p>
                       <p style={{ margin: '2px 0 2px 0' }}>
                         <PopoverSpan>Prowadzący:</PopoverSpan> {groups[index].lecturer}

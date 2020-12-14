@@ -27,9 +27,17 @@ export interface Course {
   classes?: Array<Group>;
 }
 
-export interface User {
-  name?: string;
-  surname?: string;
+export interface LoggedUser {
+  authorityRole: string;
+  email: string;
+  id: number;
+}
+
+export interface Student {
+  email: string;
+  id: number;
+  name: string;
+  surname: string;
 }
 
 export interface SchedulerEvent {

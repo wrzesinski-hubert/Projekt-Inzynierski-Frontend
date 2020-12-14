@@ -42,3 +42,12 @@ export const courseStartTimeToEventRow: { [time: string]: number } = {
 
 //groupTimeToEventRowMapping - 1;
 export const ROWS_COUNT = 6;
+export const dayMapping: { [key: number]: string } = {
+  0: 'poniedziałek',
+  1: 'wtorek',
+  2: 'środa',
+  3: 'czwartek',
+  4: 'piątek',
+  5: 'sobota',
+  6: 'niedziela',
+};
