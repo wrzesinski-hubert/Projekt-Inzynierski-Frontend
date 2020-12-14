@@ -33,12 +33,12 @@ export const App = () => {
         <Topbar handleTransfer={handleTransfer} />
         <Transfer isOpen={isOpenTransfer} handleClose={handleTransfer} />
         <Wrapper>
-          {userPrivilige === 'STUDENT' ? (
+          {userPrivilige === 'STUDENT' && (
             <>
               <Scheduler />
               <Rightbar />
             </>
-          ) : (
+          )} { userPrivilige === 'DEANERY' && (
             <Admin />
           )}
         </Wrapper>
