@@ -77,6 +77,7 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
     `}
   transition: background-color ease-out 0.4s;
   box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
+  cursor:pointer;
 `;
 
 const threeStyles = () => {
