@@ -21,7 +21,7 @@ export const App = () => {
   const { isDataLoading } = useContext(coursesContext)!;
   const [isOpenTransfer, setOpenTransfer] = useState(false);
 
-  const handleTransfer = () => {
+  const handleTransfer = () => {   
     setOpenTransfer(!isOpenTransfer);
   };
 

@@ -213,7 +213,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       fetchCourses();
       getNewestTimetable();
       setIsDataLoading(false);
-    }, 500);
+    }, 600);
   }, []);
 
   return (
