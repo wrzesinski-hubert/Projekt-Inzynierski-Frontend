@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, ChangeEvent, useEffect, useCallback } from 'react';
+import React, { useState, MouseEvent, ChangeEvent, useEffect, useCallback, useContext } from 'react';
 import { ReactComponent as Close } from '../assets/close.svg';
 import ProfileIcon from '../assets/account.svg';
 import { Profile } from './Profile';
@@ -8,6 +8,7 @@ import EnglishIcon from '../assets/united-kingdom.svg';
 import styled from 'styled-components/macro';
 import ClickAwayListener from 'react-click-away-listener';
 import { SelectMenu } from './SelectMenu';
+import { studentsContext } from '../contexts/StudentsProvider';
 
 const Topbar = styled.div`
   background-color: #e3e5ed;
@@ -104,9 +105,10 @@ const CloseIcon = styled(Close)`
 
 const IconWrapper = styled.div`
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: flex-end;
   width: 335px;
+  margin-right: 10px;
 `;
 
 const Icon = styled.img`
@@ -122,13 +124,21 @@ export const Flexbox = styled.div`
   display: flex;
 `;
 
+export const SelectedStudent = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-right: 10px;
+  margin-left: 10px;
+`;
+
 interface TopbarProps {
   handleTransfer: (e: MouseEvent) => void;
 }
 
 export default function ({ handleTransfer }: TopbarProps) {
   const userPrivilige = localStorage.getItem('userPrivilige');
-
+  const { selectedStudent } = useContext(studentsContext)!;
   const [clearInput, setClearInput] = useState(false);
   const [isPolish, setIsPolish] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
@@ -195,8 +205,9 @@ export default function ({ handleTransfer }: TopbarProps) {
           />
         </ClickAwayListener>
       </FlexboxColumn>
-
       <IconWrapper>
+        <SelectedStudent>{selectedStudent?.email.replace(/@st.amu.edu.pl/, '')}</SelectedStudent>
+
         {/* <Text>Maciej Głowacki</Text> */}
         {/* <Icon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
         {/* <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} /> */}

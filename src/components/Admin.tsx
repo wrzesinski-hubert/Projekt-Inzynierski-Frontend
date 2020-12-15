@@ -59,7 +59,6 @@ const HistoryDiv = styled.div`
   margin-left: 20px;
   border-radius: 5px;
   height: calc(100vh - 120px);
-  background-color: red;
 `;
 
 const StatsDiv = styled.div`
@@ -68,7 +67,6 @@ const StatsDiv = styled.div`
   margin-left: 20px;
   border-radius: 5px;
   height: calc(100vh - 120px);
-  background-color: blue;
 `;
 
 const LogoWrapper = styled.div`
