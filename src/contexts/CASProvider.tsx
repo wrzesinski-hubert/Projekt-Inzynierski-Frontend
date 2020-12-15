@@ -44,6 +44,7 @@ export const CASProvider = ({ children }: CASProviderProps) => {
 
   function logout() {
     localStorage.removeItem('userToken');
+    localStorage.removeItem('userPrivilige');
     redirectToCASLogoutService();
   }
 
