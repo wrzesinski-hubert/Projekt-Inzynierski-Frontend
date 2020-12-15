@@ -5,6 +5,8 @@ import { CASContext } from './CASProvider';
 
 interface StudentContext {
   students: Array<Student>;
+  selectedStudent: Student | null;
+  changeSelectedStudent: (studentId: number) => void;
 }
 
 export const studentsContext = createContext<StudentContext | undefined>(undefined);
@@ -15,6 +17,7 @@ interface StudentsProviderProps {
 
 export const StudentsProvider = ({ children }: StudentsProviderProps) => {
   const [students, setStudents] = useState<Array<Student>>([]);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   //not working currently
   const userPrivilige = localStorage.getItem('userPrivilige');
@@ -32,6 +35,10 @@ export const StudentsProvider = ({ children }: StudentsProviderProps) => {
     }
   };
 
+  const changeSelectedStudent = (studentId: number) => {
+    setSelectedStudent(students.find((student) => student.id === studentId)!);
+  };
+
   useEffect(() => {
     setTimeout(() => {
       // user?.authorityRole === 'DEANERY' &&
@@ -42,7 +49,9 @@ export const StudentsProvider = ({ children }: StudentsProviderProps) => {
   return (
     <studentsContext.Provider
       value={{
+        selectedStudent,
         students,
+        changeSelectedStudent,
       }}
     >
       {children}

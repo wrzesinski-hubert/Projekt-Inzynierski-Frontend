@@ -50,10 +50,8 @@ interface DropdownProps {
 }
 
 export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: DropdownProps) => {
-  const { courses, selectBasketNames, addCourseToBasket, changeStudent } = useContext(
-    coursesContext,
-  )!;
-  const { students } = useContext(studentsContext)!;
+  const { courses, selectBasketNames, addCourseToBasket, changeStudent } = useContext(coursesContext)!;
+  const { students, changeSelectedStudent } = useContext(studentsContext)!;
   const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
   const [filteredStudents, setFilteredStudents] = useState<Array<Student>>([]);
@@ -69,7 +67,10 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
 
   const onUserClick = (event: MouseEvent) => {
     const target = event.currentTarget;
+    console.log('target: ', target);
+    //to be moved to students provider
     changeStudent(target.id);
+    changeSelectedStudent(Number(target.id));
     handleCloseDropdown();
   };
 
@@ -118,11 +119,9 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
         <>
           {selectedOption === 'studenci' ? (
             <div>
-              {filteredStudents.map(({ name, surname, id }, index) => (
+              {filteredStudents.map(({ email, id }, index) => (
                 <CourseContainer key={index} id={id.toString()} onClick={onUserClick}>
-                  <p>
-                    {name} {surname}
-                  </p>
+                  <p>{email}</p>
                 </CourseContainer>
               ))}
             </div>
