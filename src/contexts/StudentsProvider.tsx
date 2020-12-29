@@ -20,8 +20,6 @@ export const StudentsProvider = ({ children }: StudentsProviderProps) => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   //not working currently
-  const userPrivilige = localStorage.getItem('userPrivilige');
-  const { user } = useContext(CASContext)!;
 
   const getStudents = async () => {
     try {
@@ -41,8 +39,9 @@ export const StudentsProvider = ({ children }: StudentsProviderProps) => {
 
   useEffect(() => {
     setTimeout(() => {
-      // user?.authorityRole === 'DEANERY' &&
-      getStudents();
+      const userPrivilige = localStorage.getItem('userPrivilige');
+      console.log('mordo privilidż: ', userPrivilige);
+      userPrivilige === 'DEANERY' && getStudents();
     }, 500);
   }, []);
 

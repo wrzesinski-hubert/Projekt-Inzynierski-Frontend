@@ -77,7 +77,7 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
     `}
   transition: background-color ease-out 0.4s;
   box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 const threeStyles = () => {
@@ -189,7 +189,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                       <BoldParagraph isThree={groupsPerDay[group.day] >= 3}>{groups[index].name}</BoldParagraph>
                       {groupsPerDay[group.day] < 3 ? (
                         <TextWrapper>
-                          <div>{`${groups[index].time[0]}-${groups[index].time[1]}`}</div>
+                          <div>{`${groups[index].time}-${groups[index].endTime}`}</div>
                           <div>3/{groups[index].capacity}</div>
                         </TextWrapper>
                       ) : (

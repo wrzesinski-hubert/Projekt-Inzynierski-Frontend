@@ -14,6 +14,7 @@ export interface Group {
   id: number;
   day: number;
   time: string;
+  endTime: string;
   lecturer: string;
   room: string;
   type: GroupType;
@@ -43,7 +44,8 @@ export interface Student {
 export interface SchedulerEvent {
   id: number;
   day: number;
-  time: [string, string];
+  time: string;
+  endTime: string;
   lecturer: string;
   room: string;
   type: GroupType;
