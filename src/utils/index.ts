@@ -1,20 +1,11 @@
 import { courseStartTimeToEventRow } from '../constants/index';
 import { SchedulerEvent } from '../types';
 
-export const createClassTime = (startTime: string): [string, string] => {
-  const startTimeMapped = courseStartTimeToEventRow[startTime];
-  const endTime = Object.keys(courseStartTimeToEventRow).find(
-    (key) => courseStartTimeToEventRow[key] === startTimeMapped + 1,
-  )!;
-  return [startTime, endTime];
-};
+
 
 export const selectGroupsToShow = (schedulerEvents: Array<SchedulerEvent>, index: number) => {
-  return schedulerEvents.filter(({ time }: { time: [string, string] }) => courseStartTimeToEventRow[time[0]] === index);
+  return schedulerEvents.filter((schedulerEvent) => courseStartTimeToEventRow[schedulerEvent.time] === index);
 };
-
-
-
 
 //debounce declaration and implementation
 type Procedure = (...args: any[]) => any;

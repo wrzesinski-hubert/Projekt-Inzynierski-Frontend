@@ -1,7 +1,6 @@
 import React, { useState, createContext, useEffect, ReactNode } from 'react';
 import { Course, Group, Basket, GroupType, SchedulerEvent } from '../types';
 import { useSnackbar } from 'notistack';
-import { createClassTime } from '../utils';
 import { axiosInstance } from '../utils/axiosInstance';
 import CloseIcon from '@material-ui/icons/Close';
 import styled from 'styled-components';
@@ -71,12 +70,13 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     return basket.reduce((res, el) => {
       const { name } = el;
       if (el.classes) {
-        const { time } = el.classes;
-        res.push({ ...el.classes, name, time: createClassTime(time) });
+        console.log('element kurwa is: ', el);
+        res.push({ ...el.classes, name });
       }
       if (el.lecture) {
-        const { time } = el.lecture;
-        res.push({ ...el.lecture, name, time: createClassTime(time) });
+        console.log('element kurwa is: ', el);
+
+        res.push({ ...el.lecture, name });
       }
       return res;
     }, [] as Array<SchedulerEvent>);
@@ -175,8 +175,12 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const getNewestTimetable = async () => {
     try {
-      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/schedule`);
+      const { data } = await axiosInstance.get<Array<Basket> | ''>(
+        `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/schedule`,
+      );
       const basket = data === '' ? [] : data;
+      console.log('basket is: ', basket);
+      console.log('mordo weź');
       setBasket(basket);
     } catch (e) {
       console.log(e);
@@ -189,6 +193,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${studentId}/schedule`,
       );
       const basket = data === '' ? [] : data;
+
       setBasket(basket);
     } catch (e) {
       console.log(e);
@@ -198,13 +203,14 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const fetchCourses = async () => {
     try {
       const { data: courses } = await axiosInstance.get<Array<Course>>(
-        `${process.env.REACT_APP_API_URL}/api/v1/courses/all?groups=true`,
+        `${process.env.REACT_APP_API_URL}/api/v1/courses/all?groups=true&takenPlaces=true`,
       );
       const sortedCourses = courses.sort((a, b) => (a.name > b.name ? 1 : -1));
+      console.log('sortedCourses: ', sortedCourses);
       setCourses(sortedCourses);
     } catch (e) {
       console.log(e);
-    }
+    } 
   };
 
   useEffect(() => {

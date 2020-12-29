@@ -7,7 +7,6 @@ import styled, { css } from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useMemo } from 'react';
-import { createClassTime } from '../utils';
 import { dayMapping } from '../constants';
 
 const CourseCardWrapper = styled.div`
@@ -219,12 +218,9 @@ export const CourseCard = ({ course }: CourseCardProps) => {
                 </FlexItem>
               )}
               <FlexItem style={{ justifyContent: 'center', flexDirection: 'column' }}>
-                {/* <span>
-                  {dayMapping[group.day]} {createClassTime(group.time)[0]} - {createClassTime(group.time)[1]}
-                </span> */}
                 <div>{dayMapping[group.day]}</div>
                 <div>
-                  {createClassTime(group.time)[0]} - {createClassTime(group.time)[1]}
+                  {group.time} - {group.endTime}
                 </div>
               </FlexItem>
             </FlexboxWrapper>

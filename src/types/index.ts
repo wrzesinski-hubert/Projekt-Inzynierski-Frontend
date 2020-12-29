@@ -14,10 +14,12 @@ export interface Group {
   id: number;
   day: number;
   time: string;
+  endTime: string;
   lecturer: string;
   room: string;
   type: GroupType;
   capacity?: number;
+  takenPlaces: number;
 }
 
 export interface Course {
@@ -43,10 +45,12 @@ export interface Student {
 export interface SchedulerEvent {
   id: number;
   day: number;
-  time: [string, string];
+  time: string;
+  endTime: string;
   lecturer: string;
   room: string;
   type: GroupType;
   capacity?: number;
+  takenPlaces: number;
   name: string;
 }
