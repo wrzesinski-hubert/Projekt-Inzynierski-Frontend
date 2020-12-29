@@ -190,11 +190,15 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                       {groupsPerDay[group.day] < 3 ? (
                         <TextWrapper>
                           <div>{`${groups[index].time}-${groups[index].endTime}`}</div>
-                          <div>3/{groups[index].capacity}</div>
+                          <div>
+                            {groups[index].takenPlaces}/{groups[index].capacity}
+                          </div>
                         </TextWrapper>
                       ) : (
                         <TextWrapper style={{ flexDirection: 'column' }}>
-                          <div style={{ alignSelf: 'flex-end' }}>3/{groups[index].capacity}</div>
+                          <div style={{ alignSelf: 'flex-end' }}>
+                            {groups[index].takenPlaces}/{groups[index].capacity}
+                          </div>
                         </TextWrapper>
                       )}
                     </ClassWrap>

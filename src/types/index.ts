@@ -19,6 +19,7 @@ export interface Group {
   room: string;
   type: GroupType;
   capacity?: number;
+  takenPlaces: number;
 }
 
 export interface Course {
@@ -50,5 +51,6 @@ export interface SchedulerEvent {
   room: string;
   type: GroupType;
   capacity?: number;
+  takenPlaces: number;
   name: string;
 }

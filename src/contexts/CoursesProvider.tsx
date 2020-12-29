@@ -210,7 +210,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       setCourses(sortedCourses);
     } catch (e) {
       console.log(e);
-    }
+    } 
   };
 
   useEffect(() => {
