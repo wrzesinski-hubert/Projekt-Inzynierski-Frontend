@@ -146,14 +146,10 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
   };
 
   const handlePopoverClose = (e: MouseEvent<any>) => {
-    console.log('current target:', e.currentTarget);
-    console.log(' target:', e.target);
     setPopoverId(null);
     setAnchorEl(null);
-    console.log('click awayyy');
   };
   useEffect(() => {
-    console.log('anchorEl: ', anchorEl);
   }, [anchorEl]);
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;

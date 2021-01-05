@@ -1,11 +1,10 @@
-import React, { ElementType, useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Topbar from './Topbar';
 import { Transfer } from './Transfer';
 import { Admin } from './Admin';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
 import styled from 'styled-components';
-import { coursesContext } from '../contexts/CoursesProvider';
 import LoadingOverlay from 'react-loading-overlay';
 import { SyncLoader } from 'react-spinners';
 import { CASContext } from '../contexts/CASProvider';
@@ -19,8 +18,7 @@ const Wrapper = styled.div`
 `;
 
 export const App = () => {
-  const { isDataLoading } = useContext(coursesContext)!;
-  const { isFetchingToken, user, role } = useContext(CASContext)!;
+  const { role } = useContext(CASContext)!;
   const [isOpenTransfer, setOpenTransfer] = useState(false);
 
   const handleTransfer = () => {
@@ -28,10 +26,6 @@ export const App = () => {
   };
 
   const userPrivilige = localStorage.getItem('userPrivilige');
-  console.log('role of that user is: ', role);
-  useEffect(() => {
-    console.log('is fetching token: ', isFetchingToken);
-  }, [isFetchingToken]);
   return (
     <>
       <LoadingOverlay active={role === undefined} spinner={<SyncLoader />}>
@@ -43,7 +37,7 @@ export const App = () => {
               <Scheduler />
               <Rightbar />
             </>
-          )}{' '}
+          )}
           {userPrivilige === 'DEANERY' && <Admin />}
         </Wrapper>
       </LoadingOverlay>

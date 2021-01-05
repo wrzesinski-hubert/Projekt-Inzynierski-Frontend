@@ -5,6 +5,7 @@ import History from '../assets/history.svg';
 import Statistics from '../assets/statistics.svg';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
+import { SchedulerHistory } from './SchedulerHistory';
 
 const LeftSide = styled.div`
   height: 100%;
@@ -13,7 +14,7 @@ const LeftSide = styled.div`
   flex-direction: column;
   background-color: white;
   text-align: center;
-  border-radius:5px;
+  border-radius: 5px;
 `;
 
 const Wrap = styled.div`
@@ -45,11 +46,11 @@ const LeftPanelElement = styled.div<LeftPanelElement>`
   cursor: pointer;
   box-shadow: ${({ isCurrentTab }) => (isCurrentTab === true ? `inset 0px 0px 11px 0px rgba(0,0,0,0.30)` : '')};
   border-bottom: 1px solid #979797;
-  :first-child{
-    border-radius:0px 5px 0px 0px;
+  :first-child {
+    border-radius: 0px 5px 0px 0px;
   }
-  :last-child{
-    border-radius:0px 0px 5px 0px;
+  :last-child {
+    border-radius: 0px 0px 5px 0px;
   }
 `;
 
@@ -124,7 +125,7 @@ export const Admin = () => {
             <Rightbar />
           </>
         ) : currentTab === 2 ? (
-          <HistoryDiv />
+          <SchedulerHistory />
         ) : currentTab === 3 ? (
           <StatsDiv />
         ) : (

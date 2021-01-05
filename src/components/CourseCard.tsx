@@ -161,7 +161,6 @@ export const CourseCard = ({ course }: CourseCardProps) => {
   const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.id), []);
   const [previous, setPrevious] = useState(basketCourseGroups);
 
-  console.log('course is: ', course);
   const onGroupClick = (group: Group, courseId: number) => {
     setPrevious((prev) => (group.type === GroupType.CLASS ? { ...prev, classes: group } : { ...prev, lecture: group }));
     changeGroupInBasket(group, courseId);

@@ -50,7 +50,7 @@ interface DropdownProps {
 }
 
 export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: DropdownProps) => {
-  const { courses, selectBasketNames, addCourseToBasket, changeStudent } = useContext(coursesContext)!;
+  const { courses, selectBasketNames, addCourseToBasket, changeStudent, getStudentTimetablesHistory } = useContext(coursesContext)!;
   const { students, changeSelectedStudent } = useContext(studentsContext)!;
   const basketNames = useMemo(() => selectBasketNames(), [selectBasketNames]);
   const [filteredCourses, setFilteredCourses] = useState<Array<Course>>([]);
@@ -71,6 +71,7 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
     //to be moved to students provider
     changeStudent(target.id);
     changeSelectedStudent(Number(target.id));
+    
     handleCloseDropdown();
   };
 

@@ -1,7 +1,6 @@
 import React, { useState, createContext, useEffect, ReactNode, useRef, useContext } from 'react';
 import { Student } from '../types';
 import { axiosInstance } from '../utils/axiosInstance';
-import { CASContext } from './CASProvider';
 
 interface StudentContext {
   students: Array<Student>;
@@ -19,7 +18,9 @@ export const StudentsProvider = ({ children }: StudentsProviderProps) => {
   const [students, setStudents] = useState<Array<Student>>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
-  //not working currently
+  useEffect(() => {
+    console.log('selected student: ', selectedStudent);
+  }, [selectedStudent]);
 
   const getStudents = async () => {
     try {
@@ -27,7 +28,6 @@ export const StudentsProvider = ({ children }: StudentsProviderProps) => {
         `${process.env.REACT_APP_API_URL}/api/v1/users/students`,
       );
       setStudents(data);
-      console.log(data);
     } catch (e) {
       console.log(e);
     }
@@ -40,7 +40,6 @@ export const StudentsProvider = ({ children }: StudentsProviderProps) => {
   useEffect(() => {
     setTimeout(() => {
       const userPrivilige = localStorage.getItem('userPrivilige');
-      console.log('mordo privilidż: ', userPrivilige);
       userPrivilige === 'DEANERY' && getStudents();
     }, 500);
   }, []);

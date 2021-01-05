@@ -54,3 +54,20 @@ export interface SchedulerEvent {
   takenPlaces: number;
   name: string;
 }
+
+export interface TimetableHistory {
+  commisionDate: Date;
+  commiter: {
+    id: number;
+    name: string;
+    surname: string;
+    email: string;
+  };
+  groups: Array<number>;
+  owner: {
+    id: number;
+    name: string;
+    surname: string;
+    email: string;
+  };
+}
