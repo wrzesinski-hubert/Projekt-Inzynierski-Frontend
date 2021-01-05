@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, ChangeEvent, useEffect, useCallback, useContext } from 'react';
+import React, { useState, MouseEvent, ChangeEvent, useEffect, useCallback, useContext, useRef } from 'react';
 import { ReactComponent as Close } from '../assets/close.svg';
 import ProfileIcon from '../assets/account.svg';
 import { Profile } from './Profile';
@@ -9,6 +9,8 @@ import styled from 'styled-components/macro';
 import ClickAwayListener from 'react-click-away-listener';
 import { SelectMenu } from './SelectMenu';
 import { studentsContext } from '../contexts/StudentsProvider';
+import { CASContext } from '../contexts/CASProvider';
+import { render } from 'react-dom';
 
 const Topbar = styled.div`
   background-color: #e3e5ed;
@@ -137,14 +139,18 @@ interface TopbarProps {
 }
 
 export default function ({ handleTransfer }: TopbarProps) {
-  const userPrivilige = localStorage.getItem('userPrivilige');
   const { selectedStudent } = useContext(studentsContext)!;
+  const { role } = useContext(CASContext)!;
   const [clearInput, setClearInput] = useState(false);
   const [isPolish, setIsPolish] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [selectedOption, setSelectedOption] = useState('przedmioty');
+  const [selectedOption, setSelectedOption] = useState(role === 'STUDENT' ? 'przedmioty' : 'studenci');
+
+  useEffect(() => {
+    role && setSelectedOption(role === 'STUDENT' ? 'przedmioty' : 'studenci');
+  }, [role]);
 
   const changeSelectedOption = (option: string) => setSelectedOption(option);
 
@@ -178,14 +184,14 @@ export default function ({ handleTransfer }: TopbarProps) {
       <FlexboxColumn>
         <ClickAwayListener onClickAway={handleCloseDropdown}>
           <Flexbox>
-            {userPrivilige !== 'STUDENT' && (
+            {role !== 'STUDENT' && (
               <SelectMenu
                 changeSelectedOption={changeSelectedOption}
                 selectedOption={selectedOption}
                 changeDropdownOpen={setOpen}
               />
             )}
-            <InputWrapper isStudent={userPrivilige === 'STUDENT'}>
+            <InputWrapper isStudent={role === 'STUDENT'}>
               <Input
                 placeholder={`Wyszukaj ${selectedOption === 'studenci' ? 'studentów...' : 'przedmioty...'}`}
                 onChange={handleChange}

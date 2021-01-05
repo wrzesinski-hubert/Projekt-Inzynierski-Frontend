@@ -7,6 +7,8 @@ export interface CASContext {
   logout: () => void;
   token: string | undefined;
   refreshToken: string | undefined;
+  isFetchingToken: boolean;
+  role: string | undefined;
 }
 
 export const CASContext = createContext<CASContext | undefined>(undefined);
@@ -19,6 +21,8 @@ export const CASProvider = ({ children }: CASProviderProps) => {
   const [user, setUser] = useState<LoggedUser>();
   const [token, setToken] = useState<string | undefined>();
   const [refreshToken, setRefreshToken] = useState<string | undefined>();
+  const [role, setRole] = useState<string | undefined>(undefined);
+  const [isFetchingToken, setIsFetchingToken] = useState(false);
   useEffect(() => {
     const login = async () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -28,6 +32,7 @@ export const CASProvider = ({ children }: CASProviderProps) => {
       }
       try {
         if (!localStorage.getItem('userToken')) {
+          setIsFetchingToken(true);
           const { data: user } = await axiosInstance.get<LoggedUser & { token: string; refreshToken: string }>(
             `${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`,
           );
@@ -36,11 +41,14 @@ export const CASProvider = ({ children }: CASProviderProps) => {
           localStorage.setItem('userToken', user.token);
           localStorage.setItem('userPrivilige', user.authorityRole);
           localStorage.setItem('refreshToken', user.refreshToken);
+          setIsFetchingToken(false);
         }
         const token = localStorage.getItem('userToken');
         const refreshToken = localStorage.getItem('refreshToken');
+        const role = localStorage.getItem('userPrivilige');
         token && setToken(token);
         refreshToken && setRefreshToken(refreshToken);
+        role && setRole(role);
       } catch (e) {
         console.log(e);
       }
@@ -63,5 +71,9 @@ export const CASProvider = ({ children }: CASProviderProps) => {
     window.location.replace(`https://cas.amu.edu.pl/cas/login?service=${window.origin}&locale=pl`);
   }
 
-  return <CASContext.Provider value={{ user, token, refreshToken, logout }}>{children}</CASContext.Provider>;
+  return (
+    <CASContext.Provider value={{ user, token, refreshToken, logout, isFetchingToken, role }}>
+      {children}
+    </CASContext.Provider>
+  );
 };
