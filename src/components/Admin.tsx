@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent,useContext } from 'react';
 import styled from 'styled-components/macro';
 import Plan from '../assets/plan.svg';
 import History from '../assets/history.svg';
@@ -6,6 +6,7 @@ import Statistics from '../assets/statistics.svg';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
 import { SchedulerHistory } from './SchedulerHistory';
+import { coursesContext } from '../contexts/CoursesProvider';
 
 const LeftSide = styled.div`
   height: 100%;
@@ -97,9 +98,11 @@ const Icon = styled.img`
 
 export const Admin = () => {
   const [currentTab, setCurrentTab] = useState<null | number>(1);
+  const { getNewestStudentTimetable,userID } = useContext(coursesContext)!;
 
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     setCurrentTab(Number(e.currentTarget.id));
+    getNewestStudentTimetable(userID);
   };
 
   return (

@@ -144,6 +144,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         action,
       });
     }
+    getStudentTimetablesHistory(userID);
   };
 
   const changeGroupInBasket = (choosenGroup: Group, courseId: number) => {
