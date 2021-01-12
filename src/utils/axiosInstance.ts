@@ -37,7 +37,6 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    console.log("original request is: ", originalRequest)
     if (error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
       const access_token = await getNewTokens();

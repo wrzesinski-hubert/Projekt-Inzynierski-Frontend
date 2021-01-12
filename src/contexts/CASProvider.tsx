@@ -36,7 +36,6 @@ export const CASProvider = ({ children }: CASProviderProps) => {
           const { data: user } = await axiosInstance.get<LoggedUser & { token: string; refreshToken: string }>(
             `${process.env.REACT_APP_API_URL}/token?ticket=${ticket}`,
           );
-          console.log('token response: ', user);
           setUser({ authorityRole: user.authorityRole, email: user.email, id: user.id });
           localStorage.setItem('userToken', user.token);
           localStorage.setItem('userPrivilige', user.authorityRole);

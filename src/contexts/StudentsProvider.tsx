@@ -18,10 +18,6 @@ export const StudentsProvider = ({ children }: StudentsProviderProps) => {
   const [students, setStudents] = useState<Array<Student>>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
-  useEffect(() => {
-    console.log('selected student: ', selectedStudent);
-  }, [selectedStudent]);
-
   const getStudents = async () => {
     try {
       const { data } = await axiosInstance.get<Array<Student>>(

@@ -67,7 +67,6 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
 
   const onUserClick = (event: MouseEvent) => {
     const target = event.currentTarget;
-    console.log('target: ', target);
     //to be moved to students provider
     changeStudent(target.id);
     changeSelectedStudent(Number(target.id));

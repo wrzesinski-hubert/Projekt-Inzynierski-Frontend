@@ -7,6 +7,7 @@ import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
 import { SchedulerHistory } from './SchedulerHistory';
 import { coursesContext } from '../contexts/CoursesProvider';
+import { SchedulerEvent } from '../types';
 
 const LeftSide = styled.div`
   height: 100%;
@@ -96,9 +97,15 @@ const Icon = styled.img`
   margin: 5px;
 `;
 
-export const Admin = () => {
+interface Deanery {
+  schedulerEvents: Array<SchedulerEvent>;
+}
+
+export const Deanery = ({ schedulerEvents }: Deanery) => {
   const [currentTab, setCurrentTab] = useState<null | number>(1);
   const { getNewestStudentTimetable,userID } = useContext(coursesContext)!;
+  const { selectHistorySchedulerEvents } = useContext(coursesContext)!;
+  const schedulerHistoryEvents = selectHistorySchedulerEvents();
 
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     setCurrentTab(Number(e.currentTarget.id));
@@ -124,11 +131,11 @@ export const Admin = () => {
       <Wrapper>
         {currentTab === 1 ? (
           <>
-            <Scheduler />
+            <Scheduler schedulerEvents={schedulerEvents}/>
             <Rightbar />
           </>
         ) : currentTab === 2 ? (
-          <SchedulerHistory />
+          <SchedulerHistory schedulerHistoryEvents={schedulerHistoryEvents}/>
         ) : currentTab === 3 ? (
           <StatsDiv />
         ) : (

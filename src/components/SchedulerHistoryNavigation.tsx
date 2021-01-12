@@ -65,8 +65,6 @@ export const SchedulerHistoryNavigation = ({
   AddCurrentTimetable,
 }: SchedulerHistoryNavigationProps) => {
 
-  console.log("231213231231",commisionDate)
-
   return (
     <Wrapper>
       <StyledButton

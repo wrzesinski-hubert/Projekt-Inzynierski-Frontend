@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { coursesContext } from '../contexts/CoursesProvider';
+import { SchedulerEvent } from '../types';
 import { Scheduler } from './Scheduler';
 import { SchedulerHistoryNavigation } from './SchedulerHistoryNavigation';
 
@@ -10,8 +11,12 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-export const SchedulerHistory = () => {
-  const { timetableHistory, setBasketFromHistoryGroups } = useContext(coursesContext)!;
+interface SchedulerHistoryProps {
+  schedulerHistoryEvents: Array<SchedulerEvent>;
+}
+
+export const SchedulerHistory = ({schedulerHistoryEvents}:SchedulerHistoryProps) => {
+  const { timetableHistory, setHistoryBasketFromHistoryGroups } = useContext(coursesContext)!;
   const [currentTimetable, setCurrentTimetable] = useState(timetableHistory.length===0 ? 0 : timetableHistory.length - 1);
   let commisionDate = timetableHistory[currentTimetable]?.commisionDate;
 
@@ -28,12 +33,13 @@ export const SchedulerHistory = () => {
   };
 
   useEffect(() => {
-    console.log('current timetable is: ', currentTimetable);
-    console.log('23113knkalsdnkasdlk', timetableHistory);
     const timetable = timetableHistory[currentTimetable];
     if (timetable) {
       const { groups } = timetable;
-      setBasketFromHistoryGroups(groups);
+      setHistoryBasketFromHistoryGroups(groups);
+    }
+    else{
+      setHistoryBasketFromHistoryGroups([]);
     }
   }, [currentTimetable,timetableHistory]);
 
@@ -42,7 +48,7 @@ export const SchedulerHistory = () => {
       {timetableHistory.length > 0 && (
         <SchedulerHistoryNavigation commisionDate={commisionDate} SubstractCurrentTimetable={SubstractCurrentTimetable} AddCurrentTimetable={AddCurrentTimetable} />
       )}
-      <Scheduler />
+      <Scheduler schedulerEvents={schedulerHistoryEvents}/>
     </Wrapper>
   );
 };
