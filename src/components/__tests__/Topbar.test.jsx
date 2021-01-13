@@ -18,12 +18,21 @@ test('renders component', async () => {
   expect(screen.getByText(/plan na plan/i)).toBeInTheDocument();
 });
 
-// test('calculate results after user types value', async () => {
-//   const { getByLabelText, getByText, debug } = customRender(<Topbar handleTransfer={() => {}} />);
-//   const input = getByLabelText('xd');
-//   fireEvent.change(input, { target: { value: '122' } });
-//   console.log(debug());
-//   const textNode = await waitForElement(() => getByText('asdasdsa'));
-//   console.log(debug());
-//   expect(textNode).toBeInTheDocument();
-// });
+test('input should display default placeholder for student', async () => {
+  const { getByPlaceholderText, getByText, debug } = customRender(<Topbar handleTransfer={() => {}} />);
+  const input = getByPlaceholderText('Wyszukaj przedmioty...');
+  // fireEvent.change(input, { target: { value: '122' } });
+  // console.log(debug());
+  // const textNode = await waitForElement(() => getByText('asdasdsa'));
+  // console.log(debug());
+  expect(input).toBeInTheDocument();
+});
+
+test('input should display changed value', async () => {
+  const { getByPlaceholderText, getByText, debug } = customRender(<Topbar handleTransfer={() => {}} />);
+  const input = getByPlaceholderText('Wyszukaj przedmioty...');
+  fireEvent.change(input, { target: { value: '122' } });
+  // console.log(debug());
+  // console.log(debug());
+  expect(input.value).toBe("122");
+});

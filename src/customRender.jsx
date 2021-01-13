@@ -16,3 +16,18 @@ export const customRender = (ui, CASValue = {}, studentsValue = {}, coursesValue
     </SnackbarProvider>,
   );
 };
+
+export const customRenderCAS = (ui, CASValue = {}, studentsValue = {}, coursesValue = {}) => {
+
+  const user={authorityRole: "DEANERY", email: "test@test.pl", id: "123"}
+
+  return render(
+    <SnackbarProvider>
+      <CASProvider value={{user}}>
+        <StudentsProvider value={50}>
+          <CoursesProvider value={100}>{ui}</CoursesProvider>
+        </StudentsProvider>
+      </CASProvider>
+    </SnackbarProvider>,
+  );
+};
