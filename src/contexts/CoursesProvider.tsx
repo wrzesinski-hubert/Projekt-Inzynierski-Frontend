@@ -150,13 +150,13 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`,
         JSON.stringify(basketIds),
       );
-      enqueueSnackbar('Plan został zapisany', {
+      enqueueSnackbar('Ustawienia zostały zapisane', {
         variant: 'success',
         action,
       });
     } catch (e) {
       console.log('error: ', e);
-      enqueueSnackbar('Zapisywanie planu nie powiodło się', {
+      enqueueSnackbar('Ustawienia nie zostały zapisane', {
         variant: 'error',
         action,
       });
