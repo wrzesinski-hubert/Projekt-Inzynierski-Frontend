@@ -1,4 +1,4 @@
-import React, { ElementType, useContext, useState } from 'react';
+import React, { ElementType, useContext, useEffect, useState } from 'react';
 import Topbar from './Topbar';
 import { Transfer } from './Transfer';
 import { Admin } from './Admin';
@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { coursesContext } from '../contexts/CoursesProvider';
 import LoadingOverlay from 'react-loading-overlay';
 import { SyncLoader } from 'react-spinners';
+import { CASContext } from '../contexts/CASProvider';
 const Wrapper = styled.div`
   display: flex;
   height: calc(100vh - 80px);
@@ -19,17 +20,21 @@ const Wrapper = styled.div`
 
 export const App = () => {
   const { isDataLoading } = useContext(coursesContext)!;
+  const { isFetchingToken, user, role } = useContext(CASContext)!;
   const [isOpenTransfer, setOpenTransfer] = useState(false);
 
-  const handleTransfer = () => {   
+  const handleTransfer = () => {
     setOpenTransfer(!isOpenTransfer);
   };
 
   const userPrivilige = localStorage.getItem('userPrivilige');
-
+  console.log('role of that user is: ', role);
+  useEffect(() => {
+    console.log('is fetching token: ', isFetchingToken);
+  }, [isFetchingToken]);
   return (
     <>
-      <LoadingOverlay active={isDataLoading} spinner={<SyncLoader />}>
+      <LoadingOverlay active={role === undefined} spinner={<SyncLoader />}>
         <Topbar handleTransfer={handleTransfer} />
         <Transfer isOpen={isOpenTransfer} handleClose={handleTransfer} />
         <Wrapper>
@@ -38,9 +43,8 @@ export const App = () => {
               <Scheduler />
               <Rightbar />
             </>
-          )} { userPrivilige === 'DEANERY' && (
-            <Admin />
-          )}
+          )}{' '}
+          {userPrivilige === 'DEANERY' && <Admin />}
         </Wrapper>
       </LoadingOverlay>
     </>
