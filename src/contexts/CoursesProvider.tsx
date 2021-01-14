@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect, ReactNode } from 'react';
-import { Course, Group, Basket, GroupType, SchedulerEvent } from '../types';
+import { Course, Group, Basket, GroupType, SchedulerEvent, TimetableHistory } from '../types';
 import { useSnackbar } from 'notistack';
 import { axiosInstance } from '../utils/axiosInstance';
 import CloseIcon from '@material-ui/icons/Close';
@@ -16,22 +16,27 @@ const StyledCloseIcon = styled(CloseIcon)`
 interface CourseContext {
   courses: Array<Course>;
   basket: Array<Basket>;
+  timetableHistory: Array<TimetableHistory>;
   hoveredGroup: Group | undefined | null;
   userID: string;
   isDataLoading: boolean;
+  historyBasket: Array<Basket>;
   addCourseToBasket: (courses: Course) => void;
   changeHoveredGroup: (group: Group | null) => void;
-  changeGroupInBasket: (group: Group, courseId: number) => void;
+  changeGroupInBasket: (group: any, courseId: number) => void;
   restoreGroupInBasket: (restoreGroup: Group, courseId: number) => void;
   deleteFromBasket: (id: number) => void;
   saveBasket: (userID: string) => Promise<void>;
   changeStudent: (studentId: string) => void;
   selectSchedulerEvents: () => Array<SchedulerEvent>;
+  selectHistorySchedulerEvents: () => Array<SchedulerEvent>;
   selectBasketNames: () => Array<string>;
   selectBasketCourses: () => Array<Course>;
   selectBasketCourseGroups: (courseId: number) => { lecture: Group | undefined; classes: Group | undefined };
   getNewestStudentTimetable: (studentId: string) => void;
+  getStudentTimetablesHistory: (studentId: string) => void;
   changeDataLoading: (isLoading: boolean) => void;
+  setHistoryBasketFromHistoryGroups: (groupsIds: Array<number>) => void;
 }
 export const coursesContext = createContext<CourseContext | undefined>(undefined);
 
@@ -46,6 +51,8 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   //fetch courses with groups
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [basket, setBasket] = useState<Array<Basket>>([]);
+  const [historyBasket, setHistoryBasket] = useState<Array<Basket>>([]);
+  const [timetableHistory, setTimetableHistory] = useState<Array<TimetableHistory>>([]);
   const [userID, setUserID] = useState('');
   const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
   const [isDataLoading, setIsDataLoading] = useState(false);
@@ -70,17 +77,28 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     return basket.reduce((res, el) => {
       const { name } = el;
       if (el.classes) {
-        console.log('element kurwa is: ', el);
         res.push({ ...el.classes, name });
       }
       if (el.lecture) {
-        console.log('element kurwa is: ', el);
-
         res.push({ ...el.lecture, name });
       }
       return res;
     }, [] as Array<SchedulerEvent>);
   };
+
+  const selectHistorySchedulerEvents = () => {
+    return historyBasket.reduce((res, el) => {
+      const { name } = el;
+      if (el.classes) {
+        res.push({ ...el.classes, name });
+      }
+      if (el.lecture) {
+        res.push({ ...el.lecture, name });
+      }
+      return res;
+    }, [] as Array<SchedulerEvent>);
+  };
+
 
   const selectBasketCourseGroups = (courseId: number) => {
     const course = basket.find(({ id }) => id === courseId);
@@ -111,6 +129,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     setUserID(studentId);
     setTimeout(() => {
       getNewestStudentTimetable(studentId);
+      getStudentTimetablesHistory(studentId);
     }, 100);
   };
 
@@ -131,32 +150,30 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${userID}`,
         JSON.stringify(basketIds),
       );
-      enqueueSnackbar('Plan został zapisany', {
+      enqueueSnackbar('Ustawienia zostały zapisane', {
         variant: 'success',
         action,
       });
     } catch (e) {
       console.log('error: ', e);
-      enqueueSnackbar('Zapisywanie planu nie powiodło się', {
+      enqueueSnackbar('Ustawienia nie zostały zapisane', {
         variant: 'error',
         action,
       });
     }
+    getStudentTimetablesHistory(userID);
   };
 
-  const changeGroupInBasket = (choosenGroup: Group, courseId: number) => {
+  const changeGroupInBasket = (choosenGroup: any, courseId: number) => {
     const basketCourse = basket.filter((course) => course.id === courseId)[0];
-    const { type } = choosenGroup;
-    if (type === GroupType.CLASS) {
+    if (choosenGroup.lecture && choosenGroup.classes)
+    {
+      const prev = choosenGroup.prev==="lecture"?choosenGroup.lecture : choosenGroup.classes
       setBasket(
-        basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, classes: choosenGroup } : basket)),
+        basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, lecture: choosenGroup.lecture, classes:choosenGroup.classes } : basket)),
       );
-    } else if (type === GroupType.LECTURE) {
-      setBasket(
-        basket.map((basket) => (basket.id === basketCourse.id ? { ...basket, lecture: choosenGroup } : basket)),
-      );
-    }
-    changeHoveredGroup(choosenGroup);
+      changeHoveredGroup(prev);
+    }    
   };
 
   const restoreGroupInBasket = (restoreGroup: Group, courseId: number) => {
@@ -179,8 +196,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/schedule`,
       );
       const basket = data === '' ? [] : data;
-      console.log('basket is: ', basket);
-      console.log('mordo weź');
       setBasket(basket);
     } catch (e) {
       console.log(e);
@@ -200,17 +215,57 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }
   };
 
+  const getStudentTimetablesHistory = async (studentId: string) => {
+    try {
+      const { data } = await axiosInstance.get<Array<TimetableHistory> | []>(
+        `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${studentId}?groups=true`,
+      );
+      console.log('data is mordo: ', data);
+      setTimetableHistory(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const fetchCourses = async () => {
     try {
       const { data: courses } = await axiosInstance.get<Array<Course>>(
         `${process.env.REACT_APP_API_URL}/api/v1/courses/all?groups=true&takenPlaces=true`,
       );
       const sortedCourses = courses.sort((a, b) => (a.name > b.name ? 1 : -1));
-      console.log('sortedCourses: ', sortedCourses);
       setCourses(sortedCourses);
     } catch (e) {
       console.log(e);
-    } 
+    }
+  };
+
+  const setHistoryBasketFromHistoryGroups = (groupsIds: Array<number>) => {
+    const basket: Array<Basket> = [];
+    for (const groupId of groupsIds) {
+      for (const course of courses) {
+        const { lectures, classes, name, id } = course;
+        let basketElement: Basket = { name: name, id: id };
+        if (lectures) {
+          for (const lecture of lectures) {
+            if (groupId === lecture.id) {
+              basketElement = { ...basketElement, lecture: lecture };
+            }
+          }
+        }
+        if (classes) {
+          for (const singleClass of classes) {
+            if (groupId === singleClass.id) {
+              basketElement = { ...basketElement, classes: singleClass };
+            }
+          }
+        }
+        if (basketElement.classes !== undefined || basketElement.lecture !== undefined) {
+          basket.push(basketElement);
+        }
+      }
+    }
+    console.log('baskeeeeeet: ', basket);
+    setHistoryBasket(basket);
   };
 
   useEffect(() => {
@@ -231,7 +286,9 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         courses,
         basket,
         hoveredGroup,
+        timetableHistory,
         isDataLoading,
+        historyBasket,
         addCourseToBasket,
         changeHoveredGroup,
         changeGroupInBasket,
@@ -239,11 +296,14 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         restoreGroupInBasket,
         saveBasket,
         selectSchedulerEvents,
+        selectHistorySchedulerEvents,
         selectBasketNames,
         selectBasketCourses,
         selectBasketCourseGroups,
         getNewestStudentTimetable,
         changeStudent,
+        getStudentTimetablesHistory,
+        setHistoryBasketFromHistoryGroups,
         changeDataLoading,
       }}
     >

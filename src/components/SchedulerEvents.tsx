@@ -3,15 +3,15 @@ import { SchedulerRow } from './SchedulerRow';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { selectGroupsToShow } from '../utils/index';
 import { ROWS_COUNT } from '../constants';
+import { SchedulerEvent } from '../types';
+
 interface SchedulerEventsProps {
   cellWidth: number;
   cellHeight: number;
+  schedulerEvents: Array<SchedulerEvent>;
 }
 
-export const SchedulerEvents = ({ cellWidth, cellHeight }: SchedulerEventsProps) => {
-  const { selectSchedulerEvents } = useContext(coursesContext)!;
-
-  const schedulerEvents = selectSchedulerEvents();
+export const SchedulerEvents = ({ cellWidth, cellHeight,schedulerEvents }: SchedulerEventsProps) => {
 
   return (
     <div>

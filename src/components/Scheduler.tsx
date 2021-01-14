@@ -1,8 +1,9 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { useState } from 'react';
 import { SchedulerEvents } from './SchedulerEvents';
 import { days, hours } from '../constants/index';
 import styled from 'styled-components/macro';
+import { SchedulerEvent } from '../types';
 
 const SchedulerWrapper = styled.div`
   border-collapse: collapse;
@@ -61,7 +62,11 @@ const TableCell = styled.div<TableCellProps>`
   font-weight: bold;
 `;
 
-export const Scheduler = () => {
+interface SchedulerProps {
+  schedulerEvents: Array<SchedulerEvent>;
+}
+
+export const Scheduler = ({ schedulerEvents }: SchedulerProps) => {
   const cellRef = useRef<HTMLDivElement>(null);
   const [cellWidth, setCellWidth] = useState(0);
   const [cellHeight, setCellHeight] = useState(0);
@@ -123,7 +128,7 @@ export const Scheduler = () => {
             )}
           </TableRow>
         ))}
-        <SchedulerEvents cellWidth={cellWidth} cellHeight={cellHeight} />
+        <SchedulerEvents cellWidth={cellWidth} cellHeight={cellHeight} schedulerEvents={schedulerEvents} />
       </TableBody>
     </SchedulerWrapper>
   );

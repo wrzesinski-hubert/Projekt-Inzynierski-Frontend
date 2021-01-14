@@ -1,10 +1,13 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent,useContext } from 'react';
 import styled from 'styled-components/macro';
 import Plan from '../assets/plan.svg';
 import History from '../assets/history.svg';
 import Statistics from '../assets/statistics.svg';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
+import { SchedulerHistory } from './SchedulerHistory';
+import { coursesContext } from '../contexts/CoursesProvider';
+import { SchedulerEvent } from '../types';
 
 const LeftSide = styled.div`
   height: 100%;
@@ -13,7 +16,7 @@ const LeftSide = styled.div`
   flex-direction: column;
   background-color: white;
   text-align: center;
-  border-radius:5px;
+  border-radius: 5px;
 `;
 
 const Wrap = styled.div`
@@ -45,11 +48,11 @@ const LeftPanelElement = styled.div<LeftPanelElement>`
   cursor: pointer;
   box-shadow: ${({ isCurrentTab }) => (isCurrentTab === true ? `inset 0px 0px 11px 0px rgba(0,0,0,0.30)` : '')};
   border-bottom: 1px solid #979797;
-  :first-child{
-    border-radius:0px 5px 0px 0px;
+  :first-child {
+    border-radius: 0px 5px 0px 0px;
   }
-  :last-child{
-    border-radius:0px 0px 5px 0px;
+  :last-child {
+    border-radius: 0px 0px 5px 0px;
   }
 `;
 
@@ -94,11 +97,19 @@ const Icon = styled.img`
   margin: 5px;
 `;
 
-export const Admin = () => {
+interface Deanery {
+  schedulerEvents: Array<SchedulerEvent>;
+}
+
+export const Deanery = ({ schedulerEvents }: Deanery) => {
   const [currentTab, setCurrentTab] = useState<null | number>(1);
+  const { getNewestStudentTimetable,userID } = useContext(coursesContext)!;
+  const { selectHistorySchedulerEvents } = useContext(coursesContext)!;
+  const schedulerHistoryEvents = selectHistorySchedulerEvents();
 
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     setCurrentTab(Number(e.currentTarget.id));
+    getNewestStudentTimetable(userID);
   };
 
   return (
@@ -120,11 +131,11 @@ export const Admin = () => {
       <Wrapper>
         {currentTab === 1 ? (
           <>
-            <Scheduler />
+            <Scheduler schedulerEvents={schedulerEvents}/>
             <Rightbar />
           </>
         ) : currentTab === 2 ? (
-          <HistoryDiv />
+          <SchedulerHistory schedulerHistoryEvents={schedulerHistoryEvents}/>
         ) : currentTab === 3 ? (
           <StatsDiv />
         ) : (

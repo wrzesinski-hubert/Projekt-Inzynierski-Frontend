@@ -161,9 +161,8 @@ export const CourseCard = ({ course }: CourseCardProps) => {
   const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.id), []);
   const [previous, setPrevious] = useState(basketCourseGroups);
 
-  console.log('course is: ', course);
   const onGroupClick = (group: Group, courseId: number) => {
-    setPrevious((prev) => (group.type === GroupType.CLASS ? { ...prev, classes: group } : { ...prev, lecture: group }));
+    setPrevious((prev) => (group.type === GroupType.CLASS ? { ...prev, classes: group, prev:"classes" } : { ...prev, lecture: group,prev:"lecture" }));
     changeGroupInBasket(group, courseId);
   };
 
@@ -188,22 +187,17 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             onClick={() => onGroupClick(group, course.id)}
             onMouseEnter={() => {
               if (group.type === GroupType.CLASS) {
-                changeGroupInBasket(group, course.id);
+                changeGroupInBasket({classes: group,lecture:previous.lecture}, course.id);
               }
               if (group.type === GroupType.LECTURE) {
-                changeGroupInBasket(group, course.id);
+                changeGroupInBasket({lecture: group,classes:previous.classes}, course.id);
               }
             }}
             onMouseLeave={() => {
               if (hoveredGroup) {
-                if (hoveredGroup.type === GroupType.CLASS && previous.classes !== undefined) {
-                  changeGroupInBasket(previous.classes, course.id);
-                }
-                if (hoveredGroup.type === GroupType.LECTURE && previous.lecture !== undefined) {
-                  changeGroupInBasket(previous.lecture, course.id);
-                }
-                changeHoveredGroup(null);
+                changeGroupInBasket(previous, course.id);            
               }
+              changeHoveredGroup(null);
             }}
           >
             <StyledGroupType groupType={group.type}>{group.type === 'CLASS' ? 'ĆW' : 'WYK'}</StyledGroupType>

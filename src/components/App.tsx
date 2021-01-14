@@ -1,14 +1,15 @@
-import React, { ElementType, useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Topbar from './Topbar';
 import { Transfer } from './Transfer';
-import { Admin } from './Admin';
+import { Deanery } from './DeaneryPanel';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
+import { Administrator } from './Administrator';
 import styled from 'styled-components';
-import { coursesContext } from '../contexts/CoursesProvider';
 import LoadingOverlay from 'react-loading-overlay';
 import { SyncLoader } from 'react-spinners';
 import { CASContext } from '../contexts/CASProvider';
+import { coursesContext } from '../contexts/CoursesProvider';
 const Wrapper = styled.div`
   display: flex;
   height: calc(100vh - 80px);
@@ -19,33 +20,38 @@ const Wrapper = styled.div`
 `;
 
 export const App = () => {
-  const { isDataLoading } = useContext(coursesContext)!;
-  const { isFetchingToken, user, role } = useContext(CASContext)!;
+  const { role } = useContext(CASContext)!;
   const [isOpenTransfer, setOpenTransfer] = useState(false);
+
+  const { selectSchedulerEvents } = useContext(coursesContext)!;
+  const schedulerEvents = selectSchedulerEvents();
 
   const handleTransfer = () => {
     setOpenTransfer(!isOpenTransfer);
   };
 
   const userPrivilige = localStorage.getItem('userPrivilige');
-  console.log('role of that user is: ', role);
-  useEffect(() => {
-    console.log('is fetching token: ', isFetchingToken);
-  }, [isFetchingToken]);
   return (
     <>
       <LoadingOverlay active={role === undefined} spinner={<SyncLoader />}>
-        <Topbar handleTransfer={handleTransfer} />
-        <Transfer isOpen={isOpenTransfer} handleClose={handleTransfer} />
-        <Wrapper>
-          {userPrivilige === 'STUDENT' && (
+        {userPrivilige !== 'ADMIN' && (
             <>
-              <Scheduler />
-              <Rightbar />
+              <Topbar handleTransfer={handleTransfer} />
+              <Transfer isOpen={isOpenTransfer} handleClose={handleTransfer} />
+              <Wrapper>
+                {userPrivilige === 'STUDENT' && (
+                  <>
+                    <Scheduler schedulerEvents={schedulerEvents} />
+                    <Rightbar />
+                  </>
+                )}
+                {userPrivilige === 'DEANERY' && <Deanery schedulerEvents={schedulerEvents} />}
+              </Wrapper>
             </>
-          )}{' '}
-          {userPrivilige === 'DEANERY' && <Admin />}
-        </Wrapper>
+          )}
+        {userPrivilige === 'ADMIN' && (
+            <Administrator></Administrator>
+        )}
       </LoadingOverlay>
     </>
   );
