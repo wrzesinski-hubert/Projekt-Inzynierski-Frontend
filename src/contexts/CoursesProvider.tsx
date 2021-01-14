@@ -222,6 +222,8 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }, 600);
   }, []);
 
+  console.log("123,",userID,courses,basket)
+
   return (
     <coursesContext.Provider
       value={{

@@ -3,8 +3,6 @@ import { ReactComponent as Close } from '../assets/close.svg';
 import ProfileIcon from '../assets/account.svg';
 import { Profile } from './Profile';
 import { Dropdown } from './Dropdown';
-import PolishIcon from '../assets/poland.svg';
-import EnglishIcon from '../assets/united-kingdom.svg';
 import styled from 'styled-components/macro';
 import ClickAwayListener from 'react-click-away-listener';
 import { SelectMenu } from './SelectMenu';
