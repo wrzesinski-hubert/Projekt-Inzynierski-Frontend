@@ -1,8 +1,8 @@
 import React from 'react';
-import { cleanup, fireEvent, waitForElement, screen } from '@testing-library/react';
+import { cleanup, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { customRender,customRenderCAS } from '../../customRender';
-import {Scheduler} from '../Scheduler';
+import { customRender } from '../../customRender';
+import { Admin } from '../Admin';
 
 beforeAll(() => {
   delete window.location;
@@ -15,6 +15,6 @@ afterAll(() => {
 
 test('renders component', async () => {
     const addItem = jest.fn();
-    customRender(<Scheduler/>);
-    expect(screen.getByText(/Poniedziałek/i)).toBeInTheDocument();
+    customRender(<Admin />);
+    expect(screen.getByText(/Pokaż plan/i)).toBeInTheDocument();
   });
