@@ -98,11 +98,6 @@ export const Administrator = () => {
   const [endSecondDate, setEndSecondDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (startFirstDate !== null) {
-      console.log(format(startFirstDate, 'dd.MM.yyyy'));
-    }
-  }, [startFirstDate]);
 
   const uploadFile = async (event: React.FormEvent<HTMLFormElement>) => {
     const action = (key: any) => (
@@ -147,7 +142,6 @@ export const Administrator = () => {
         variant: 'success',
         action,
       });
-      console.log(response);
     } catch (e) {
       enqueueSnackbar('Zapisywanie planu nie powiodło się', {
         variant: 'error',

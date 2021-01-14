@@ -70,7 +70,6 @@ export const SchedulerHistoryNavigation = ({
       <StyledButton
         direction="left"
         onClick={() => {
-          console.log('left clicked');
           SubstractCurrentTimetable(-1);
         }}
       >
@@ -80,7 +79,6 @@ export const SchedulerHistoryNavigation = ({
       <StyledButton
         direction="right"
         onClick={() => {
-          console.log('right clicked');
           AddCurrentTimetable(1);
         }}
       >
