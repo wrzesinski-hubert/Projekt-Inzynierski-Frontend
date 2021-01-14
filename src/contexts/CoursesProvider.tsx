@@ -220,7 +220,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       const { data } = await axiosInstance.get<Array<TimetableHistory> | []>(
         `${process.env.REACT_APP_API_URL}/api/v1/commisions/user/${studentId}?groups=true`,
       );
-      console.log('data is mordo: ', data);
       setTimetableHistory(data);
     } catch (e) {
       console.log(e);
@@ -264,7 +263,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         }
       }
     }
-    console.log('baskeeeeeet: ', basket);
     setHistoryBasket(basket);
   };
 
@@ -276,8 +274,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       setIsDataLoading(false);
     }, 600);
   }, []);
-
-  console.log("123,",userID,courses,basket)
 
   return (
     <coursesContext.Provider
