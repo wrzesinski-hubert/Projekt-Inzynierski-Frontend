@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="10" failures="0" errors="0" time="5.784">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-01-17T17:28:18" time="4.043" tests="2">
+    <testcase classname=" not render component for student" name=" not render component for student" time="0.052">
+    </testcase>
+    <testcase classname=" not render component for deanery" name=" not render component for deanery" time="0.008">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-01-17T17:28:18" time="4.019" tests="2">
+    <testcase classname=" renders component" name=" renders component" time="0.055">
+    </testcase>
+    <testcase classname=" component handles button click" name=" component handles button click" time="0.013">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-01-17T17:28:18" time="4.102" tests="2">
+    <testcase classname=" renders component" name=" renders component" time="0.059">
+    </testcase>
+    <testcase classname=" renders component" name=" renders component" time="0.012">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-01-17T17:28:18" time="4.201" tests="3">
+    <testcase classname=" renders component" name=" renders component" time="0.171">
+    </testcase>
+    <testcase classname=" input should display default placeholder for student" name=" input should display default placeholder for student" time="0.033">
+    </testcase>
+    <testcase classname=" input should display changed value" name=" input should display changed value" time="0.025">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2021-01-17T17:28:18" time="4.631" tests="1">
+    <testcase classname=" renders application" name=" renders application" time="0.171">
+    </testcase>
+  </testsuite>
+</testsuites>
