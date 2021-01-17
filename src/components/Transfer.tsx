@@ -21,19 +21,15 @@ const useStyles = makeStyles({
 
 const TransferStyled = styled.div`
   display: flex;
-
   flex-direction: row;
-
   outline: none;
   min-width: 35%;
   height: 70%;
   padding-top: 40px;
-  background: #006b96;
+  background: white;
   box-shadow: 0px 0px 0px 4px #006b96;
-  border: 4px solid #ffc400;
   margin: 0 auto;
-  border-top-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-radius: 5px;
   text-transform: uppercase;
   letter-spacing: 0.3ch;
 `;

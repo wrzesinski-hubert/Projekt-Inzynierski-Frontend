@@ -213,7 +213,7 @@ export default function ({ handleTransfer }: TopbarProps) {
         <SelectedStudent>{selectedStudent?.email.replace(/@st.amu.edu.pl/, '')}</SelectedStudent>
 
         {/* <Text>Maciej Głowacki</Text> */}
-        {/* <Icon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
+        <Icon alt="transfer" src={ProfileIcon} onClick={handleTransfer} />
         {/* <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} /> */}
         <Icon alt="profile" src={ProfileIcon} onClick={handleProfile} />
         <Profile anchorEl={anchorEl} handleClose={handleCloseProfile} />
