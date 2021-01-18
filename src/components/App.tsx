@@ -35,23 +35,21 @@ export const App = () => {
     <>
       <LoadingOverlay active={role === undefined} spinner={<SyncLoader />}>
         {userPrivilige !== 'ADMIN' && (
-            <>
-              <Topbar handleTransfer={handleTransfer} />
-              <Transfer isOpen={isOpenTransfer} handleClose={handleTransfer} />
-              <Wrapper>
-                {userPrivilige === 'STUDENT' && (
-                  <>
-                    <Scheduler schedulerEvents={schedulerEvents} />
-                    <Rightbar />
-                  </>
-                )}
-                {userPrivilige === 'DEANERY' && <Deanery schedulerEvents={schedulerEvents} />}
-              </Wrapper>
-            </>
-          )}
-        {userPrivilige === 'ADMIN' && (
-            <Administrator></Administrator>
+          <>
+            <Topbar handleTransfer={handleTransfer} />
+            <Transfer isTransferOpen={isOpenTransfer} handleClose={handleTransfer} />
+            <Wrapper>
+              {userPrivilige === 'STUDENT' && (
+                <>
+                  <Scheduler schedulerEvents={schedulerEvents} />
+                  <Rightbar />
+                </>
+              )}
+              {userPrivilige === 'DEANERY' && <Deanery schedulerEvents={schedulerEvents} />}
+            </Wrapper>
+          </>
         )}
+        {userPrivilige === 'ADMIN' && <Administrator></Administrator>}
       </LoadingOverlay>
     </>
   );

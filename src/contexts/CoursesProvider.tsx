@@ -32,7 +32,7 @@ interface CourseContext {
   selectHistorySchedulerEvents: () => Array<SchedulerEvent>;
   selectBasketNames: () => Array<string>;
   selectBasketCourses: () => Array<Course>;
-  selectBasketCourseGroups: (courseId: number) => { lecture: Group | undefined; classes: Group | undefined };
+  selectBasketCourseGroups: (courseName: string) => { lecture: Group | undefined; classes: Group | undefined };
   selectGroups: () => Array<Group>;
   getNewestStudentTimetable: (studentId: string) => void;
   getStudentTimetablesHistory: (studentId: string) => void;
@@ -100,8 +100,8 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     }, [] as Array<SchedulerEvent>);
   };
 
-  const selectBasketCourseGroups = (courseId: number) => {
-    const course = basket.find(({ id }) => id === courseId);
+  const selectBasketCourseGroups = (courseName: string) => {
+    const course = basket.find(({ name }) => name === courseName);
     if (course !== undefined) {
       return { lecture: course.lecture, classes: course.classes };
     } else {

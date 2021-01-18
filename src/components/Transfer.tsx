@@ -9,10 +9,11 @@ import { Group } from '../types';
 import { coursesContext } from '../contexts/CoursesProvider';
 import { Dropdown } from './Dropdown';
 import { DropdownModal } from './DropdownModal';
+import { dayMapping } from '../constants';
 
 interface TransferProps {
   handleClose: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  isOpen: boolean;
+  isTransferOpen: boolean;
 }
 
 const useStyles = makeStyles({
@@ -107,10 +108,10 @@ const createExchange = async (groupsIds: Array<number>) => {
   }
 };
 
-export const Transfer = ({ handleClose, isOpen }: TransferProps) => {
-  const { selectGroups } = useContext(coursesContext)!;
+export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
+  const { basket } = useContext(coursesContext)!;
   const classes = useStyles();
-  const groups = selectGroups();
+  // const groups = selectGroups();
   const [input, setInput] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -133,29 +134,39 @@ export const Transfer = ({ handleClose, isOpen }: TransferProps) => {
   const handleCloseDropdown = () => setOpen(false);
   useEffect(() => {
     const getExchanges = async () => {
-      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/all`);
-      console.log('exchanges: ', data);
-      setExchanges(data);
+      try {
+        const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/all`);
+        console.log('exchanges: ', data);
+        setExchanges(data);
+      } catch (e) {
+        console.log(e);
+      }
     };
     const getAssignmentsGroups = async () => {
-      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/assignments`);
-      console.log('assignments: ', data);
-      setAssignmentsGroups(data);
+      try {
+        const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/assignments`);
+        console.log('assignments: ', data);
+        const classes = data.filter((el: any) => el.type === 'CLASS');
+        setAssignmentsGroups(classes);
+      } catch (e) {
+        console.log(e);
+      }
     };
+    console.log('open changed');
     getExchanges();
     getAssignmentsGroups();
-  }, []);
+  }, [isTransferOpen]);
 
   return (
     <div>
       <Modal
         className={classes.wrapper}
-        open={isOpen}
+        open={isTransferOpen}
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <Fade in={isOpen}>
+        <Fade in={isTransferOpen}>
           <TransferStyled>
             <TransferGiveStyled>
               <TransferTextStyled>Oddam</TransferTextStyled>
@@ -172,7 +183,7 @@ export const Transfer = ({ handleClose, isOpen }: TransferProps) => {
                     {assignmentsGroups.map((el) => {
                       return (
                         <MenuItem key={el.id} value={el}>
-                          {el.name}
+                          {`${el.name}  (${dayMapping[el.day - 1]} ${el.time} ${el.endTime})`}
                         </MenuItem>
                       );
                     })}
@@ -183,12 +194,11 @@ export const Transfer = ({ handleClose, isOpen }: TransferProps) => {
             <TransferReceiveStyled>
               <TransferTextStyled>Przyjmę</TransferTextStyled>
               <TransferInputStyled>
-                {/* <Select
-                  multiple
+                <Select
                   labelId="demo-simple-select-label"
                   id="assignments-groups"
-                  value={selectedGroups}
-                  onChange={handleSelectedGroupsChange}
+                  // value={selectedGroups}
+                  // onChange={handleSelectedGroupsChange}
                   placeholder="Wyszukaj..."
                   style={{ width: '200px' }}
                 >
@@ -199,15 +209,15 @@ export const Transfer = ({ handleClose, isOpen }: TransferProps) => {
                       </MenuItem>
                     );
                   })}
-                </Select> */}
-                <Input
+                </Select>
+                {/* <Input
                   placeholder={`Wyszukaj przedmioty...`}
                   onChange={handleChange}
                   value={input}
                   onFocus={() => {
                     handleShowDropdown();
                   }}
-                />
+                /> */}
                 <DropdownModal
                   handleSelectedGroupChange={handleSelectedGroupChange}
                   open={open}
