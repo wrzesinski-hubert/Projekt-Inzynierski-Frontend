@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/core/styles';
@@ -25,20 +25,27 @@ const useStyles = makeStyles({
   },
 });
 
-const Input = styled.input`
-  font-family: 'Roboto', sans-serif;
-  font-size: 18px;
-  background-color: #f1f2f5;
+const SaveButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  background-color: #43a047;
+  border-radius: 10px;
+  cursor: pointer;
   height: 40px;
-  max-height: 40px;
-  width: 100%;
-  border: none;
-  margin-left: 5px;
-  &:focus {
-    outline: none;
+  margin-bottom: 10px;
+  &:hover {
+    color: #ffffff;
+    box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.24);
   }
-`;
 
+  &:active {
+    background-color: #54c457;
+  }
+
+  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
+`;
 const TransferStyled = styled.div`
   display: flex;
   flex-direction: row;
@@ -100,7 +107,7 @@ const createExchange = async (groupsIds: Array<number>) => {
   try {
     const response = await axiosInstance.post(
       `${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange`,
-      JSON.stringify(groupsIds),
+      JSON.stringify({ assignment: groupsIds[0], group: groupsIds[1] }),
     );
     console.log('create exchange response is: ', response);
   } catch (e) {
@@ -109,29 +116,50 @@ const createExchange = async (groupsIds: Array<number>) => {
 };
 
 export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
-  const { basket } = useContext(coursesContext)!;
+  const { basket, selectBasketCourses } = useContext(coursesContext)!;
+  // const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.name), []);
+  const basketCourses = selectBasketCourses();
+
   const classes = useStyles();
   // const groups = selectGroups();
   const [input, setInput] = useState('');
   const [open, setOpen] = useState(false);
 
-  const [assignmentsGroups, setAssignmentsGroups] = useState<Array<any>>([]);
-  const [selectedAssignmentsGroup, setSelectedAssignmentsGroup] = useState<any>('');
+  const [assignmentsClasses, setAssignmentsClasses] = useState<Array<any>>([]);
+  const [selectedAssignmentsClasses, setSelectedAssignmentsClasses] = useState<any>('');
+  const [groups, setGroups] = useState<any>([]);
   const [selectedGroup, setSelectedGroup] = useState<any>('');
   const [exchanges, setExchanges] = useState<any>(null);
   // const allGroups
   const handleSelectedAssignmentsGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     console.log('it is: ', event.target.value);
-    setSelectedAssignmentsGroup(event.target.value);
+    setSelectedAssignmentsClasses(event.target.value);
   };
 
-  const handleSelectedGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleGroupsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedGroup(event.target.value as any);
   };
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
   const handleShowDropdown = () => setOpen(true);
 
   const handleCloseDropdown = () => setOpen(false);
+
+  useEffect(() => {
+    if (selectedAssignmentsClasses) {
+      const allGroups = basketCourses.filter((el) => el.name === selectedAssignmentsClasses.name);
+      const allClasses = allGroups[0]?.classes;
+      console.log('allgroups: ', allGroups);
+      console.log('allclasses: ', allClasses);
+      if (allClasses) {
+        const filteredClasses = allClasses.filter((el: any) => {
+          return el.time !== selectedAssignmentsClasses.time;
+        });
+        console.log('filtered classes: ', filteredClasses);
+        setGroups(filteredClasses);
+      }
+    }
+  }, [selectedAssignmentsClasses]);
+
   useEffect(() => {
     const getExchanges = async () => {
       try {
@@ -147,7 +175,7 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
         const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/assignments`);
         console.log('assignments: ', data);
         const classes = data.filter((el: any) => el.type === 'CLASS');
-        setAssignmentsGroups(classes);
+        setAssignmentsClasses(classes);
       } catch (e) {
         console.log(e);
       }
@@ -175,15 +203,15 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
                   <Select
                     labelId="demo-simple-select-label"
                     id="assignments-groups"
-                    value={selectedAssignmentsGroup}
+                    value={selectedAssignmentsClasses}
                     onChange={handleSelectedAssignmentsGroupChange}
                     placeholder="Wyszukaj..."
                     style={{ width: '200px' }}
                   >
-                    {assignmentsGroups.map((el) => {
+                    {assignmentsClasses.map((el) => {
                       return (
                         <MenuItem key={el.id} value={el}>
-                          {`${el.name}  (${dayMapping[el.day - 1]} ${el.time} ${el.endTime})`}
+                          {`${el.name}  (${dayMapping[el.day]} ${el.time} ${el.endTime})`}
                         </MenuItem>
                       );
                     })}
@@ -197,36 +225,28 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="assignments-groups"
-                  // value={selectedGroups}
-                  // onChange={handleSelectedGroupsChange}
+                  value={selectedGroup}
+                  onChange={handleGroupsChange}
                   placeholder="Wyszukaj..."
                   style={{ width: '200px' }}
                 >
-                  {assignmentsGroups.map((el) => {
+                  {groups.map((el: any, index: number) => {
                     return (
-                      <MenuItem key={el.id} value={el}>
-                        {el.name}
+                      <MenuItem key={index} value={el}>
+                        {`${selectedAssignmentsClasses.name} ${el.time} ${el.endTime} ${dayMapping[el.day]}`}
                       </MenuItem>
                     );
                   })}
                 </Select>
-                {/* <Input
-                  placeholder={`Wyszukaj przedmioty...`}
-                  onChange={handleChange}
-                  value={input}
-                  onFocus={() => {
-                    handleShowDropdown();
-                  }}
-                /> */}
-                <DropdownModal
-                  handleSelectedGroupChange={handleSelectedGroupChange}
-                  open={open}
-                  input={input}
-                  handleCloseDropdown={handleCloseDropdown}
-                  selectedOption={'przedmioty'}
-                />
               </TransferInputStyled>
             </TransferReceiveStyled>
+            <SaveButton
+              onClick={() => {
+                createExchange([selectedAssignmentsClasses.id, selectedGroup.id]);
+              }}
+            >
+              WYŚLIJ
+            </SaveButton>
           </TransferStyled>
         </Fade>
       </Modal>
