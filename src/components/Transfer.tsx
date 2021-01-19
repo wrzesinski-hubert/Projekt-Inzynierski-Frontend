@@ -84,7 +84,7 @@ const TransferInputStyled = styled.div`
 `;
 
 const SaveWrapper = styled.div`
-  margin-top:40px;
+  margin-top: 40px;
 `;
 
 const SaveButton = styled.div`
@@ -97,7 +97,7 @@ const SaveButton = styled.div`
   cursor: pointer;
   height: 40px;
   width: 150px;
-  font-size:12px;
+  font-size: 12px;
   letter-spacing: 0.1ch;
   line-height: normal;
   &:hover {
@@ -114,9 +114,9 @@ const SaveButton = styled.div`
 `;
 
 const ExchangesWrapper = styled.div`
-  flex:5;
+  flex: 4;
   overflow-y: scroll;
-  width:100%;
+  width: 100%;
   ::-webkit-scrollbar-track {
     border-radius: 10px;
   }
@@ -128,11 +128,12 @@ const ExchangesWrapper = styled.div`
     border-radius: 10px;
     background-color: #4b4b4b;
   }
+  border-top: 1px solid;
 `;
 
 const ExchangesRow = styled.div`
-  display:flex;
-  flex-direction:row;
+  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 `;
@@ -145,14 +146,12 @@ const Icon = styled.img`
 const Exchange = styled.div`
   background-color: #b5d2e0;
   border-radius: 10px;
-  width:200px;
-  margin:10px;
-  height:50px;
-  display:flex;
-  
+  width: 300px;
+  margin: 10px;
+  display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 
 const deleteExchange = async (id: number) => {
   try {
@@ -234,7 +233,7 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
     console.log('open changed');
     getExchanges();
     getAssignmentsGroups();
-  }, [isTransferOpen,save]);
+  }, [isTransferOpen, save]);
 
   const createExchange = async (groupsIds: Array<number>) => {
     console.log('groups ids are: ', groupsIds);
@@ -276,9 +275,19 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
                     >
                       {assignmentsClasses.map((el) => {
                         return (
-                          <MenuItem key={el.id} value={el} >
+                          <MenuItem
+                            key={el.id}
+                            value={el}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              textAlign: 'center',
+                            }}
+                          >
                             {`${el.name}  `}
-                            <br></br>{`(${dayMapping[el.day]} ${el.time} ${el.endTime})`}
+                            <br></br>
+                            {`(${dayMapping[el.day]} ${el.time} - ${el.endTime})`}
                           </MenuItem>
                         );
                       })}
@@ -287,50 +296,68 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
                 </TransferInputStyled>
               </TransferGiveStyled>
               <SaveWrapper>
-              {' '}
-              <SaveButton
-                onClick={() => {
-                  createExchange([selectedAssignmentsClasses.id, selectedGroup.id]);
-                }}
-              >
-                Zaproponuj wymianę
-              </SaveButton>
-            </SaveWrapper>
+                {' '}
+                <SaveButton
+                  onClick={() => {
+                    createExchange([selectedAssignmentsClasses.id, selectedGroup.id]);
+                  }}
+                >
+                  Zaproponuj wymianę
+                </SaveButton>
+              </SaveWrapper>
               <TransferReceiveStyled>
                 <TransferTextStyled>Przyjmę</TransferTextStyled>
                 <TransferInputStyled>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="assignments-groups"
-                    value={selectedGroup}
-                    onChange={handleGroupsChange}
-                    placeholder="Wyszukaj..."
-                    style={{ width: '200px' }}
-                  >
-                    {groups.map((el: any, index: number) => {
-                      return (
-                        <MenuItem key={index} value={el}>
-                          {`${selectedAssignmentsClasses.name} ${el.time} ${el.endTime} ${dayMapping[el.day]}`}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
+                  <FormControl disabled>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="assignments-groups"
+                      value={selectedGroup}
+                      onChange={handleGroupsChange}
+                      placeholder="Wyszukaj..."
+                      style={{ width: '200px' }}
+                    >
+                      {groups.map((el: any, index: number) => {
+                        return (
+                          <MenuItem
+                            key={index}
+                            value={el}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              textAlign: 'center',
+                            }}
+                          >
+                            {`${selectedAssignmentsClasses.name}  `}
+                            <br></br>
+                            {`(${dayMapping[el.day]} ${el.time} - ${el.endTime})`}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
                 </TransferInputStyled>
               </TransferReceiveStyled>
             </InputWrapper>
-            
+
             <ExchangesWrapper>
-            {exchanges ? (
-              exchanges.map((name: any) => (
-                <ExchangesRow>
-                  <Exchange>
-                    {name.desiredGroup.id} </Exchange> <Icon alt="transfer" src={TransferIcon} /><Exchange>{name.ownedAssignment.id}
-                  </Exchange>
-                </ExchangesRow>
-              ))
-            ) : (
-              <div></div>
-            )}
+              {exchanges ? (
+                exchanges.map((name: any) => (
+                  <ExchangesRow>
+                    <Exchange>
+                      {name.desiredGroup.lecturer} <br></br> {dayMapping[name.desiredGroup.day]} <br></br>{' '}
+                      {name.desiredGroup.time} - {name.desiredGroup.endTime}
+                    </Exchange>{' '}
+                    <Icon alt="transfer" src={TransferIcon} />
+                    <Exchange>
+                    {name.ownedAssignment.lecturer} <br></br> {dayMapping[name.ownedAssignment.day]} <br></br>{' '}
+                      {name.ownedAssignment.time} - {name.ownedAssignment.endTime}</Exchange>
+                  </ExchangesRow>
+                ))
+              ) : (
+                <div></div>
+              )}
             </ExchangesWrapper>
           </TransferStyled>
         </Fade>
