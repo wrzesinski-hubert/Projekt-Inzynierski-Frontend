@@ -180,7 +180,7 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
   const [save, setSave] = useState(false);
   // const allGroups
   const handleSelectedAssignmentsGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedAssignmentsClasses(1);
+    setSelectedAssignmentsClasses(event.target.value);
   };
 
   const handleGroupsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
