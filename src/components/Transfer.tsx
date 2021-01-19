@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, MouseEvent, useState } from 'react';
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,6 +11,7 @@ import { Dropdown } from './Dropdown';
 import { DropdownModal } from './DropdownModal';
 import { dayMapping } from '../constants';
 import TransferIcon from '../assets/switch.svg';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 interface TransferProps {
   handleClose: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -40,6 +41,15 @@ const TransferStyled = styled.div`
   margin: 0 auto;
   border-radius: 5px;
   letter-spacing: 0.2ch;
+`;
+
+const BinIcon = styled(DeleteIcon)`
+  max-width: 30px;
+  min-width: 30px;
+  cursor: pointer;
+  &:hover {
+    fill: white;
+  }
 `;
 
 const InputWrapper = styled.div`
@@ -153,14 +163,7 @@ const Exchange = styled.div`
   justify-content: center;
 `;
 
-const deleteExchange = async (id: number) => {
-  try {
-    const response = await axiosInstance.delete(`${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/${id}`);
-    console.log('delete exchange response: ', response);
-  } catch (e) {
-    console.log(e);
-  }
-};
+
 
 export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
   const { basket, selectBasketCourses } = useContext(coursesContext)!;
@@ -174,32 +177,23 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
 
   const [assignmentsClasses, setAssignmentsClasses] = useState<Array<any>>([]);
   const [selectedAssignmentsClasses, setSelectedAssignmentsClasses] = useState<any>('');
-  const [groups, setGroups] = useState<any>([]);
   const [selectedGroup, setSelectedGroup] = useState<any>('');
+  const [groups, setGroups] = useState<any>([]);
   const [exchanges, setExchanges] = useState<any>(null);
   const [save, setSave] = useState(false);
   // const allGroups
   const handleSelectedAssignmentsGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedAssignmentsClasses(event.target.value);
+    setSelectedAssignmentsClasses(event.target.value as any);
   };
 
   const handleGroupsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedGroup(event.target.value as any);
   };
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
   const handleShowDropdown = () => setOpen(true);
 
   const handleCloseDropdown = () => setOpen(false);
-
-useEffect(()=>{
-  console.log("ASAJNMENTS",selectedAssignmentsClasses)
-},[selectedAssignmentsClasses])
-
-
-useEffect(()=>{
-  console.log("SELEKTET GTUP",selectedGroup)
-},[selectedGroup])
-
 
   useEffect(() => {
     if (selectedAssignmentsClasses) {
@@ -214,16 +208,16 @@ useEffect(()=>{
     }
   }, [selectedAssignmentsClasses]);
 
-  useEffect(() => {
-    const getExchanges = async () => {
-      try {
-        const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/all`);
-        setExchanges(data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
+  const getExchanges = async () => {
+    try {
+      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/all`);
+      setExchanges(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
+  useEffect(() => {
     const getAssignmentsGroups = async () => {
       try {
         const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/assignments`);
@@ -246,7 +240,30 @@ useEffect(()=>{
     } catch (e) {
       console.log(e);
     }
+    setSelectedGroup('');
+    setSelectedAssignmentsClasses('');
     setSave(!save);
+  };
+
+  const getExchange = async (event: MouseEvent) => {
+    const target = event.currentTarget;
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/${target.id}`,
+      );
+    } catch (e) {
+      console.log(e);
+    }
+
+  };
+
+  const deleteExchange = async (id: number) => {
+    try {
+      const response = await axiosInstance.delete(`${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/${id}`);
+      getExchanges();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -273,10 +290,10 @@ useEffect(()=>{
                       placeholder="Wyszukaj..."
                       style={{ width: '200px' }}
                     >
-                      {assignmentsClasses.map((el) => {
+                      {assignmentsClasses.map((el: any, index: number) => {
                         return (
                           <MenuItem
-                            key={el.id}
+                            key={index}
                             value={el}
                             style={{
                               display: 'flex',
@@ -343,18 +360,26 @@ useEffect(()=>{
 
             <ExchangesWrapper>
               {exchanges ? (
-                exchanges.map((name: any) => (
-                  <ExchangesRow>
+                exchanges.map((name: any, index: number) => (
+                  <ExchangesRow key={index}>
                     {' '}
                     <Exchange>
                       {name.ownedAssignment.lecturer} <br></br> {dayMapping[name.ownedAssignment.day]} <br></br>{' '}
                       {name.ownedAssignment.time} - {name.ownedAssignment.endTime}
                     </Exchange>
-                    <Icon alt="transfer" src={TransferIcon} />
+                    <Icon alt="transfer" src={TransferIcon} onClick={getExchange} />
                     <Exchange>
                       {name.desiredGroup.lecturer} <br></br> {dayMapping[name.desiredGroup.day]} <br></br>{' '}
                       {name.desiredGroup.time} - {name.desiredGroup.endTime}
                     </Exchange>{' '}
+                    <BinIcon
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const id = Number(e.currentTarget.id);
+                        deleteExchange(id);
+                      }}
+                      id={name.id}
+                    ></BinIcon>
                   </ExchangesRow>
                 ))
               ) : (

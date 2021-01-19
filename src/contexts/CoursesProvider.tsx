@@ -111,7 +111,6 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const selectGroups = () => {
     const groups = [];
-    console.log('courses are: ', courses);
     return (courses as unknown) as Array<Group>;
   };
 

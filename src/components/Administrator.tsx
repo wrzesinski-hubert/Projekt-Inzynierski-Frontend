@@ -38,6 +38,7 @@ const SaveButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   height: 40px;
+  margin:10px;
   &:hover {
     color: #ffffff;
     box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.24);
@@ -66,6 +67,7 @@ const LogoWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top:-50px;
 `;
 
 const Text = styled.div`
@@ -212,7 +214,8 @@ export const Administrator = () => {
           <Logo alt="logo" src="https://plannaplan.pl/img/logo.svg" />
           <Text> plan na plan </Text>
         </LogoWrapper>
-        {xd !== true ? (
+        {xd === true ? (
+          <div>
           <Form onSubmit={uploadFile}>
             <div>
               <div>Start pierwszej tury:</div>{' '}
@@ -251,10 +254,11 @@ export const Administrator = () => {
               <SaveButton type="submit">{loading === false ? 'Zapisz' : <SyncLoader />} </SaveButton>
             </div>
           </Form>
-        ) : (
-          <DownloadSection>
-            <SaveButton onClick={downloadFile}>Pobierz dane.csv</SaveButton>
-          </DownloadSection>
+                      <DownloadSection>
+                      <SaveButton onClick={downloadFile}>Pobierz dane.csv</SaveButton>
+                    </DownloadSection>
+                    </div>
+        ) : (<div></div>
         )}
       </Wrap>
     </AdministratorWrapper>
