@@ -2,7 +2,8 @@ import React, { useState, MouseEvent,useContext } from 'react';
 import styled from 'styled-components/macro';
 import Plan from '../assets/plan.svg';
 import History from '../assets/history.svg';
-import Statistics from '../assets/statistics.svg';
+import StatisticsIcon from '../assets/statistics.svg';
+import { Statistics } from './Statistics';
 import { Scheduler } from './Scheduler';
 import { Rightbar } from './Rightbar';
 import { SchedulerHistory } from './SchedulerHistory';
@@ -124,7 +125,7 @@ export const Deanery = ({ schedulerEvents }: Deanery) => {
           Historia Zmian
         </LeftPanelElement>
         <LeftPanelElement id={'3'} isCurrentTab={currentTab === 3} onClick={handleClick}>
-          <Icon alt="statistics" src={Statistics} />
+          <Icon alt="statistics" src={StatisticsIcon} />
           Statystyki
         </LeftPanelElement>
       </LeftSide>
@@ -137,7 +138,7 @@ export const Deanery = ({ schedulerEvents }: Deanery) => {
         ) : currentTab === 2 ? (
           <SchedulerHistory schedulerHistoryEvents={schedulerHistoryEvents}/>
         ) : currentTab === 3 ? (
-          <StatsDiv />
+          <StatsDiv><Statistics/></StatsDiv>
         ) : (
           <LogoWrapper>
             <Logo alt="logo" src="https://plannaplan.pl/img/logo.svg" />

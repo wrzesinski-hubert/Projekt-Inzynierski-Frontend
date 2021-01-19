@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { ChangeEvent, useContext, useEffect, MouseEvent, useState } from 'react';
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
-import Input from '@material-ui/core/Input';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import { FormControl, MenuItem, Select, useControlled, useEventCallback } from '@material-ui/core';
+import { axiosInstance } from '../utils/axiosInstance';
+import { Group } from '../types';
+import { coursesContext } from '../contexts/CoursesProvider';
+import { Dropdown } from './Dropdown';
+import { DropdownModal } from './DropdownModal';
+import { dayMapping } from '../constants';
+import TransferIcon from '../assets/switch.svg';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 interface TransferProps {
   handleClose: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  isOpen: boolean;
+  isTransferOpen: boolean;
 }
 
 const useStyles = makeStyles({
@@ -21,35 +29,49 @@ const useStyles = makeStyles({
 
 const TransferStyled = styled.div`
   display: flex;
-
-  flex-direction: row;
-
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   outline: none;
   min-width: 35%;
   height: 70%;
   padding-top: 40px;
-  background: #006b96;
+  background: white;
   box-shadow: 0px 0px 0px 4px #006b96;
-  border: 4px solid #ffc400;
   margin: 0 auto;
-  border-top-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  text-transform: uppercase;
-  letter-spacing: 0.3ch;
+  border-radius: 5px;
+  letter-spacing: 0.2ch;
+`;
+
+const BinIcon = styled(DeleteIcon)`
+  max-width: 30px;
+  min-width: 30px;
+  cursor: pointer;
+  &:hover {
+    fill: white;
+  }
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex: 1;
 `;
 
 const TransferGiveStyled = styled.div`
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-transform: uppercase;
 `;
 
 const TransferReceiveStyled = styled.div`
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-transform: uppercase;
 `;
 
 const TransferTextStyled = styled.div`
@@ -68,44 +90,302 @@ const TransferInputStyled = styled.div`
     font-weight: bold;
     text-align: center;
   }
+  text-transform: none;
 `;
 
-export const Transfer = ({ handleClose, isOpen }: TransferProps) => {
+const SaveWrapper = styled.div`
+  margin-top: 40px;
+`;
+
+const SaveButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  background-color: #43a047;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 40px;
+  width: 150px;
+  font-size: 12px;
+  letter-spacing: 0.1ch;
+  line-height: normal;
+  &:hover {
+    color: #ffffff;
+    box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.24);
+  }
+
+  &:active {
+    background-color: #54c457;
+  }
+
+  text-transform: uppercase;
+  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
+`;
+
+const ExchangesWrapper = styled.div`
+  flex: 4;
+  overflow-y: scroll;
+  width: 100%;
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar {
+    width: 5px;
+    border-style: none;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #4b4b4b;
+  }
+  border-top: 1px solid;
+`;
+
+const ExchangesRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Icon = styled.img`
+  width: 20px;
+  cursor: pointer;
+`;
+
+const Exchange = styled.div`
+  background-color: #b5d2e0;
+  border-radius: 10px;
+  width: 280px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+
+
+export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
+  const { basket, selectBasketCourses } = useContext(coursesContext)!;
+  // const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.name), []);
+  const basketCourses = selectBasketCourses();
+
   const classes = useStyles();
+  // const groups = selectGroups();
+  const [input, setInput] = useState('');
+  const [open, setOpen] = useState(false);
+
+  const [assignmentsClasses, setAssignmentsClasses] = useState<Array<any>>([]);
+  const [selectedAssignmentsClasses, setSelectedAssignmentsClasses] = useState<any>('');
+  const [selectedGroup, setSelectedGroup] = useState<any>('');
+  const [groups, setGroups] = useState<any>([]);
+  const [exchanges, setExchanges] = useState<any>(null);
+  const [save, setSave] = useState(false);
+  // const allGroups
+  const handleSelectedAssignmentsGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedAssignmentsClasses(event.target.value as any);
+  };
+
+  const handleGroupsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedGroup(event.target.value as any);
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => setInput(event.target.value);
+  const handleShowDropdown = () => setOpen(true);
+
+  const handleCloseDropdown = () => setOpen(false);
+
+  useEffect(() => {
+    if (selectedAssignmentsClasses) {
+      const allGroups = basketCourses.filter((el) => el.name === selectedAssignmentsClasses.name);
+      const allClasses = allGroups[0]?.classes;
+      if (allClasses) {
+        const filteredClasses = allClasses.filter((el: any) => {
+          return el.time !== selectedAssignmentsClasses.time;
+        });
+        setGroups(filteredClasses);
+      }
+    }
+  }, [selectedAssignmentsClasses]);
+
+  const getExchanges = async () => {
+    try {
+      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/all`);
+      setExchanges(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    const getAssignmentsGroups = async () => {
+      try {
+        const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/assignments`);
+        const classes = data.filter((el: any) => el.type === 'CLASS');
+        setAssignmentsClasses(classes);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getExchanges();
+    getAssignmentsGroups();
+  }, [isTransferOpen, save]);
+
+  const createExchange = async (groupsIds: Array<number>) => {
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange`,
+        JSON.stringify({ assignment: groupsIds[0], group: groupsIds[1] }),
+      );
+    } catch (e) {
+      console.log(e);
+    }
+    setSelectedGroup('');
+    setSelectedAssignmentsClasses('');
+    setSave(!save);
+  };
+
+  const getExchange = async (event: MouseEvent) => {
+    const target = event.currentTarget;
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/${target.id}`,
+      );
+    } catch (e) {
+      console.log(e);
+    }
+
+  };
+
+  const deleteExchange = async (id: number) => {
+    try {
+      const response = await axiosInstance.delete(`${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/${id}`);
+      getExchanges();
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <div>
       <Modal
         className={classes.wrapper}
-        open={isOpen}
+        open={isTransferOpen}
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <Fade in={isOpen}>
+        <Fade in={isTransferOpen}>
           <TransferStyled>
-            <TransferGiveStyled>
-              <TransferTextStyled>Oddam</TransferTextStyled>
-              <TransferInputStyled>
+            <InputWrapper>
+              <TransferGiveStyled>
+                <TransferTextStyled>Oddam</TransferTextStyled>
+                <TransferInputStyled>
+                  <FormControl>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="assignments-groups"
+                      value={selectedAssignmentsClasses}
+                      onChange={handleSelectedAssignmentsGroupChange}
+                      placeholder="Wyszukaj..."
+                      style={{ width: '200px' }}
+                    >
+                      {assignmentsClasses.map((el: any, index: number) => {
+                        return (
+                          <MenuItem
+                            key={index}
+                            value={el}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              textAlign: 'center',
+                            }}
+                          >
+                            {`${el.name}  `}
+                            <br></br>
+                            {`(${dayMapping[el.day]} ${el.time} - ${el.endTime})`}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </TransferInputStyled>
+              </TransferGiveStyled>
+              <SaveWrapper>
                 {' '}
-                <Input
-                  placeholder="Wyszukaj..."
-                  inputProps={{ 'aria-label': 'description' }}
-                  className="top-bar__input-field"
-                />
-              </TransferInputStyled>
-            </TransferGiveStyled>
-            <TransferReceiveStyled>
-              <TransferTextStyled>Przyjmę</TransferTextStyled>
-              <TransferInputStyled>
-                {' '}
-                <Input
-                  placeholder="Wyszukaj..."
-                  inputProps={{ 'aria-label': 'description' }}
-                  className="top-bar__input-field"
-                />
-              </TransferInputStyled>
-            </TransferReceiveStyled>
+                <SaveButton
+                  onClick={() => {
+                    createExchange([selectedAssignmentsClasses.id, selectedGroup.id]);
+                  }}
+                >
+                  Zaproponuj wymianę
+                </SaveButton>
+              </SaveWrapper>
+              <TransferReceiveStyled>
+                <TransferTextStyled>Przyjmę</TransferTextStyled>
+                <TransferInputStyled>
+                  <FormControl disabled={selectedAssignmentsClasses ? false : true}>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="assignments-groups"
+                      value={selectedGroup}
+                      onChange={handleGroupsChange}
+                      placeholder="Wyszukaj..."
+                      style={{ width: '200px' }}
+                    >
+                      {groups.map((el: any, index: number) => {
+                        return (
+                          <MenuItem
+                            key={index}
+                            value={el}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              textAlign: 'center',
+                            }}
+                          >
+                            {`${selectedAssignmentsClasses.name}  `}
+                            <br></br>
+                            {`(${dayMapping[el.day]} ${el.time} - ${el.endTime})`}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </TransferInputStyled>
+              </TransferReceiveStyled>
+            </InputWrapper>
+
+            <ExchangesWrapper>
+              {exchanges ? (
+                exchanges.map((name: any, index: number) => (
+                  <ExchangesRow key={index}>
+                    {' '}
+                    <Exchange>
+                      {name.ownedAssignment.lecturer} <br></br> {dayMapping[name.ownedAssignment.day]} <br></br>{' '}
+                      {name.ownedAssignment.time} - {name.ownedAssignment.endTime}
+                    </Exchange>
+                    <Icon alt="transfer" src={TransferIcon} onClick={getExchange} />
+                    <Exchange>
+                      {name.desiredGroup.lecturer} <br></br> {dayMapping[name.desiredGroup.day]} <br></br>{' '}
+                      {name.desiredGroup.time} - {name.desiredGroup.endTime}
+                    </Exchange>{' '}
+                    <BinIcon
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const id = Number(e.currentTarget.id);
+                        deleteExchange(id);
+                      }}
+                      id={name.id}
+                    ></BinIcon>
+                  </ExchangesRow>
+                ))
+              ) : (
+                <div></div>
+              )}
+            </ExchangesWrapper>
           </TransferStyled>
         </Fade>
       </Modal>

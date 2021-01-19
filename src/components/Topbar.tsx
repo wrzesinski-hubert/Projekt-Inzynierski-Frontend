@@ -1,6 +1,7 @@
 import React, { useState, MouseEvent, ChangeEvent, useEffect, useCallback, useContext, useRef } from 'react';
 import { ReactComponent as Close } from '../assets/close.svg';
-import ProfileIcon from '../assets/account.svg';
+import LogoutIcon from '../assets/logout.svg';
+import TransferIcon from '../assets/transfer.svg';
 import { Profile } from './Profile';
 import { Dropdown } from './Dropdown';
 import styled from 'styled-components/macro';
@@ -113,7 +114,7 @@ const IconWrapper = styled.div`
 
 const Icon = styled.img`
   width: 40px;
-  margin: 5px;
+  margin-left: 40px;
   cursor: pointer;
   @media only screen and (max-width: 670px) {
     width: 35px;
@@ -137,6 +138,7 @@ interface TopbarProps {
 }
 
 export default function ({ handleTransfer }: TopbarProps) {
+  const { logout } = useContext(CASContext)!;
   const { selectedStudent } = useContext(studentsContext)!;
   const { role } = useContext(CASContext)!;
   const [clearInput, setClearInput] = useState(false);
@@ -213,10 +215,10 @@ export default function ({ handleTransfer }: TopbarProps) {
         <SelectedStudent>{selectedStudent?.email.replace(/@st.amu.edu.pl/, '')}</SelectedStudent>
 
         {/* <Text>Maciej Głowacki</Text> */}
-        {/* <Icon alt="transfer" src={Transfer} onClick={handleTransfer} /> */}
+        <Icon alt="transfer" src={TransferIcon} onClick={handleTransfer} />
         {/* <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} /> */}
-        <Icon alt="profile" src={ProfileIcon} onClick={handleProfile} />
-        <Profile anchorEl={anchorEl} handleClose={handleCloseProfile} />
+        <Icon alt="logout" src={LogoutIcon} onClick={logout} />
+        {/* <Profile anchorEl={anchorEl} handleClose={handleCloseProfile} /> */}
       </IconWrapper>
     </Topbar>
   );

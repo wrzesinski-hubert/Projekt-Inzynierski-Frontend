@@ -1,10 +1,12 @@
 import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components/macro';
 import { axiosInstance } from '../utils/axiosInstance';
 import { useSnackbar } from 'notistack';
 import CloseIcon from '@material-ui/icons/Close';
 import { SyncLoader } from 'react-spinners';
+import { CASContext } from '../contexts/CASProvider';
+import LogoutIcon from '../assets/logout.svg';
 
 const StyledCloseIcon = styled(CloseIcon)`
   color: #000000;
@@ -12,6 +14,18 @@ const StyledCloseIcon = styled(CloseIcon)`
     color: white;
     cursor: pointer;
   }
+`;
+
+const Icon = styled.img`
+  width: 40px;
+  margin-left: 40px;
+  cursor: pointer;
+  @media only screen and (max-width: 670px) {
+    width: 35px;
+  }
+  position:absolute;
+  top:10px;
+  right:10px;
 `;
 
 const SaveButton = styled.button`
@@ -24,6 +38,7 @@ const SaveButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   height: 40px;
+  margin:10px;
   &:hover {
     color: #ffffff;
     box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.24);
@@ -52,6 +67,7 @@ const LogoWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top:-50px;
 `;
 
 const Text = styled.div`
@@ -80,7 +96,22 @@ const Form = styled.form`
   }
 `;
 
+const DownloadSection = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  input {
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 210px;
+  }
+`;
 export const Administrator = () => {
+  const { logout } = useContext(CASContext)!;
   const { enqueueSnackbar } = useSnackbar();
   const { closeSnackbar } = useSnackbar();
 
@@ -98,6 +129,27 @@ export const Administrator = () => {
   const [endSecondDate, setEndSecondDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const downloadFile = async () => {
+
+    const {data} = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/export/csv`,{responseType:"blob"});
+
+    console.log("123",xd);
+
+    const downloadUrl = window.URL.createObjectURL(new Blob([data]));
+
+    const link = document.createElement('a');
+
+    link.href = downloadUrl;
+
+    link.setAttribute('download', 'file.csv');
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+      
+  };
 
   const uploadFile = async (event: React.FormEvent<HTMLFormElement>) => {
     const action = (key: any) => (
@@ -138,12 +190,12 @@ export const Administrator = () => {
         formData,
         config,
       );
-      enqueueSnackbar('Plan został zapisany', {
+      enqueueSnackbar('Ustawienia zostały zapisane', {
         variant: 'success',
         action,
       });
     } catch (e) {
-      enqueueSnackbar('Zapisywanie planu nie powiodło się', {
+      enqueueSnackbar('Ustawienia nie zostały zapisane', {
         variant: 'error',
         action,
       });
@@ -152,51 +204,62 @@ export const Administrator = () => {
     setLoading(false);
   };
 
+  const xd = true;
+
   return (
     <AdministratorWrapper>
+                  <Icon alt="logout" src={LogoutIcon} onClick={logout}/>
       <Wrap>
         <LogoWrapper>
           <Logo alt="logo" src="https://plannaplan.pl/img/logo.svg" />
           <Text> plan na plan </Text>
         </LogoWrapper>
-        <Form onSubmit={uploadFile}>
+        {xd === true ? (
           <div>
-            <div>Start pierwszej tury:</div>{' '}
+          <Form onSubmit={uploadFile}>
             <div>
-              <input type="date" min={date} onChange={(e) => setStartFirstDate(e.target.valueAsDate)} />
+              <div>Start pierwszej tury:</div>{' '}
+              <div>
+                <input type="date" min={date} onChange={(e) => setStartFirstDate(e.target.valueAsDate)} />
+              </div>
+              <div>Koniec pierwszej tury:</div>{' '}
+              <div>
+                <input type="date" min={date} onChange={(e) => setEndFirstDate(e.target.valueAsDate)} />
+              </div>
             </div>
-            <div>Koniec pierwszej tury:</div>{' '}
             <div>
-              <input type="date" min={date} onChange={(e) => setEndFirstDate(e.target.valueAsDate)} />
+              <div>Start drugiej tury:</div>{' '}
+              <div>
+                <input type="date" min={date} onChange={(e) => setStartSecondDate(e.target.valueAsDate)} />
+              </div>
             </div>
-          </div>
-          <div>
-            <div>Start drugiej tury:</div>{' '}
             <div>
-              <input type="date" min={date} onChange={(e) => setStartSecondDate(e.target.valueAsDate)} />
+              <div>Koniec drugiej tury:</div>{' '}
+              <div>
+                <input type="date" min={date} onChange={(e) => setEndSecondDate(e.target.valueAsDate)} />
+              </div>
             </div>
-          </div>
-          <div>
-            <div>Koniec drugiej tury:</div>{' '}
             <div>
-              <input type="date" min={date} onChange={(e) => setEndSecondDate(e.target.valueAsDate)} />
+              <input
+                type="file"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    setSelectedFile(file);
+                  }
+                }}
+              />
             </div>
-          </div>
-          <div>
-            <input
-              type="file"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  const file = e.target.files[0];
-                  setSelectedFile(file);
-                }
-              }}
-            />
-          </div>
-          <div>
-            <SaveButton type="submit">{loading === false ? 'Zapisz' : <SyncLoader />} </SaveButton>
-          </div>
-        </Form>
+            <div>
+              <SaveButton type="submit">{loading === false ? 'Zapisz' : <SyncLoader />} </SaveButton>
+            </div>
+          </Form>
+                      <DownloadSection>
+                      <SaveButton onClick={downloadFile}>Pobierz dane.csv</SaveButton>
+                    </DownloadSection>
+                    </div>
+        ) : (<div></div>
+        )}
       </Wrap>
     </AdministratorWrapper>
   );

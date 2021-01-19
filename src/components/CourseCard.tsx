@@ -158,7 +158,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
   } = useContext(coursesContext)!;
   const [isSelected, setSelected] = useState(true);
   const groups = [...course.lectures!, ...course.classes!];
-  const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.id), []);
+  const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.name), []);
   const [previous, setPrevious] = useState(basketCourseGroups);
 
   const onGroupClick = (group: Group, courseId: number) => {

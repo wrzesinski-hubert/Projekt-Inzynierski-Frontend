@@ -84,7 +84,6 @@ export const SelectMenu = ({changeSelectedOption,changeDropdownOpen, selectedOpt
       <Wrapper onClick={() => {changeDropdownOpen(false)}}>
         <Header
           onClick={() => {
-            console.log('clicked');
             setIsOpen(!isOpen);
           }}
         >
