@@ -146,7 +146,7 @@ const Icon = styled.img`
 const Exchange = styled.div`
   background-color: #b5d2e0;
   border-radius: 10px;
-  width: 300px;
+  width: 280px;
   margin: 10px;
   display: flex;
   align-items: center;
@@ -180,8 +180,7 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
   const [save, setSave] = useState(false);
   // const allGroups
   const handleSelectedAssignmentsGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    console.log('it is: ', event.target.value);
-    setSelectedAssignmentsClasses(event.target.value);
+    setSelectedAssignmentsClasses(1);
   };
 
   const handleGroupsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -192,17 +191,24 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
 
   const handleCloseDropdown = () => setOpen(false);
 
+useEffect(()=>{
+  console.log("ASAJNMENTS",selectedAssignmentsClasses)
+},[selectedAssignmentsClasses])
+
+
+useEffect(()=>{
+  console.log("SELEKTET GTUP",selectedGroup)
+},[selectedGroup])
+
+
   useEffect(() => {
     if (selectedAssignmentsClasses) {
       const allGroups = basketCourses.filter((el) => el.name === selectedAssignmentsClasses.name);
       const allClasses = allGroups[0]?.classes;
-      console.log('allgroups: ', allGroups);
-      console.log('allclasses: ', allClasses);
       if (allClasses) {
         const filteredClasses = allClasses.filter((el: any) => {
           return el.time !== selectedAssignmentsClasses.time;
         });
-        console.log('filtered classes: ', filteredClasses);
         setGroups(filteredClasses);
       }
     }
@@ -212,9 +218,7 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
     const getExchanges = async () => {
       try {
         const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange/all`);
-        console.log('exchanges: ', data);
         setExchanges(data);
-        console.log('123', exchanges);
       } catch (e) {
         console.log(e);
       }
@@ -223,26 +227,22 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
     const getAssignmentsGroups = async () => {
       try {
         const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/user/assignments`);
-        console.log('assignments: ', data);
         const classes = data.filter((el: any) => el.type === 'CLASS');
         setAssignmentsClasses(classes);
       } catch (e) {
         console.log(e);
       }
     };
-    console.log('open changed');
     getExchanges();
     getAssignmentsGroups();
   }, [isTransferOpen, save]);
 
   const createExchange = async (groupsIds: Array<number>) => {
-    console.log('groups ids are: ', groupsIds);
     try {
       const response = await axiosInstance.post(
         `${process.env.REACT_APP_API_URL}/api/v1/exchanges/exchange`,
         JSON.stringify({ assignment: groupsIds[0], group: groupsIds[1] }),
       );
-      console.log('create exchange response is: ', response);
     } catch (e) {
       console.log(e);
     }
@@ -308,7 +308,7 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
               <TransferReceiveStyled>
                 <TransferTextStyled>Przyjmę</TransferTextStyled>
                 <TransferInputStyled>
-                  <FormControl disabled>
+                  <FormControl disabled={selectedAssignmentsClasses ? false : true}>
                     <Select
                       labelId="demo-simple-select-label"
                       id="assignments-groups"
@@ -345,14 +345,16 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
               {exchanges ? (
                 exchanges.map((name: any) => (
                   <ExchangesRow>
+                    {' '}
+                    <Exchange>
+                      {name.ownedAssignment.lecturer} <br></br> {dayMapping[name.ownedAssignment.day]} <br></br>{' '}
+                      {name.ownedAssignment.time} - {name.ownedAssignment.endTime}
+                    </Exchange>
+                    <Icon alt="transfer" src={TransferIcon} />
                     <Exchange>
                       {name.desiredGroup.lecturer} <br></br> {dayMapping[name.desiredGroup.day]} <br></br>{' '}
                       {name.desiredGroup.time} - {name.desiredGroup.endTime}
                     </Exchange>{' '}
-                    <Icon alt="transfer" src={TransferIcon} />
-                    <Exchange>
-                    {name.ownedAssignment.lecturer} <br></br> {dayMapping[name.ownedAssignment.day]} <br></br>{' '}
-                      {name.ownedAssignment.time} - {name.ownedAssignment.endTime}</Exchange>
                   </ExchangesRow>
                 ))
               ) : (

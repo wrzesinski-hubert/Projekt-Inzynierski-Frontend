@@ -188,12 +188,12 @@ export const Administrator = () => {
         formData,
         config,
       );
-      enqueueSnackbar('Plan został zapisany', {
+      enqueueSnackbar('Ustawienia zostały zapisane', {
         variant: 'success',
         action,
       });
     } catch (e) {
-      enqueueSnackbar('Zapisywanie planu nie powiodło się', {
+      enqueueSnackbar('Ustawienia nie zostały zapisane', {
         variant: 'error',
         action,
       });
