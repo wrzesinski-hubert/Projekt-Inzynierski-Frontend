@@ -205,6 +205,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       );
       const basket = data === '' ? [] : data;
       setBasket(basket);
+      console.log("basket:",basket);
     } catch (e) {
       console.log(e);
     }

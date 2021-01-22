@@ -20,6 +20,7 @@ export interface Group {
   type: GroupType;
   capacity?: number;
   takenPlaces: number;
+  isAccepted:boolean;
 }
 
 export interface Course {
@@ -53,6 +54,7 @@ export interface SchedulerEvent {
   capacity?: number;
   takenPlaces: number;
   name: string;
+  isAccepted:boolean;
 }
 
 export interface TimetableHistory {
