@@ -245,7 +245,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                         <PopoverSpan>Kod grupy: </PopoverSpan>FVJ753
                       </p>
                       <p style={{ margin: '2px 0 2px 0', color:"green"}}>
-                      <b>{String(groups[index].isAccepted)==="false"?"":"Przedmiot został zaakceptowany"}</b>
+                      <b>{groups[index].isAccepted===true && "Przedmiot został zaakceptowany"}</b>
                       </p>                      
                       
                     </div>
