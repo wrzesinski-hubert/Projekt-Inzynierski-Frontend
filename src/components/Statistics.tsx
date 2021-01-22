@@ -9,6 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { useMemo } from 'react';
 import { dayMapping } from '../constants';
 import { axiosInstance } from '../utils/axiosInstance';
+import { SyncLoader } from 'react-spinners';
 
 const StatisticsWrapper = styled.div`
   display: flex;
@@ -26,19 +27,21 @@ const Row = styled.div`
 `;
 
 const StatisticBox = styled.div`
-  background-color: white;
-  width: 200px;
-  height: 200px;
-  margin: 10px;
-  border: 1px solid #000000;
-  border-radius: 38px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  font-size: 22px;
-  padding: 2px;
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.75);
+  z-index: 20000;
+  font-size: 0.65vw;
+  line-height: normal;
+  border-radius: 2px;
+  width: 200px;
+  height: 200px;
+  margin: 5px;
+  padding: 5px 5px 0 5px;
+  text-align: center;
+  background-color: #ffe485;
+  box-shadow: 3px 3px 5px 0px rgba(189, 189, 189, 1);
 `;
 
 const StatisticNumber = styled.p`
@@ -61,6 +64,7 @@ export const Statistics = () => {
   const [notRegisteredStudentsNumber, setNotRegisteredStudentsNumber] = useState('');
   const [acceptedStudentsNumber, setAcceptedStudentsNumber] = useState('');
   const [partlyAcceptedStudentsNumber, setPartlyAcceptedStudentsNumber] = useState('');
+  const [loaded, setLoaded] = useState(false);
 
   const getCreatedGroupsNumber = async () => {
     try {
@@ -117,49 +121,54 @@ export const Statistics = () => {
   };
 
   useEffect(() => {
-    getCreatedGroupsNumber()
-    getFullGroupsNumber()
-    getRegisteredStudentsNumber()
-    getNotRegisteredStudentsNumber()
-    getAcceptedStudentsNumber()
-    getPartlyAcceptedStudentsNumber()
+    Promise.all([
+      getCreatedGroupsNumber(),
+      getFullGroupsNumber(),
+      getRegisteredStudentsNumber(),
+      getNotRegisteredStudentsNumber(),
+      getAcceptedStudentsNumber(),
+      getPartlyAcceptedStudentsNumber(),
+    ]).then(()=>{setLoaded(true);});
+
+    
   }, []);
 
-  return (
-    <StatisticsWrapper>
-      <Row>
-        <StatisticBox>
-          <StatisticNumber>{createdGroupsNumber}</StatisticNumber>
-          <StatisticText>Utworzonych grup</StatisticText>
-        </StatisticBox>
-        <StatisticBox>
-          {' '}
-          <StatisticNumber>{registeredStudentsNumber}</StatisticNumber>
-          <StatisticText>Zapisanych studentów do grup</StatisticText>
-        </StatisticBox>
-        <StatisticBox>
-          {' '}
-          <StatisticNumber>{notRegisteredStudentsNumber}</StatisticNumber>
-          <StatisticText>Studentów niezapisanych do żadnej grupy</StatisticText>
-        </StatisticBox>
-      </Row>
-      <Row>
-        <StatisticBox>
-          {' '}
-          <StatisticNumber>{acceptedStudentsNumber}</StatisticNumber>
-          <StatisticText>Studentów z zaakceptowanym planem</StatisticText>
-        </StatisticBox>
-        <StatisticBox>
-          {' '}
-          <StatisticNumber>{partlyAcceptedStudentsNumber}</StatisticNumber>
-          <StatisticText>Studentów bez zaakceptowanego pełengo planu</StatisticText>
-        </StatisticBox>
-        <StatisticBox>
-          {' '}
-          <StatisticNumber>{fullGroupsNumber}</StatisticNumber>
-          <StatisticText>Grup z zajętymi wszystkimi miejscami</StatisticText>
-        </StatisticBox>
-      </Row>
-    </StatisticsWrapper>
-  );
+  useEffect(() => {
+    console.log(loaded);
+  }, [loaded]);
+
+  return <StatisticsWrapper>{loaded === false ? <SyncLoader />:<><Row>
+    <StatisticBox>
+      <StatisticNumber>{createdGroupsNumber}</StatisticNumber>
+      <StatisticText>Utworzonych grup</StatisticText>
+    </StatisticBox>
+    <StatisticBox>
+      {' '}
+      <StatisticNumber>{registeredStudentsNumber}</StatisticNumber>
+      <StatisticText>Zapisanych studentów do grup</StatisticText>
+    </StatisticBox>
+    <StatisticBox>
+      {' '}
+      <StatisticNumber>{notRegisteredStudentsNumber}</StatisticNumber>
+      <StatisticText>Studentów niezapisanych do żadnej grupy</StatisticText>
+    </StatisticBox>
+  </Row>
+    <Row>
+      <StatisticBox>
+        {' '}
+        <StatisticNumber>{acceptedStudentsNumber}</StatisticNumber>
+        <StatisticText>Studentów z zaakceptowanym planem</StatisticText>
+      </StatisticBox>
+      <StatisticBox>
+        {' '}
+        <StatisticNumber>{partlyAcceptedStudentsNumber}</StatisticNumber>
+        <StatisticText>Studentów bez zaakceptowanego pełengo planu</StatisticText>
+      </StatisticBox>
+      <StatisticBox>
+        {' '}
+        <StatisticNumber>{fullGroupsNumber}</StatisticNumber>
+        <StatisticText>Grup z zajętymi wszystkimi miejscami</StatisticText>
+      </StatisticBox>
+    </Row></>}
+  </StatisticsWrapper>;
 };
