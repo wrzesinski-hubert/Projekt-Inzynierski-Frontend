@@ -28,6 +28,7 @@ export interface Group {
 export interface Course {
   id: number;
   name: string;
+  symbol:string;
   lectures?: Array<Group>;
   classes?: Array<Group>;
 }
