@@ -239,10 +239,10 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                         <PopoverSpan>Sala zajęć</PopoverSpan>: {groups[index].room}
                       </p>
                       <p style={{ margin: '2px 0 2px 0' }}>
-                        <PopoverSpan>Kod przedmiotu: </PopoverSpan>ACB129
+                        <PopoverSpan>Kod przedmiotu: </PopoverSpan> {groups[index].symbol}
                       </p>
                       <p style={{ margin: '2px 0 2px 0' }}>
-                        <PopoverSpan>Kod grupy: </PopoverSpan>FVJ753
+                        <PopoverSpan>Numer grupy: </PopoverSpan> {groups[index].grNr}
                       </p>
                       <p style={{ margin: '2px 0 2px 0', color:"green"}}>
                       <b>{groups[index].isAccepted===true && "Przedmiot został zaakceptowany"}</b>

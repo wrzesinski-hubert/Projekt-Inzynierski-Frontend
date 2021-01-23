@@ -6,6 +6,7 @@ export enum GroupType {
 export interface Basket {
   id: number;
   name: string;
+  symbol?:string;
   lecture?: Group;
   classes?: Group;
 }
@@ -21,6 +22,7 @@ export interface Group {
   capacity?: number;
   takenPlaces: number;
   isAccepted:boolean;
+  grNr: number;
 }
 
 export interface Course {
@@ -55,6 +57,8 @@ export interface SchedulerEvent {
   takenPlaces: number;
   name: string;
   isAccepted:boolean;
+  grNr?: number;
+  symbol?:string;
 }
 
 export interface TimetableHistory {
