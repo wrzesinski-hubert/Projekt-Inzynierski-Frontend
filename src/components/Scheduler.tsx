@@ -1,9 +1,12 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useContext, useLayoutEffect, useRef } from 'react';
 import { useState } from 'react';
 import { SchedulerEvents } from './SchedulerEvents';
 import { days, hours } from '../constants/index';
 import styled from 'styled-components/macro';
 import { SchedulerEvent } from '../types';
+import { coursesContext } from '../contexts/CoursesProvider';
+import Button from '@material-ui/core/Button';
+import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
 
 const SchedulerWrapper = styled.div`
   border-collapse: collapse;
@@ -17,6 +20,7 @@ const SchedulerWrapper = styled.div`
   justify-content: center;
   align-items: center;
   box-shadow: 3px 3px 3px -2px rgba(0, 0, 0, 0.59);
+  position:relative;
 `;
 
 const TableBody = styled.div`
@@ -62,6 +66,27 @@ const TableCell = styled.div<TableCellProps>`
   font-weight: bold;
 `;
 
+const TourWrapper = styled.div`
+  display: flex;
+  justify-content:center;
+  align-items:center;
+  position:absolute;
+  top:8px;
+  right:8px;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: black;
+  line-height: 1;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-align: center;
+  background-color: #FFDC61;
+  border-radius: 10px;
+  font-size:18px;
+`;
+
 interface SchedulerProps {
   schedulerEvents: Array<SchedulerEvent>;
 }
@@ -70,7 +95,8 @@ export const Scheduler = ({ schedulerEvents }: SchedulerProps) => {
   const cellRef = useRef<HTMLDivElement>(null);
   const [cellWidth, setCellWidth] = useState(0);
   const [cellHeight, setCellHeight] = useState(0);
-
+  const { tour } = useContext(coursesContext)!;
+  
   useLayoutEffect(() => {
     const handleResize = () => {
       if (cellRef.current) {
@@ -130,6 +156,19 @@ export const Scheduler = ({ schedulerEvents }: SchedulerProps) => {
         ))}
         <SchedulerEvents cellWidth={cellWidth} cellHeight={cellHeight} schedulerEvents={schedulerEvents} />
       </TableBody>
+      <TourWrapper>
+      <Tooltip title="Pierwsza Tura Zapisów">
+        <div style={{cursor: 'help'}}>{tour === 'FIRST_TOUR' && '1'}</div>
+      </Tooltip>
+      <Tooltip title="Druga Tura Zapisów">
+        <div style={{cursor: 'help'}}>{tour === 'SECOND_TOUR' && '2'}</div>
+      </Tooltip>
+      <Tooltip title="Zapisywanie wyłączone">
+        <div style={{cursor: 'help'}}>{tour === 'NO_TOUR' && 'X'}</div>
+      </Tooltip>    
+          
+          
+        </TourWrapper>
     </SchedulerWrapper>
   );
 };

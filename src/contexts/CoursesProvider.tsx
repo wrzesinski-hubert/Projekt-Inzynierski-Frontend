@@ -21,6 +21,8 @@ interface CourseContext {
   userID: string;
   isDataLoading: boolean;
   historyBasket: Array<Basket>;
+  tour: string;
+  getCurrentTour: () => void;
   addCourseToBasket: (courses: Course) => void;
   changeHoveredGroup: (group: Group | null) => void;
   changeGroupInBasket: (group: any, courseId: number) => void;
@@ -57,6 +59,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const [userID, setUserID] = useState('');
   const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
   const [isDataLoading, setIsDataLoading] = useState(false);
+  const [tour, setTour] = useState('');
 
   const selectBasketIds = () => {
     const classesIds = basket.map((course) => course?.classes?.id).filter((course) => course !== undefined);
@@ -76,12 +79,12 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
 
   const selectSchedulerEvents = () => {
     return basket.reduce((res, el) => {
-      const { name } = el;
+      const { name, symbol } = el;
       if (el.classes) {
-        res.push({ ...el.classes, name });
+        res.push({ ...el.classes, name, symbol});
       }
       if (el.lecture) {
-        res.push({ ...el.lecture, name });
+        res.push({ ...el.lecture, name, symbol });
       }
       return res;
     }, [] as Array<SchedulerEvent>);
@@ -161,7 +164,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       });
     } catch (e) {
       console.log('error: ', e);
-      enqueueSnackbar('Zapisywanie planu nie powiodło się', {
+      enqueueSnackbar('Zapisywanie niemożliwe w czasie bezturowym', {
         variant: 'error',
         action,
       });
@@ -274,9 +277,19 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     setHistoryBasket(basket);
   };
 
+  const getCurrentTour = async () => {
+    try {
+      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/configurator/config/tour`);
+      setTour(data.currentTour);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     setIsDataLoading(true);
     setTimeout(() => {
+      getCurrentTour();
       fetchCourses();
       getNewestTimetable();
       setIsDataLoading(false);
@@ -293,6 +306,8 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         timetableHistory,
         isDataLoading,
         historyBasket,
+        tour,
+        getCurrentTour,
         addCourseToBasket,
         changeHoveredGroup,
         changeGroupInBasket,

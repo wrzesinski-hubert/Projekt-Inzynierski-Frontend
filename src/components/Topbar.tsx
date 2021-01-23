@@ -10,6 +10,7 @@ import { SelectMenu } from './SelectMenu';
 import { studentsContext } from '../contexts/StudentsProvider';
 import { CASContext } from '../contexts/CASProvider';
 import { render } from 'react-dom';
+import { coursesContext } from '../contexts/CoursesProvider';
 
 const Topbar = styled.div`
   background-color: #e3e5ed;
@@ -111,6 +112,8 @@ const IconWrapper = styled.div`
   width: 335px;
   margin-right: 10px;
 `;
+
+
 
 const Icon = styled.img`
   width: 40px;
@@ -215,9 +218,8 @@ export default function ({ handleTransfer }: TopbarProps) {
       </FlexboxColumn>
       <IconWrapper>
         <SelectedStudent>{selectedStudent?.email.replace(/@st.amu.edu.pl/, '')}</SelectedStudent>
-
         {/* <Text>Maciej Głowacki</Text> */}
-        {userPrivilige==="STUDENT" && <Icon alt="transfer" src={TransferIcon} onClick={handleTransfer} />}
+        {userPrivilige === 'STUDENT' && <Icon alt="transfer" src={TransferIcon} onClick={handleTransfer} />}
         {/* <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} /> */}
         <Icon alt="logout" src={LogoutIcon} onClick={logout} />
         {/* <Profile anchorEl={anchorEl} handleClose={handleCloseProfile} /> */}

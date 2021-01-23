@@ -180,7 +180,7 @@ const ExchangeParagraph = styled.p`
 `;
 
 export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
-  const { basket, selectBasketCourses } = useContext(coursesContext)!;
+  const { basket, tour, selectBasketCourses } = useContext(coursesContext)!;
   // const basketCourseGroups = useMemo(() => selectBasketCourseGroups(course.name), []);
   const basketCourses = selectBasketCourses();
 
@@ -195,7 +195,6 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
   const [groups, setGroups] = useState<any>([]);
   const [exchanges, setExchanges] = useState<any>(null);
   const [save, setSave] = useState(false);
-  const [tour, setTour] = useState<any>(null);
   // const allGroups
   const handleSelectedAssignmentsGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedAssignmentsClasses(event.target.value as any);
@@ -243,7 +242,6 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
       }
     };
     getExchanges();
-    getCurrentTour();
     getAssignmentsGroups();
   }, [isTransferOpen, save]);
 
@@ -259,15 +257,6 @@ export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {
     setSelectedGroup('');
     setSelectedAssignmentsClasses('');
     setSave(!save);
-  };
-
-  const getCurrentTour = async () => {
-    try {
-      const { data } = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/configurator/config/tour`);
-      setTour(data.currentTour);
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   const deleteExchange = async (id: number) => {
