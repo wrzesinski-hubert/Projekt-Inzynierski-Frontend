@@ -37,14 +37,12 @@ const SaveButton = styled.div`
   margin-bottom: 10px;
   &:hover {
     color: #ffffff;
-    box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.24);
   }
-
   &:active {
     background-color: #54c457;
   }
 
-  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 5px 0px rgba(189,189,189,1);
 `;
 
 export const Rightbar = () => {

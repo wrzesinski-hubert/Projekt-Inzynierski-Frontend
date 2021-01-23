@@ -5,6 +5,7 @@ import Popover from '@material-ui/core/Popover';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { MONDAY_TO_FRIDAY } from '../constants';
 import { coursesContext } from '../contexts/CoursesProvider';
+import TickIcon from '../assets/tick.svg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +58,7 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
   z-index: 20000;
   font-size: 0.65vw;
   line-height: normal;
-  border-radius: 10px;
+  border-radius: 2px;
   height: ${({ cellHeight }) => cellHeight * 3}px;
   width: ${({ cellWidth }) => (cellWidth * 3) / 4}px;
   margin-right: 5px;
@@ -75,8 +76,10 @@ const StyledSchedulerEvent = styled.div<SchedulerEventProps>`
     css`
       transition: background-color ease-in 0.4s;
     `}
-  transition: background-color ease-out 0.4s;
-  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
+  transition: background-color ease-out 0.4s;   
+  box-shadow: 3px 3px 5px 0px rgba(189,189,189,1);
+
+
   cursor: pointer;
 `;
 
@@ -124,6 +127,13 @@ interface SchedulerRowProps {
   cellWidth: number;
   cellHeight: number;
 }
+
+const Icon = styled.img`
+  width: 15px;
+  position:absolute;
+  top:5px;
+  left:15px;
+`;
 
 const getGroupsPerDay = (groups: Array<SchedulerEvent>) => {
   const groupsPerDay: any = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
@@ -185,10 +195,12 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                       <BoldParagraph isThree={groupsPerDay[group.day] >= 3}>{groups[index].name}</BoldParagraph>
                       {groupsPerDay[group.day] < 3 ? (
                         <TextWrapper>
+                          {groups[index].isAccepted===true && <Icon alt="transfer" src={TickIcon} />}
                           <div>{`${groups[index].time}-${groups[index].endTime}`}</div>
                           <div>
                             {groups[index].takenPlaces}/{groups[index].capacity}
                           </div>
+                          
                         </TextWrapper>
                       ) : (
                         <TextWrapper style={{ flexDirection: 'column' }}>
@@ -232,9 +244,10 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                       <p style={{ margin: '2px 0 2px 0' }}>
                         <PopoverSpan>Kod grupy: </PopoverSpan>FVJ753
                       </p>
-                      <p style={{ margin: '2px 0 2px 0' }}>
-                        <PopoverSpan>Punkty ECTS:</PopoverSpan> 2
-                      </p>
+                      <p style={{ margin: '2px 0 2px 0', color:"green"}}>
+                      <b>{groups[index].isAccepted===true && "Przedmiot został zaakceptowany"}</b>
+                      </p>                      
+                      
                     </div>
                   </Popover>
                 </Fragment>

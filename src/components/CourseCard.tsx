@@ -21,7 +21,7 @@ const CourseCardWrapper = styled.div`
   border-radius: 10px;
   cursor: pointer;
   align-items: stretch;
-  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 5px 0px rgba(189,189,189,1);
 `;
 
 const TitleWrapper = styled.div`

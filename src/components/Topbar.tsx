@@ -175,6 +175,8 @@ export default function ({ handleTransfer }: TopbarProps) {
     }
   }, [clearInput, handleClearInput]);
 
+  const userPrivilige = localStorage.getItem('userPrivilige');
+
   return (
     <Topbar>
       <LogoWrapper>
@@ -215,7 +217,7 @@ export default function ({ handleTransfer }: TopbarProps) {
         <SelectedStudent>{selectedStudent?.email.replace(/@st.amu.edu.pl/, '')}</SelectedStudent>
 
         {/* <Text>Maciej Głowacki</Text> */}
-        <Icon alt="transfer" src={TransferIcon} onClick={handleTransfer} />
+        {userPrivilige==="STUDENT" && <Icon alt="transfer" src={TransferIcon} onClick={handleTransfer} />}
         {/* <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} /> */}
         <Icon alt="logout" src={LogoutIcon} onClick={logout} />
         {/* <Profile anchorEl={anchorEl} handleClose={handleCloseProfile} /> */}
