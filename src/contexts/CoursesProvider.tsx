@@ -125,6 +125,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
     const courseToBasket: Basket = {
       name: course.name,
       id: course.id,
+      symbol: course.symbol,
       classes: course.classes !== undefined ? course.classes[0] : undefined,
       lecture: course.lectures !== undefined ? course.lectures[0] : undefined,
     };
