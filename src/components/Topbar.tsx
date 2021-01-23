@@ -9,8 +9,7 @@ import ClickAwayListener from 'react-click-away-listener';
 import { SelectMenu } from './SelectMenu';
 import { studentsContext } from '../contexts/StudentsProvider';
 import { CASContext } from '../contexts/CASProvider';
-import { render } from 'react-dom';
-import { coursesContext } from '../contexts/CoursesProvider';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const Topbar = styled.div`
   background-color: #e3e5ed;
@@ -112,8 +111,6 @@ const IconWrapper = styled.div`
   width: 335px;
   margin-right: 10px;
 `;
-
-
 
 const Icon = styled.img`
   width: 40px;
@@ -217,11 +214,18 @@ export default function ({ handleTransfer }: TopbarProps) {
         </ClickAwayListener>
       </FlexboxColumn>
       <IconWrapper>
-        <SelectedStudent>{selectedStudent?.email.replace(/@st.amu.edu.pl/, '')}</SelectedStudent>
+        <SelectedStudent>{selectedStudent?.surname}</SelectedStudent>
         {/* <Text>Maciej Głowacki</Text> */}
-        {userPrivilige === 'STUDENT' && <Icon alt="transfer" src={TransferIcon} onClick={handleTransfer} />}
+        {userPrivilige === 'STUDENT' && (
+          <Tooltip title="Wymiana grupami">
+            <Icon alt="transfer" src={TransferIcon} onClick={handleTransfer} />
+          </Tooltip>
+        )}
         {/* <Icon alt="change_language" src={isPolish ? EnglishIcon : PolishIcon} onClick={onLangChange} /> */}
-        <Icon alt="logout" src={LogoutIcon} onClick={logout} />
+        <Tooltip title="Wyloguj">
+          <Icon alt="logout" src={LogoutIcon} onClick={logout} />
+        </Tooltip>
+
         {/* <Profile anchorEl={anchorEl} handleClose={handleCloseProfile} /> */}
       </IconWrapper>
     </Topbar>

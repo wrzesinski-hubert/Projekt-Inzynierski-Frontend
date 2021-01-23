@@ -105,7 +105,8 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
             input
               .toLowerCase()
               .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, ''),
+              .replace(/[\u0300-\u036f]/g, '')
+              .replace(/\s/g, ''),
           ),
       );
       setFilteredStudents(filteredUsers);
@@ -119,9 +120,9 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
         <>
           {selectedOption === 'studenci' ? (
             <div>
-              {filteredStudents.map(({ email, id }, index) => (
+              {filteredStudents.map(({ surname, name, id }, index) => (
                 <CourseContainer key={index} id={id.toString()} onClick={onUserClick}>
-                  <p>{email}</p>
+                  <p>{name} {surname}</p>
                 </CourseContainer>
               ))}
             </div>

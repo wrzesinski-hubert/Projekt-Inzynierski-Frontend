@@ -5,8 +5,7 @@ import { days, hours } from '../constants/index';
 import styled from 'styled-components/macro';
 import { SchedulerEvent } from '../types';
 import { coursesContext } from '../contexts/CoursesProvider';
-import Button from '@material-ui/core/Button';
-import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const SchedulerWrapper = styled.div`
   border-collapse: collapse;
