@@ -204,6 +204,7 @@ export const SchedulerRow = ({ groups, indexRow, rowTop, cellWidth, cellHeight }
                         </TextWrapper>
                       ) : (
                         <TextWrapper style={{ flexDirection: 'column' }}>
+                          {groups[index].isAccepted===true && <Icon alt="transfer" src={TickIcon} />}
                           <div style={{ alignSelf: 'flex-end' }}>
                             {groups[index].takenPlaces}/{groups[index].capacity}
                           </div>

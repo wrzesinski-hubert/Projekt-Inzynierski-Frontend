@@ -24,6 +24,7 @@ const Wrapper = styled.div`
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
   user-select: none;
+  z-index:100;
 `;
 const Header = styled.div`
   display: flex;
