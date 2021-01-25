@@ -134,8 +134,6 @@ export const Administrator = () => {
 
     const {data} = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/v1/commisions/export/csv`,{responseType:"blob"});
 
-    console.log("123",xd);
-
     const downloadUrl = window.URL.createObjectURL(new Blob([data]));
 
     const link = document.createElement('a');
