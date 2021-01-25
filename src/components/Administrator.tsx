@@ -7,6 +7,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { SyncLoader } from 'react-spinners';
 import { CASContext } from '../contexts/CASProvider';
 import LogoutIcon from '../assets/logout.svg';
+import LogoPlanNaPlan from '../assets/logo.svg';
 
 const StyledCloseIcon = styled(CloseIcon)`
   color: #000000;
@@ -210,7 +211,7 @@ export const Administrator = () => {
                   <Icon alt="logout" src={LogoutIcon} onClick={logout}/>
       <Wrap>
         <LogoWrapper>
-          <Logo alt="logo" src="https://plannaplan.pl/img/logo.svg" />
+          <Logo alt="logo" src={LogoPlanNaPlan} />
           <Text> plan na plan </Text>
         </LogoWrapper>
         {xd === true ? (
