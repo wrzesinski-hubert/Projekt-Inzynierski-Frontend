@@ -10,6 +10,7 @@ import { SelectMenu } from './SelectMenu';
 import { studentsContext } from '../contexts/StudentsProvider';
 import { CASContext } from '../contexts/CASProvider';
 import Tooltip from '@material-ui/core/Tooltip';
+import LogoPlanNaPlan from '../assets/logo.svg';
 
 const Topbar = styled.div`
   background-color: #e3e5ed;
@@ -180,7 +181,7 @@ export default function ({ handleTransfer }: TopbarProps) {
   return (
     <Topbar>
       <LogoWrapper>
-        <Logo alt="logo" src="https://plannaplan.pl/img/logo.svg" />
+        <Logo alt="logo" src={LogoPlanNaPlan} />
         <Text> plan na plan </Text>
       </LogoWrapper>
       <FlexboxColumn>

@@ -133,10 +133,6 @@ export const Statistics = () => {
     
   }, []);
 
-  useEffect(() => {
-    console.log(loaded);
-  }, [loaded]);
-
   return <StatisticsWrapper>{loaded === false ? <SyncLoader />:<><Row>
     <StatisticBox>
       <StatisticNumber>{createdGroupsNumber}</StatisticNumber>
