@@ -22,6 +22,7 @@ interface CourseContext {
   isDataLoading: boolean;
   historyBasket: Array<Basket>;
   tour: string;
+  isSavingLoading: boolean;
   getCurrentTour: () => void;
   addCourseToBasket: (courses: Course) => void;
   changeHoveredGroup: (group: Group | null) => void;
@@ -60,6 +61,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   const [hoveredGroup, setHoveredGroup] = useState<Group | undefined | null>(null);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [tour, setTour] = useState('');
+  const [isSavingLoading, setIsSavingLoading] = useState(false);
 
   const selectBasketIds = () => {
     const classesIds = basket.map((course) => course?.classes?.id).filter((course) => course !== undefined);
@@ -143,6 +145,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
   };
 
   const saveBasket = async (userID: string) => {
+    setIsSavingLoading(true);
     const basketIds = selectBasketIds();
     const action = (key: any) => (
       <>
@@ -171,6 +174,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
       });
     }
     getStudentTimetablesHistory(userID);
+    setIsSavingLoading(false);
   };
 
   const changeGroupInBasket = (choosenGroup: any, courseId: number) => {
@@ -308,6 +312,7 @@ export const CoursesProvider = ({ children }: CoursesProviderProps) => {
         isDataLoading,
         historyBasket,
         tour,
+        isSavingLoading,
         getCurrentTour,
         addCourseToBasket,
         changeHoveredGroup,

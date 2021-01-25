@@ -214,7 +214,7 @@ export default function ({ handleTransfer }: TopbarProps) {
         </ClickAwayListener>
       </FlexboxColumn>
       <IconWrapper>
-        <SelectedStudent>{selectedStudent?.surname}</SelectedStudent>
+        <SelectedStudent>{selectedStudent?.surname === '' ? selectedStudent?.email.replace(/@st.amu.edu.pl/, '') : selectedStudent?.surname}</SelectedStudent>
         {/* <Text>Maciej Głowacki</Text> */}
         {userPrivilige === 'STUDENT' && (
           <Tooltip title="Wymiana grupami">

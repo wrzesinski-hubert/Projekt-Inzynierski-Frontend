@@ -39,7 +39,6 @@ const TransferStyled = styled.div`
   background: white;
   margin: 0 auto;
   border-radius: 5px;
-  letter-spacing: 0.1ch;
 `;
 
 const BinIcon = styled(DeleteIcon)`
@@ -166,17 +165,20 @@ const Exchange = styled.div`
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  line-height: 0;
+  line-height:2;
 `;
 
 const ExchangeTitle = styled.p`
   font-size: 16px;
   font-weight: bold;
+  
+  margin:0;
 `;
 
 const ExchangeParagraph = styled.p`
   font-size: 13px;
   color: #1a1a1a;
+  margin:0;
 `;
 
 export const Transfer = ({ handleClose, isTransferOpen }: TransferProps) => {

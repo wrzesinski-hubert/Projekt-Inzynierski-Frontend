@@ -120,9 +120,10 @@ export const Dropdown = ({ open, input, handleCloseDropdown, selectedOption }: D
         <>
           {selectedOption === 'studenci' ? (
             <div>
-              {filteredStudents.map(({ surname, name, id }, index) => (
+              {filteredStudents.map(({ surname, name, email, id }, index) => (
                 <CourseContainer key={index} id={id.toString()} onClick={onUserClick}>
-                  <p>{name} {surname}</p>
+                  {name=== ''? <p>{email}</p> :<p>{name} {surname}</p>}
+                  
                 </CourseContainer>
               ))}
             </div>

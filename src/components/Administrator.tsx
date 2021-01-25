@@ -58,12 +58,12 @@ const Wrap = styled.div`
   flex: 1;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: center;  
+  margin:20px;
 `;
 
 const LogoWrapper = styled.div`
   display: flex;
-  flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -74,6 +74,7 @@ const Text = styled.div`
   font-family: 'Roboto', sans-serif;
   font-size: 5rem;
   user-select: none;
+  margin-bottom:60px;
 `;
 
 const Logo = styled.img`
