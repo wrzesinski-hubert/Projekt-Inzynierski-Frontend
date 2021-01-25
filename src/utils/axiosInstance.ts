@@ -9,7 +9,6 @@ export const getNewTokens = async () => {
     const { data } = await axiosInstance.get(
       `${process.env.REACT_APP_API_URL}/token/refresh?refreshToken=${refreshToken}`,
     );
-    console.log("12312321",data);
     localStorage.setItem('userPrivilige',data.authorityRole);
     localStorage.setItem('userToken', data.token);
     localStorage.setItem('refreshToken', data.refreshToken);
