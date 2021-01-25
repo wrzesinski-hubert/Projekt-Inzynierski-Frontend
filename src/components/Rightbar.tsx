@@ -53,7 +53,7 @@ export const Rightbar = () => {
   const handleSave = debounce(() => saveBasket(userID), 500);
   return (
     <RightbarWrapper>
-      <SaveButton onClick={handleSave}> {isSavingLoading ? <SyncLoader size={9}/> : "ZAPISZ"}</SaveButton>
+      <SaveButton onClick={()=> {!isSavingLoading && handleSave() }}> {isSavingLoading ? <SyncLoader size={9}/> : "ZAPISZ"}</SaveButton>
       {basketCourses.map((course) => (
         <CourseCard course={course} key={course.id} />
       ))}
