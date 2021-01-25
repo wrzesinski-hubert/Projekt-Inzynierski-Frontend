@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext, ReactNode } from 'react';
 import { LoggedUser } from '../types';
-import { axiosInstance } from '../utils/axiosInstance';
+import { axiosInstance, getNewTokens } from '../utils/axiosInstance';
+
 
 export interface CASContext {
   user: LoggedUser | undefined;
@@ -41,6 +42,9 @@ export const CASProvider = ({ children }: CASProviderProps) => {
           localStorage.setItem('userPrivilige', user.authorityRole);
           localStorage.setItem('refreshToken', user.refreshToken);
           setIsFetchingToken(false);
+        }
+        else{
+          getNewTokens();
         }
         const token = localStorage.getItem('userToken');
         const refreshToken = localStorage.getItem('refreshToken');
