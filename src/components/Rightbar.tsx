@@ -3,6 +3,7 @@ import { CourseCard } from './CourseCard';
 import { coursesContext } from '../contexts/CoursesProvider';
 import styled from 'styled-components';
 import { debounce } from '../utils/index';
+import { SyncLoader } from 'react-spinners';
 
 const RightbarWrapper = styled.div`
   padding: 15px;
@@ -46,13 +47,13 @@ const SaveButton = styled.div`
 `;
 
 export const Rightbar = () => {
-  const { selectBasketCourses, saveBasket, userID } = useContext(coursesContext)!;
+  const { selectBasketCourses, saveBasket, userID, isSavingLoading } = useContext(coursesContext)!;
 
   const basketCourses = selectBasketCourses();
   const handleSave = debounce(() => saveBasket(userID), 500);
   return (
     <RightbarWrapper>
-      <SaveButton onClick={handleSave}>ZAPISZ</SaveButton>
+      <SaveButton onClick={handleSave}> {isSavingLoading ? <SyncLoader size={9}/> : "ZAPISZ"}</SaveButton>
       {basketCourses.map((course) => (
         <CourseCard course={course} key={course.id} />
       ))}
